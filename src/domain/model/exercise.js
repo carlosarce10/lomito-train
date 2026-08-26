@@ -78,7 +78,8 @@ export function updateSet(set, cambios) {
     if (peso < LIMITS.weight.min || peso > LIMITS.weight.max) {
       return { set, ok: false, issue: 'outOfRange' };
     }
-    siguiente.weight = Math.round(peso / LIMITS.weight.step) * LIMITS.weight.step;
+    const factor = 10 ** LIMITS.weight.decimals;
+    siguiente.weight = Math.round(peso * factor) / factor;
   }
 
   if ('reps' in cambios) {

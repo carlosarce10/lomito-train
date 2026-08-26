@@ -20,15 +20,18 @@ export const text =
 
 /** Numero dentro de un rango, opcionalmente multiplo de un paso. */
 export const number =
-  ({ min = -Infinity, max = Infinity, step = null, integer = false } = {}) =>
+  ({ min = -Infinity, max = Infinity, decimals = null, integer = false } = {}) =>
   (value) => {
     const n = integer ? parseInteger(value) : parseDecimal(value);
     if (n === null) return { code: integer ? 'notInteger' : 'notANumber' };
     if (n < min) return { code: 'tooSmall', params: { min } };
     if (n > max) return { code: 'tooLarge', params: { max } };
     // Se compara con tolerancia porque 0.1 + 0.2 no es 0.3 en coma flotante.
-    if (step !== null && Math.abs(Math.round(n / step) * step - n) > 1e-9) {
-      return { code: 'notAStep', params: { step } };
+    if (decimals !== null) {
+      const factor = 10 ** decimals;
+      if (Math.abs(Math.round(n * factor) / factor - n) > 1e-9) {
+        return { code: 'tooPrecise', params: { decimals } };
+      }
     }
     return null;
   };

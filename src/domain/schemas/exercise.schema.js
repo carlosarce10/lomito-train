@@ -5,7 +5,11 @@ import * as r from '../validation/rules';
 /** Forma de una serie: peso y repeticiones. */
 export const setSchema = {
   id: r.id(),
-  weight: r.number({ min: LIMITS.weight.min, max: LIMITS.weight.max, step: LIMITS.weight.step }),
+  weight: r.number({
+    min: LIMITS.weight.min,
+    max: LIMITS.weight.max,
+    decimals: LIMITS.weight.decimals,
+  }),
   reps: r.number({ min: LIMITS.reps.min, max: LIMITS.reps.max, integer: true }),
 };
 
