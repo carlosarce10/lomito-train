@@ -1,34 +1,30 @@
+import OptionGroup from '@shared/components/OptionGroup/OptionGroup';
 import { LANGUAGES, LANGUAGE_LABELS } from '@i18n/config';
 import useTranslation from '@i18n/useTranslation';
-
-import './LanguagePicker.scss';
 
 /**
  * Selector de idioma con los idiomas soportados visibles a la vez.
  *
  * Cada etiqueta es el nombre del idioma en su propio idioma, y por eso no pasa por
- * t(): quien no entiende el idioma activo tiene que poder reconocer el suyo.
+ * t(): quien no entiende el idioma activo tiene que poder reconocer el suyo. Por lo
+ * mismo cada opcion declara su `lang`, para que el lector de pantalla no lea
+ * "English" con la fonetica del castellano.
  */
 export default function LanguagePicker() {
   const { t, language, setLanguage } = useTranslation('settings');
 
+  const options = LANGUAGES.map((codigo) => ({
+    id: codigo,
+    label: LANGUAGE_LABELS[codigo],
+    lang: codigo,
+  }));
+
   return (
-    <fieldset className="c-language-picker">
-      <legend className="c-language-picker__legend">{t('language.label')}</legend>
-      <div className="c-language-picker__options">
-        {LANGUAGES.map((codigo) => (
-          <button
-            key={codigo}
-            type="button"
-            className={`c-language-picker__option${language === codigo ? ' is-selected' : ''}`}
-            aria-pressed={language === codigo}
-            lang={codigo}
-            onClick={() => setLanguage(codigo)}
-          >
-            {LANGUAGE_LABELS[codigo]}
-          </button>
-        ))}
-      </div>
-    </fieldset>
+    <OptionGroup
+      legend={t('language.label')}
+      options={options}
+      value={language}
+      onChange={setLanguage}
+    />
   );
 }

@@ -26,12 +26,13 @@
   },
   "unit": {
     "kg": "kg",
-    "reps": "reps"
+    "reps": "reps",
+    "lb": "lb"
   },
   "field": {
-    "weight": "Weight (kg)",
+    "weight": "Weight ({{unit}})",
     "reps": "Reps",
-    "weightAria": "Weight in kilograms",
+    "weightAria": "Weight in {{unit}}",
     "repsAria": "Repetitions"
   },
   "recovery": {

@@ -1,0 +1,36 @@
+@use 'styles/foundation' as *;
+
+@layer components {
+  .c-detail-action {
+    @include flex-center;
+    @include touch-target;
+
+    border: 1px solid var(--border);
+    border-radius: $radius-full;
+    background: var(--surface);
+    color: var(--text-secondary);
+    transition:
+      background-color $transition-fast,
+      border-color $transition-fast,
+      color $transition-fast;
+
+    &:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: var(--accent-subtle);
+      color: var(--accent-text);
+    }
+
+    &--danger:hover:not(:disabled) {
+      border-color: var(--danger);
+      background: var(--danger-subtle);
+      color: var(--danger-text);
+    }
+
+    // Un boton deshabilitado tiene que parecerlo: el de exportar a PDF conservaba
+    // opacidad 1 y cursor de mano, asi que parecia pulsable estando muerto.
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+}

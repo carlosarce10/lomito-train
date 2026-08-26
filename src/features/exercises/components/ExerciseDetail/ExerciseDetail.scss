@@ -5,55 +5,15 @@
     @include flex-column;
     gap: $spacing-lg;
 
-    &__top {
-      @include flex-between;
-    }
-
-    &__back {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: $font-size-sm;
-      font-weight: $font-weight-medium;
-      color: var(--accent-text);
-      background: var(--accent-subtle);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid color-mix(in srgb, var(--accent) 15%, transparent);
-      border-radius: $radius-full;
-      cursor: pointer;
-      padding: $spacing-xs $spacing-md;
-      transition: background-color $transition-fast;
-
-      &:active {
-        background: color-mix(in srgb, var(--accent) 15%, transparent);
-      }
-    }
-
-    &__actions-top {
-      display: flex;
-      gap: $spacing-xs;
-    }
-
-    &__info {
-      @include flex-column;
-      gap: $spacing-sm;
-    }
-
-    &__name {
-      font-size: $font-size-xl;
-      font-weight: $font-weight-bold;
-      color: var(--text);
-    }
-
     // Sets section
     &__sets-section {
       @include flex-column;
       gap: $spacing-md;
     }
 
-    &__sets-header {
-      @include flex-between;
+    &__sets-add {
+      width: 100%;
+      margin-top: $spacing-sm;
     }
 
     &__sets-title {

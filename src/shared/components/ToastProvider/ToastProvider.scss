@@ -4,7 +4,10 @@
   .c-toast-provider {
     position: fixed;
     right: $spacing-md;
-    bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + #{$spacing-md});
+    // El aviso sube dentro del hueco que .c-layout__content reserva con
+    // --toast-reserve. Apoyado a $spacing-md de la barra de navegacion se comia el
+    // ultimo boton de Ajustes, que es justo el que se acaba de pulsar.
+    bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + #{$spacing-lg});
     left: $spacing-md;
     z-index: $z-modal;
     display: flex;

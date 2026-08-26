@@ -35,6 +35,9 @@ export default function ExercisesPage() {
       return;
     }
     setShowCreateForm(false);
+    // Un aviso por accion completada: el listado y el detalle cambian solos, pero
+    // nada confirmaba que el ejercicio quedo guardado.
+    toast.success(t('toast.created'));
     navegar(`/exercises/${resultado.exercise.id}`);
   };
 

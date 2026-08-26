@@ -1,25 +1,37 @@
-import { mdiDumbbell, mdiWeightLifter, mdiRun, mdiCog, mdiHelpCircle } from '@mdi/js';
+import { mdiDumbbell, mdiWeightLifter, mdiRun, mdiHook, mdiWeight, mdiHelpCircle } from '@mdi/js';
 import Icon from '@mdi/react';
 
 import { getMaxWeight } from '@domain/model/records';
+import useUnit from '@shared/hooks/useUnit';
 import useTranslation from '@i18n/useTranslation';
 
 import MuscleGroupBadgeList from '../MuscleGroupBadgeList/MuscleGroupBadgeList';
 import './ExerciseCard.scss';
 
+// Espejo de los nombres de icono de @domain/catalogs/equipment: el dominio no puede
+// importar @mdi/js, asi que la traduccion de nombre a trazado vive aqui.
 const EQUIPMENT_ICONS = {
   barbell: mdiWeightLifter,
   dumbbell: mdiDumbbell,
-  cable: mdiCog,
-  machine: mdiCog,
+  cable: mdiHook,
+  machine: mdiWeight,
   bodyweight: mdiRun,
   other: mdiHelpCircle,
 };
 
+/**
+ * Tarjeta resumen de un ejercicio: nombre, equipamiento, grupos y sus dos marcas.
+ *
+ * @param {object} props
+ * @param {object} props.exercise Ejercicio a resumir.
+ * @param {(exercise: object) => void} props.onClick Abre el detalle.
+ */
 export default function ExerciseCard({ exercise, onClick }) {
   const { t, tn, formatNumber } = useTranslation('exercises');
+  const { unit, toDisplay } = useUnit();
   const totalSets = exercise.sets.length;
-  const maxWeight = getMaxWeight(exercise.sets);
+  // El almacen guarda kilos: el maximo se convierte a la unidad activa para mostrarlo.
+  const maxWeight = toDisplay(getMaxWeight(exercise.sets));
   const equipmentIcon = exercise.equipmentId
     ? (EQUIPMENT_ICONS[exercise.equipmentId] ?? mdiHelpCircle)
     : null;
@@ -47,7 +59,9 @@ export default function ExerciseCard({ exercise, onClick }) {
         </div>
         <div className="c-exercise-card__stat">
           <span className="c-exercise-card__stat-value">{formatNumber(maxWeight, 'weight')}</span>
-          <span className="c-exercise-card__stat-label">{t('card.maxWeight')}</span>
+          <span className="c-exercise-card__stat-label">
+            {t('card.maxWeight', { unit: tn('common', `unit.${unit}`) })}
+          </span>
         </div>
       </div>
     </button>

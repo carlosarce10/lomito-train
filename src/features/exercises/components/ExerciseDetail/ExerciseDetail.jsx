@@ -1,11 +1,15 @@
-import { mdiArrowLeft, mdiClose } from '@mdi/js';
+import { mdiClose, mdiDelete, mdiPencil } from '@mdi/js';
 import Icon from '@mdi/react';
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 
 import { LIMITS } from '@domain/validation/limits';
+import { parseDecimal } from '@domain/validation/parseDecimal';
 import Button from '@shared/components/Button/Button';
+import DetailAction from '@shared/components/DetailHeader/DetailAction';
+import DetailHeader from '@shared/components/DetailHeader/DetailHeader';
 import Modal from '@shared/components/Modal/Modal';
 import NumberField from '@shared/components/NumberField/NumberField';
+import useUnit from '@shared/hooks/useUnit';
 import useTranslation from '@i18n/useTranslation';
 
 import ExerciseForm from '../ExerciseForm/ExerciseForm';
@@ -42,6 +46,7 @@ export default function ExerciseDetail({
   onDeleteSet,
 }) {
   const { t, tn, formatNumber } = useTranslation('exercises');
+  const { unit, toDisplay, toStorage } = useUnit();
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   // Codigo de validacion por serie: { [setId]: { field, code } }. Se pinta junto a
@@ -55,8 +60,22 @@ export default function ExerciseDetail({
   // El usuario ya intento anadir una serie estando en el tope.
   const [capReached, setCapReached] = useState(false);
   const idBase = useId();
+  // Borrar una fila destruye el elemento que tenia el foco y el navegador lo manda al
+  // <body>: quien navega con teclado acaba al principio del documento. Para
+  // devolverselo hay que poder alcanzar el boton de destino.
+  const deleteButtons = useRef(new Map());
+  const addSetButton = useRef(null);
 
   const idError = (setId) => `${idBase}-${setId}-error`;
+  const unitLabel = tn('common', `unit.${unit}`);
+
+  // El campo muestra la unidad activa y el almacen guarda kilos, asi que el texto
+  // confirmado se convierte antes de llegar al dominio. Un texto que no es un decimal
+  // pasa tal cual: rechazarlo y decir por que sigue siendo trabajo del dominio.
+  const aAlmacen = (raw) => {
+    const numero = parseDecimal(raw);
+    return numero === null ? raw : toStorage(numero);
+  };
 
   const marcarIssue = (setId, field, code) =>
     setSetIssues((prev) =>
@@ -102,7 +121,24 @@ export default function ExerciseDetail({
     onClose();
   };
 
+  /**
+   * Lleva el foco al boton de borrado de la fila que ocupa el sitio de la eliminada,
+   * o al de agregar serie si era la ultima.
+   */
+  const devolverFoco = (siguienteSerie) => {
+    // Los dos destinos posibles ya estan montados y el repintado no los toca, solo
+    // quita la fila borrada: el foco se puede mover en el mismo evento.
+    const destino = siguienteSerie
+      ? deleteButtons.current.get(siguienteSerie.id)
+      : addSetButton.current;
+    destino?.focus();
+  };
+
   const handleDeleteSet = (setId) => {
+    // El destino se calcula antes de escribir, mientras la lista todavia tiene la fila.
+    const indice = exercise.sets.findIndex((serie) => serie.id === setId);
+    const siguienteSerie = exercise.sets[indice + 1];
+
     if (!onDeleteSet(exercise.id, setId)?.ok) return;
     olvidarIssue(setId);
     setVisitedFields((prev) => {
@@ -111,6 +147,7 @@ export default function ExerciseDetail({
       delete siguiente[setId];
       return siguiente;
     });
+    devolverFoco(siguienteSerie);
   };
 
   // El tope de series lo fija el dominio, no el JSX: al alcanzarlo, addSet no guardaba
@@ -130,7 +167,9 @@ export default function ExerciseDetail({
 
   // El valor llega crudo: lo valida el dominio y devuelve si lo acepto.
   const handleSetChange = (setId, field, raw) => {
-    const resultado = raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: raw });
+    const valor = field === 'weight' ? aAlmacen(raw) : raw;
+    const resultado =
+      raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: valor });
 
     // Un valor que el dominio rechaza vuelve con `issue`, y ese es el mensaje de la
     // fila. Una escritura que falla por almacenamiento no trae issue y no se pinta
@@ -147,33 +186,30 @@ export default function ExerciseDetail({
 
   return (
     <div className="c-exercise-detail">
-      <div className="c-exercise-detail__top">
-        <button className="c-exercise-detail__back" onClick={onClose}>
-          <Icon path={mdiArrowLeft} size={0.9} />
-          {tn('common', 'action.back')}
-        </button>
-        <div className="c-exercise-detail__actions-top">
-          <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
-            {tn('common', 'action.edit')}
-          </Button>
-          <Button variant="danger" size="sm" onClick={() => setShowDeleteConfirm(true)}>
-            {tn('common', 'action.delete')}
-          </Button>
-        </div>
-      </div>
-
-      <div className="c-exercise-detail__info">
-        <h2 className="c-exercise-detail__name">{exercise.name}</h2>
-        <MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} />
-      </div>
+      <DetailHeader
+        backLabel={tn('common', 'nav.exercises')}
+        onBack={onClose}
+        title={exercise.name}
+        badges={<MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} />}
+        actions={
+          <>
+            <DetailAction
+              icon={mdiPencil}
+              label={tn('common', 'action.edit')}
+              onClick={() => setIsEditing(true)}
+            />
+            <DetailAction
+              icon={mdiDelete}
+              label={tn('common', 'action.delete')}
+              tone="danger"
+              onClick={() => setShowDeleteConfirm(true)}
+            />
+          </>
+        }
+      />
 
       <div className="c-exercise-detail__sets-section">
-        <div className="c-exercise-detail__sets-header">
-          <h3 className="c-exercise-detail__sets-title">{t('detail.setsTitle')}</h3>
-          <Button size="sm" onClick={handleAddSet}>
-            {t('detail.addSet')}
-          </Button>
-        </div>
+        <h3 className="c-exercise-detail__sets-title">{t('detail.setsTitle')}</h3>
 
         {/* El limite viene de LIMITS: si se escribiera aqui, el JSX y el dominio
             podrian discrepar y el boton no diria la verdad. */}
@@ -191,7 +227,9 @@ export default function ExerciseDetail({
               <span className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--num">
                 #
               </span>
-              <span className="c-exercise-detail__sets-cell">{tn('common', 'field.weight')}</span>
+              <span className="c-exercise-detail__sets-cell">
+                {tn('common', 'field.weight', { unit: unitLabel })}
+              </span>
               <span className="c-exercise-detail__sets-cell">{tn('common', 'field.reps')}</span>
               <span className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--action"></span>
             </div>
@@ -213,10 +251,10 @@ export default function ExerciseDetail({
                     <NumberField
                       className="c-exercise-detail__sets-input"
                       inputMode="decimal"
-                      value={set.weight}
+                      value={toDisplay(set.weight)}
                       placeholder="0"
                       data-field="weight"
-                      aria-label={tn('common', 'field.weightAria')}
+                      aria-label={tn('common', 'field.weightAria', { unit: unitLabel })}
                       aria-invalid={issue?.field === 'weight' || undefined}
                       aria-describedby={issue?.field === 'weight' ? idError(set.id) : undefined}
                       onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
@@ -237,6 +275,10 @@ export default function ExerciseDetail({
                   </div>
                   <div className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--action">
                     <button
+                      ref={(nodo) => {
+                        if (nodo) deleteButtons.current.set(set.id, nodo);
+                        else deleteButtons.current.delete(set.id);
+                      }}
                       className="c-exercise-detail__sets-delete"
                       onClick={() => handleDeleteSet(set.id)}
                       aria-label={t('detail.deleteSet')}
@@ -257,6 +299,19 @@ export default function ExerciseDetail({
             })}
           </div>
         )}
+
+        {/* El boton vive debajo de la lista y no en la cabecera de la seccion: el
+            usuario acaba de anotar la ultima serie y lo siguiente que quiere esta
+            justo bajo el pulgar, no arriba del todo. */}
+        <Button
+          ref={addSetButton}
+          variant="ghost"
+          className="c-exercise-detail__sets-add"
+          onClick={handleAddSet}
+          disabled={capReached}
+        >
+          {t('detail.addSet')}
+        </Button>
       </div>
 
       {/* Modal editar ejercicio */}
@@ -287,8 +342,10 @@ export default function ExerciseDetail({
             <strong>{exercise.name}</strong>
             {confirmAfter}
           </p>
+          {/* El foco inicial va a Cancelar, la opcion segura: es la convencion en
+              iOS y en Material, y evita confirmar un borrado con Enter por inercia. */}
           <div className="c-exercise-detail__confirm-actions">
-            <Button variant="ghost" onClick={() => setShowDeleteConfirm(false)}>
+            <Button data-autofocus variant="ghost" onClick={() => setShowDeleteConfirm(false)}>
               {tn('common', 'action.cancel')}
             </Button>
             <Button variant="danger" onClick={handleDelete}>

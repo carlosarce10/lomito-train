@@ -1,0 +1,78 @@
+@use 'styles/foundation' as *;
+
+@layer components {
+  .c-option-group {
+    &__legend {
+      margin-bottom: $spacing-xs;
+      color: var(--text);
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+    }
+
+    &__hint {
+      margin-bottom: $spacing-sm;
+      color: var(--text-muted);
+      font-size: $font-size-sm;
+    }
+
+    &__options {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+    }
+
+    &__option {
+      display: flex;
+      gap: $spacing-sm;
+      align-items: center;
+      min-height: $touch-target;
+      padding: $spacing-sm $spacing-md;
+      border: 1px solid var(--border);
+      border-radius: $radius-sm;
+      background: var(--surface);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition:
+        background-color $transition-fast,
+        border-color $transition-fast,
+        color $transition-fast;
+
+      &.is-selected {
+        border-color: var(--accent);
+        background: var(--accent-subtle);
+        color: var(--accent-text);
+        font-weight: $font-weight-semibold;
+      }
+    }
+
+    // El radio es el control real: se oculta a la vista pero no al navegador, para
+    // conservar el recorrido con flechas y el anuncio del lector de pantalla.
+    &__input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    // El foco lo recibe el radio oculto, asi que el anillo lo dibuja su etiqueta.
+    &__input:focus-visible + * {
+      outline: 2px solid var(--focus);
+      outline-offset: 4px;
+    }
+
+    &__icon {
+      display: flex;
+      flex-shrink: 0;
+    }
+
+    // min-width: 0 para que una etiqueta larga parta en varias lineas en lugar de
+    // desbordar la tarjeta: un hijo de flex no se encoge por debajo de su contenido.
+    &__label {
+      min-width: 0;
+      font-size: $font-size-base;
+      overflow-wrap: anywhere;
+    }
+  }
+}

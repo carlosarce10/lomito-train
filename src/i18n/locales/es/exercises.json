@@ -8,7 +8,7 @@
   },
   "card": {
     "sets": "Series",
-    "maxWeight": "Máx kg"
+    "maxWeight": "Máx {{unit}}"
   },
   "filter": {
     "all": "Todos"
@@ -34,9 +34,14 @@
     "deleteTitle": "Eliminar ejercicio",
     "deleteConfirm": "¿Seguro que quieres eliminar {{name}}? Esta acción no se puede deshacer."
   },
+  "toast": {
+    "created": "Ejercicio creado",
+    "updated": "Ejercicio actualizado",
+    "deleted": "Ejercicio eliminado"
+  },
   "record": {
-    "label": "récord",
-    "empty": "Sin récord aún"
+    "label": "marca",
+    "empty": "Sin marca aún"
   },
   "count_one": "{{count}} ejercicio",
   "count_other": "{{count}} ejercicios",

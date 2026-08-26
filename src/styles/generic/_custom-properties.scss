@@ -47,5 +47,9 @@
   // Tokens que no dependen del tema.
   :root {
     --nav-height: 64px;
+    // Sitio que el aviso flotante ocupa por encima de la barra de navegacion. Lo
+    // reserva .c-layout__content y lo respeta .c-toast-provider: las dos reglas
+    // tienen que leer el mismo numero, o el aviso vuelve a tapar el ultimo boton.
+    --toast-reserve: 5rem;
   }
 }

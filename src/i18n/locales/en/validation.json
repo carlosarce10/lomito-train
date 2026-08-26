@@ -6,7 +6,6 @@
   "notInteger": "Enter a whole number",
   "tooSmall": "The minimum is {{min}}",
   "tooLarge": "The maximum is {{max}}",
-  "notAStep": "Use multiples of {{step}}",
   "outOfRange": "Value out of range",
   "notInCatalog": "Pick a valid option",
   "tooFewItems": "Pick at least {{min}}",
@@ -15,5 +14,6 @@
   "notAnObject": "The saved data does not have the expected shape",
   "invalidId": "Invalid identifier",
   "invalidDate": "Invalid date",
-  "duplicateItems": "There are duplicate items"
+  "duplicateItems": "There are duplicate items",
+  "tooPrecise": "Use at most {{decimals}} decimals"
 }

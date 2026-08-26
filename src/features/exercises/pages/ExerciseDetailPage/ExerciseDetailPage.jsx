@@ -29,6 +29,14 @@ export default function ExerciseDetailPage() {
     return resultado;
   };
 
+  // Un aviso por accion completada, no por pulsacion: se emite aqui, que es el unico
+  // punto por el que pasan todas las operaciones. Las series quedan fuera a proposito,
+  // porque NumberField confirma en cada tecla y la propia tabla ya muestra el cambio.
+  const avisar = (resultado, exito) => {
+    if (resultado?.ok) toast.success(exito);
+    return avisarSiFallo(resultado);
+  };
+
   // Un valor de serie que no pasa la validacion vuelve con `issue`: eso no es un
   // fallo de escritura y lo muestra la propia fila, no un aviso flotante.
   const avisarSiFalloLaSerie = (resultado) => {
@@ -44,8 +52,10 @@ export default function ExerciseDetailPage() {
       exercise={exercise}
       existingNames={exercises}
       onClose={() => navegar('/exercises')}
-      onUpdate={(id, cambios) => avisarSiFallo(updateExercise(id, cambios))}
-      onDelete={(id) => avisarSiFallo(deleteExercise(id))}
+      onUpdate={(id, cambios) =>
+        avisar(updateExercise(id, cambios), tn('exercises', 'toast.updated'))
+      }
+      onDelete={(id) => avisar(deleteExercise(id), tn('exercises', 'toast.deleted'))}
       onAddSet={(id) => avisarSiFallo(addSet(id))}
       onUpdateSet={(id, setId, cambios) => avisarSiFalloLaSerie(updateSet(id, setId, cambios))}
       onDeleteSet={(id, setId) => avisarSiFallo(deleteSet(id, setId))}

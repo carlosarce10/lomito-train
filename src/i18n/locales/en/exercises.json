@@ -8,7 +8,7 @@
   },
   "card": {
     "sets": "Sets",
-    "maxWeight": "Max kg"
+    "maxWeight": "Max {{unit}}"
   },
   "filter": {
     "all": "All"
@@ -33,6 +33,11 @@
     "setsEmpty": "Add a set to record weight and reps",
     "deleteTitle": "Delete exercise",
     "deleteConfirm": "Delete {{name}}? This cannot be undone."
+  },
+  "toast": {
+    "created": "Exercise created",
+    "updated": "Exercise updated",
+    "deleted": "Exercise deleted"
   },
   "record": {
     "label": "personal best",

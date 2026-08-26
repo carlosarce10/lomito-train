@@ -60,7 +60,9 @@ export default function useDataExport() {
       setTrabajando(clave);
       try {
         const resultado = await operacion();
-        if (resultado.ok) toast.success(t('export.done'));
+        // El aviso nombra el archivo entregado: los tres botones daban el mismo
+        // "listo" y el usuario no sabia cual de las tres descargas habia acabado.
+        if (resultado.ok) toast.success(t('export.done', { name: resultado.filename }));
         else toast.error(t('export.failed'));
         return resultado;
       } finally {
@@ -134,7 +136,7 @@ export default function useDataExport() {
   );
 
   /**
-   * Aplica una copia de seguridad desde un fichero elegido por el usuario.
+   * Aplica una copia de seguridad desde un archivo elegido por el usuario.
    * Vuelve a cargar la pagina al terminar: los stores ya tienen su instantanea en
    * memoria y releerla a mano dejaria la interfaz mostrando datos viejos.
    */

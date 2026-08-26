@@ -12,25 +12,25 @@
   },
   "export": {
     "title": "Tus datos",
-    "hint": "Los datos solo estan en este dispositivo. Si borras los datos del navegador, se pierden.",
+    "hint": "Los datos solo están en este dispositivo. Si borras los datos del navegador, se pierden.",
     "excel": "Descargar Excel",
     "excelHint": "Ejercicios, rutinas y series en un libro con varias hojas",
     "csv": "Descargar CSV",
     "csvHint": "Una hoja por descarga, sin depender de la red",
     "backup": "Copia de seguridad",
-    "backupHint": "Fichero JSON para llevar tus datos a otro dispositivo",
+    "backupHint": "Archivo JSON para llevar tus datos a otro dispositivo",
     "import": "Importar copia",
-    "importHint": "Sustituye lo que hay ahora por el contenido del fichero",
+    "importHint": "Sustituye lo que hay ahora por el contenido del archivo",
     "importConfirmTitle": "Importar copia de seguridad",
-    "importConfirmText": "Se sustituiran tus {{exercises}} ejercicios y {{routines}} rutinas por el contenido del fichero. Esta accion no se puede deshacer.",
+    "importConfirmText": "Se sustituirán tus {{exercises}} ejercicios y {{routines}} rutinas por el contenido del archivo. Esta acción no se puede deshacer.",
     "pdf": "Rutina en PDF",
     "pdfHint": "Con casillas en blanco para anotar en el gimnasio",
-    "working": "Preparando el fichero…",
-    "done": "Fichero listo",
-    "failed": "No se pudo generar el fichero",
+    "working": "Preparando el archivo…",
+    "done": "Descargado {{name}}",
+    "failed": "No se pudo generar el archivo",
     "imported": "Importados {{exercises}} ejercicios y {{routines}} rutinas",
-    "importFailed": "El fichero no es una copia de Lomito Train valida",
-    "importDiscarded": "Se descartaron {{count}} elementos que no tenian la forma esperada",
+    "importFailed": "El archivo no es una copia válida de Lomito Train",
+    "importDiscarded": "Se descartaron {{count}} elementos que no tenían la forma esperada",
     "sheets": {
       "exercises": "Ejercicios",
       "routines": "Rutinas",
@@ -44,7 +44,7 @@
       "muscleGroups": "Grupos musculares",
       "equipment": "Equipamiento",
       "setCount": "Series",
-      "maxWeight": "Peso maximo (kg)",
+      "maxWeight": "Peso máximo (kg)",
       "createdAt": "Creado",
       "updatedAt": "Actualizado",
       "color": "Color",
@@ -61,5 +61,11 @@
       "actualWeight": "Peso real",
       "actualReps": "Reps reales"
     }
+  },
+  "unit": {
+    "label": "Unidad de peso",
+    "kg": "Kilos (kg)",
+    "lb": "Libras (lb)",
+    "hint": "Tus datos se guardan siempre en kilos. Cambiar la unidad solo cambia cómo se muestran."
   }
 }

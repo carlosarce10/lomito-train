@@ -25,7 +25,11 @@ export default function ExercisePicker({ allExercises, selectedIds, onToggle, on
   return (
     <div className="c-exercise-picker">
       <div className="c-exercise-picker__header">
-        <h2 className="c-exercise-picker__title">{t('picker.title')}</h2>
+        {/* El id lo consume el Modal que envuelve al selector: nombra el dialogo
+            con aria-labelledby en lugar de repetir el encabezado. */}
+        <h2 className="c-exercise-picker__title" id="exercise-picker-title">
+          {t('picker.title')}
+        </h2>
         <button
           className="c-exercise-picker__close"
           onClick={onClose}

@@ -4,7 +4,9 @@ import { useId, useState, useRef } from 'react';
 
 import { getRecord } from '@domain/model/records';
 import { LIMITS } from '@domain/validation/limits';
+import { parseDecimal } from '@domain/validation/parseDecimal';
 import NumberField from '@shared/components/NumberField/NumberField';
+import useUnit from '@shared/hooks/useUnit';
 import useTranslation from '@i18n/useTranslation';
 import { MuscleGroupBadgeList } from '@features/exercises';
 
@@ -29,6 +31,7 @@ export default function RoutineExerciseCard({
   onDeleteSet,
 }) {
   const { tn, formatNumber } = useTranslation('routines');
+  const { unit, toDisplay, toStorage } = useUnit();
   const [collapsed, setCollapsed] = useState(true);
   const [translateX, setTranslateX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
@@ -46,8 +49,14 @@ export default function RoutineExerciseCard({
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const isHorizontal = useRef(false);
+  // Borrar una fila destruye el elemento que tenia el foco y el navegador lo manda al
+  // <body>: quien navega con teclado acaba al principio del documento. Para
+  // devolverselo hay que poder alcanzar el boton de destino.
+  const deleteButtons = useRef(new Map());
+  const addSetButton = useRef(null);
 
   const record = getRecord(exercise.sets);
+  const unitLabel = tn('common', `unit.${unit}`);
 
   // ── Deslizamiento ───────────────────────────────────────────
   // El deslizamiento es un atajo, no la unica via: las mismas dos acciones estan
@@ -128,9 +137,19 @@ export default function RoutineExerciseCard({
     return issue && visitedFields[setId]?.[issue.field] ? issue : null;
   };
 
+  // El campo muestra la unidad activa y el almacen guarda kilos, asi que el texto
+  // confirmado se convierte antes de llegar al dominio. Un texto que no es un decimal
+  // pasa tal cual: rechazarlo y decir por que sigue siendo trabajo del dominio.
+  const aAlmacen = (raw) => {
+    const numero = parseDecimal(raw);
+    return numero === null ? raw : toStorage(numero);
+  };
+
   // El valor llega crudo: lo valida el dominio y devuelve si lo acepto.
   const handleSetChange = (setId, field, raw) => {
-    const resultado = raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: raw });
+    const valor = field === 'weight' ? aAlmacen(raw) : raw;
+    const resultado =
+      raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: valor });
 
     // Un valor que el dominio rechaza vuelve con `issue`, y ese es el mensaje de la
     // fila. Una escritura que falla por almacenamiento no trae issue y no se pinta
@@ -141,7 +160,24 @@ export default function RoutineExerciseCard({
     return resultado;
   };
 
+  /**
+   * Lleva el foco al boton de borrado de la fila que ocupa el sitio de la eliminada,
+   * o al de agregar serie si era la ultima.
+   */
+  const devolverFoco = (siguienteSerie) => {
+    // Los dos destinos posibles ya estan montados y el repintado no los toca, solo
+    // quita la fila borrada: el foco se puede mover en el mismo evento.
+    const destino = siguienteSerie
+      ? deleteButtons.current.get(siguienteSerie.id)
+      : addSetButton.current;
+    destino?.focus();
+  };
+
   const handleDeleteSet = (setId) => {
+    // El destino se calcula antes de escribir, mientras la lista todavia tiene la fila.
+    const indice = exercise.sets.findIndex((serie) => serie.id === setId);
+    const siguienteSerie = exercise.sets[indice + 1];
+
     if (!onDeleteSet(exercise.id, setId)?.ok) return;
     olvidarIssue(setId);
     setVisitedFields((prev) => {
@@ -150,6 +186,7 @@ export default function RoutineExerciseCard({
       delete siguiente[setId];
       return siguiente;
     });
+    devolverFoco(siguienteSerie);
   };
 
   // El tope de series lo fija el dominio, no el JSX: al alcanzarlo, addSet no guardaba
@@ -245,7 +282,7 @@ export default function RoutineExerciseCard({
           {record ? (
             <>
               <span className="c-routine-exercise-card__record-value">
-                {formatNumber(record.weight, 'weight')} {tn('common', 'unit.kg')}
+                {formatNumber(toDisplay(record.weight), 'weight')} {unitLabel}
               </span>
               <span className="c-routine-exercise-card__record-sep">×</span>
               <span className="c-routine-exercise-card__record-value">
@@ -273,7 +310,7 @@ export default function RoutineExerciseCard({
               <div className="c-routine-exercise-card__sets-table">
                 <div className="c-routine-exercise-card__sets-head">
                   <span>#</span>
-                  <span>{tn('common', 'field.weight')}</span>
+                  <span>{tn('common', 'field.weight', { unit: unitLabel })}</span>
                   <span>{tn('common', 'field.reps')}</span>
                   <span />
                 </div>
@@ -294,10 +331,10 @@ export default function RoutineExerciseCard({
                       <NumberField
                         className="c-routine-exercise-card__sets-input"
                         inputMode="decimal"
-                        value={set.weight}
+                        value={toDisplay(set.weight)}
                         placeholder="0"
                         data-field="weight"
-                        aria-label={tn('common', 'field.weightAria')}
+                        aria-label={tn('common', 'field.weightAria', { unit: unitLabel })}
                         aria-invalid={issue?.field === 'weight' || undefined}
                         aria-describedby={issue?.field === 'weight' ? idError(set.id) : undefined}
                         onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
@@ -314,6 +351,10 @@ export default function RoutineExerciseCard({
                         onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
                       />
                       <button
+                        ref={(nodo) => {
+                          if (nodo) deleteButtons.current.set(set.id, nodo);
+                          else deleteButtons.current.delete(set.id);
+                        }}
                         className="c-routine-exercise-card__sets-del"
                         onClick={() => handleDeleteSet(set.id)}
                         aria-label={tn('exercises', 'detail.deleteSet')}
@@ -338,6 +379,7 @@ export default function RoutineExerciseCard({
               </div>
             )}
             <button
+              ref={addSetButton}
               className="c-routine-exercise-card__sets-add"
               onClick={handleAddSet}
               aria-describedby={capReached && setsAtCap ? idCapError : undefined}

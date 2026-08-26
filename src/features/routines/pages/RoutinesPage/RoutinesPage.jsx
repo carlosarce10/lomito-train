@@ -32,6 +32,9 @@ export default function RoutinesPage() {
       return;
     }
     setShowCreateForm(false);
+    // Un aviso por accion completada: el listado y el detalle cambian solos, pero
+    // nada confirmaba que la rutina quedo guardada.
+    toast.success(t('toast.created'));
     navigate(`/routines/${result.routine.id}`);
   };
 

@@ -8,8 +8,11 @@
 export const EQUIPMENT_TYPES = [
   { id: 'barbell', icon: 'weight-lifter' },
   { id: 'dumbbell', icon: 'dumbbell' },
-  { id: 'cable', icon: 'cog' },
-  { id: 'machine', icon: 'cog' },
+  // Ni el cable ni la maquina llevan engrane: en esta aplicacion el engrane es el
+  // icono de la pestana Ajustes, y el usuario leia "configurar" donde decia
+  // "maquina". El gancho es el enganche de la polea; la pesa, la torre de discos.
+  { id: 'cable', icon: 'hook' },
+  { id: 'machine', icon: 'weight' },
   { id: 'bodyweight', icon: 'run' },
   { id: 'other', icon: 'help-circle' },
 ];

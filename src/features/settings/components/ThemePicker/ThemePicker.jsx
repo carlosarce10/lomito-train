@@ -1,10 +1,9 @@
 import { mdiThemeLightDark, mdiWeatherNight, mdiWeatherSunny } from '@mdi/js';
 import Icon from '@mdi/react';
 
+import OptionGroup from '@shared/components/OptionGroup/OptionGroup';
 import useTheme from '@theme/useTheme';
 import useTranslation from '@i18n/useTranslation';
-
-import './ThemePicker.scss';
 
 // Solo id e icono: la etiqueta se resuelve en el render porque t() vive en el hook.
 const OPTIONS = [
@@ -18,23 +17,15 @@ export default function ThemePicker() {
   const { theme, setTheme } = useTheme();
   const { t } = useTranslation('settings');
 
+  const options = OPTIONS.map((option) => ({ ...option, label: t(`theme.${option.id}`) }));
+
   return (
-    <fieldset className="c-theme-picker">
-      <legend className="c-theme-picker__legend">{t('theme.label')}</legend>
-      <div className="c-theme-picker__options">
-        {OPTIONS.map((option) => (
-          <button
-            key={option.id}
-            type="button"
-            className={`c-theme-picker__option${theme === option.id ? ' is-selected' : ''}`}
-            aria-pressed={theme === option.id}
-            onClick={() => setTheme(option.id)}
-          >
-            <Icon path={option.icon} size={1} />
-            {t(`theme.${option.id}`)}
-          </button>
-        ))}
-      </div>
-    </fieldset>
+    <OptionGroup
+      legend={t('theme.label')}
+      options={options}
+      value={theme}
+      onChange={setTheme}
+      renderIcon={(option) => <Icon path={option.icon} size={1} />}
+    />
   );
 }

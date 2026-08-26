@@ -2,6 +2,9 @@
 
 @layer components {
   .c-layout {
+    // Red de seguridad contra el desbordamiento horizontal: clip y no hidden, porque
+    // hidden en un eje crea un contexto de scroll en el otro y rompe el sticky.
+    overflow-x: clip;
     min-height: 100vh;
     @include flex-column;
     position: relative;
@@ -18,7 +21,11 @@
       z-index: $z-nav;
       background: var(--surface-solid-strong);
       border-bottom: 1px solid var(--border);
-      padding: $spacing-md $spacing-lg;
+      // El area segura superior se suma al relleno en lugar de desplazar la barra:
+      // asi el fondo sigue llegando al borde de la pantalla y lo que baja es el
+      // contenido. El HTML declara viewport-fit=cover, asi que en un iPhone con
+      // notch y la PWA instalada sin esto el logo quedaba bajo la hora.
+      padding: calc(#{$spacing-md} + env(safe-area-inset-top)) $spacing-lg $spacing-md;
       box-shadow: var(--shadow-sm);
 
       @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
@@ -56,14 +63,19 @@
     &__content {
       flex: 1;
       padding: $spacing-md;
-      padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + #{$spacing-md});
+      // Al hueco de la barra de navegacion se suma --toast-reserve: el aviso
+      // flotante es fijo, y sin este margen se posaba sobre el ultimo control de
+      // la pantalla de Ajustes.
+      padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + var(--toast-reserve));
       max-width: 600px;
       width: 100%;
       margin: 0 auto;
 
       @include respond-to(md) {
         padding: $spacing-lg;
-        padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + #{$spacing-lg});
+        padding-bottom: calc(
+          var(--nav-height) + env(safe-area-inset-bottom) + var(--toast-reserve)
+        );
       }
     }
   }

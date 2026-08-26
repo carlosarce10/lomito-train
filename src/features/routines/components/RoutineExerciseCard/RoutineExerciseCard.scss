@@ -77,39 +77,34 @@
       gap: $spacing-xs;
     }
 
-    &__action {
+    &__action,
+    &__toggle {
+      @include flex-center;
+      @include touch-target;
+
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: $radius-full;
+      background: var(--surface);
       color: var(--text-secondary);
+      transition:
+        background-color $transition-fast,
+        border-color $transition-fast,
+        color $transition-fast;
 
       &:hover {
+        border-color: var(--accent);
+        background: var(--accent-subtle);
         color: var(--accent-text);
       }
     }
 
     &__action--danger:hover {
+      border-color: var(--danger);
+      background: var(--danger-subtle);
       color: var(--danger-text);
-    }
-
-    &__toggle {
-      @include touch-target;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      flex-shrink: 0;
-      border-radius: $radius-full;
-      color: var(--text-muted);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition:
-        background-color $transition-fast,
-        color $transition-fast;
-
-      &:active {
-        background: var(--surface-strong);
-        color: var(--text-secondary);
-      }
     }
 
     // ── Record ───────────────────────────────────────────────────

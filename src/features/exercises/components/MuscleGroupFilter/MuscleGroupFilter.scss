@@ -24,7 +24,11 @@
       // El chip activo se tinta con el color del grupo, que llega como dato desde
       // el JSX. El "Todos" no tiene grupo, asi que cae al acento del tema.
       &.is-active {
-        border-color: var(--group-color, var(--accent));
+        border-color: color-mix(
+          in srgb,
+          var(--group-color, var(--accent)) var(--group-ink-mix),
+          var(--text)
+        );
         background: color-mix(in srgb, var(--group-color, var(--accent)) 18%, var(--surface));
         color: var(--text);
         font-weight: $font-weight-semibold;

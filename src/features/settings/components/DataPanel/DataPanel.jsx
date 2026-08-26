@@ -107,8 +107,11 @@ export default function DataPanel() {
             })}
           </p>
           <div className="c-data-panel__confirm-actions">
+            {/* El foco inicial va a Cancelar, la opcion segura: importar reemplaza
+                todos los datos y no hay servidor del que recuperarlos. */}
             <button
               type="button"
+              data-autofocus
               className="c-data-panel__confirm-cancel"
               onClick={() => setFicheroPendiente(null)}
             >

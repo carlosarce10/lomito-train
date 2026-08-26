@@ -3,15 +3,18 @@
 @layer components {
   // El color del grupo llega como --group-color desde el JSX: es dato del catalogo,
   // no un token de tema. Lo que decide el SCSS es como se usa ese dato.
+  // La tinta no es el color crudo: es ese color mezclado con el texto del tema en la
+  // proporcion que fija --group-ink-mix. Sin la mezcla los cinco badges fallan AA en
+  // tema claro, el peor con 2,67:1. Ver docs/styles.md.
   .c-muscle-group-badge {
+    --group-ink: color-mix(in srgb, var(--group-color) var(--group-ink-mix), var(--text));
+
     display: inline-block;
     padding: $spacing-xs $spacing-sm;
-    border: 1px solid var(--group-color);
+    border: 1px solid var(--group-ink);
     border-radius: $radius-full;
-    // color-mix mantiene el tinte del grupo pero apoyado en la superficie del tema,
-    // de modo que en oscuro el relleno no se queda en un pastel lavado.
     background: color-mix(in srgb, var(--group-color) 14%, var(--surface));
-    color: var(--group-color);
+    color: var(--group-ink);
     font-size: $font-size-xs;
     font-weight: $font-weight-semibold;
     letter-spacing: 0.5px;

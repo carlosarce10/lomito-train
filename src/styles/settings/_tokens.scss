@@ -26,6 +26,8 @@ $slate-500: #64748b;
 $slate-600: #475569;
 $slate-text: #0f172a;
 
+$red-brand: #b30000;
+$red-200: #ef9a9a;
 $red-400: #f87171;
 $red-300: #fca5a5;
 $red-600: #dc2626;
@@ -80,6 +82,10 @@ $themes: (
     'warning-text': $amber-800,
     'on-warning': #fff,
     'focus': $blue-700,
+    // Cuanto del color de un grupo muscular sobrevive en su tinta. El resto es el
+    // color de texto del tema. Sin esta mezcla los cinco badges fallan AA en claro:
+    // el peor daba 2,67:1. Con 40% el peor pasa a 5,16:1. Ver docs/styles.md.
+    'group-ink-mix': 40%,
     // Vidrio
     'glass-blur': 16px,
     'glass-blur-strong': 20px,
@@ -115,10 +121,14 @@ $themes: (
     'accent-subtle': rgba(96, 165, 250, 0.16),
     'on-accent': $slate-950,
     'on-catalog': $slate-text,
-    'danger': $red-400,
-    'danger-text': $red-300,
-    'danger-subtle': rgba(248, 113, 113, 0.16),
-    'on-danger': $slate-950,
+    // El rojo de la marca. Como RELLENO con tinta blanca da 7,20:1 y pasa de sobra.
+    // Como color de TEXTO da 2,60:1 sobre el fondo y 1,46:1 sobre una tarjeta de
+    // vidrio, es decir es ilegible, y por eso el texto de peligro usa el mismo rojo
+    // aclarado. Medido, ver docs/styles.md.
+    'danger': $red-brand,
+    'danger-text': $red-200,
+    'danger-subtle': rgba(179, 0, 0, 0.16),
+    'on-danger': #fff,
     'success': $green-400,
     'success-text': $green-300,
     'on-success': $slate-950,
@@ -126,6 +136,9 @@ $themes: (
     'warning-text': $amber-300,
     'on-warning': $slate-950,
     'focus': $blue-300,
+    // En oscuro hace falta mezclar mas hacia el texto: el peor badge sin mezclar da
+    // 2,90:1 sobre el peor punto del fondo. Con 50% pasa a 4,77:1.
+    'group-ink-mix': 50%,
     'glass-blur': 16px,
     'glass-blur-strong': 20px,
     // En oscuro los orbes son mas tenues: a la misma opacidad el fondo se lava.

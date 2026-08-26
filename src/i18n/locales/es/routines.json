@@ -23,6 +23,11 @@
     "removeTitle": "Quitar ejercicio",
     "removeConfirm": "¿Quitar {{name}} de esta rutina?"
   },
+  "toast": {
+    "created": "Rutina creada",
+    "updated": "Rutina actualizada",
+    "deleted": "Rutina eliminada"
+  },
   "picker": {
     "title": "Agregar ejercicio"
   }

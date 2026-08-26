@@ -1,7 +1,7 @@
 {
   "name": "Lomito Train",
   "short_name": "Lomito",
-  "description": "Registro de entrenamiento de fuerza que funciona sin cuenta y sin conexion.",
+  "description": "Registro de entrenamiento de fuerza que funciona sin cuenta y sin conexión.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

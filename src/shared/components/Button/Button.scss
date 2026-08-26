@@ -91,10 +91,12 @@
       }
     }
 
-    // Disabled
-    &--disabled {
-      opacity: 0.4;
-      pointer-events: none;
+    // Un boton deshabilitado tiene que parecerlo. No se usa pointer-events: none
+    // porque eso impide que el cursor comunique el estado: el clic ya lo bloquea
+    // el propio atributo disabled.
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
   }
 }

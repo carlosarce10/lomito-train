@@ -1,10 +1,12 @@
-import { mdiArrowLeft, mdiDelete, mdiFilePdfBox, mdiPencil, mdiPlus } from '@mdi/js';
+import { mdiDelete, mdiFilePdfBox, mdiPencil, mdiPlus } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useState } from 'react';
 
 import { getRoutineColor } from '@domain/catalogs';
 import { resolveRoutineExercises } from '@domain/model/routine';
 import Button from '@shared/components/Button/Button';
+import DetailAction from '@shared/components/DetailHeader/DetailAction';
+import DetailHeader from '@shared/components/DetailHeader/DetailHeader';
 import Modal from '@shared/components/Modal/Modal';
 import useToast from '@shared/components/ToastProvider/useToast';
 import useTranslation from '@i18n/useTranslation';
@@ -132,49 +134,41 @@ export default function RoutineDetail({
   return (
     <div className="c-routine-detail">
       {/* Top bar */}
-      <div className="c-routine-detail__top">
-        <button className="c-routine-detail__back" onClick={onBack}>
-          <Icon path={mdiArrowLeft} size={0.9} />
-          {tn('common', 'nav.routines')}
-        </button>
-        <div className="c-routine-detail__top-actions">
-          {/* Exportar esta desactivado con la rutina vacia: un PDF sin ejercicios no
-              le sirve a nadie, y es mejor que el boton lo diga que no que falle. */}
-          <button
-            type="button"
-            className="c-routine-detail__export"
-            onClick={exportarPdf}
-            disabled={exportando || routineExercises.length === 0}
-            aria-label={tn('settings', 'export.pdf')}
-            title={tn('settings', 'export.pdf')}
-          >
-            <Icon path={mdiFilePdfBox} size={0.9} />
-          </button>
-          <button
-            className="c-routine-detail__edit"
-            onClick={() => setIsEditingRoutine(true)}
-            aria-label={t('detail.editAction')}
-          >
-            <Icon path={mdiPencil} size={0.9} />
-          </button>
-          <button
-            className="c-routine-detail__delete"
-            onClick={() => setShowConfirmDelete(true)}
-            aria-label={t('detail.deleteAction')}
-          >
-            <Icon path={mdiDelete} size={0.9} />
-          </button>
-        </div>
-      </div>
-
-      {/* Routine info */}
-      <div className="c-routine-detail__info">
-        <span
-          className="c-routine-detail__color-dot"
-          style={{ '--routine-color': getRoutineColor(routine.colorId) }}
-        />
-        <h2 className="c-routine-detail__name">{routine.name}</h2>
-      </div>
+      <DetailHeader
+        backLabel={tn('common', 'nav.routines')}
+        onBack={onBack}
+        title={routine.name}
+        badges={
+          <span
+            className="c-routine-detail__color-dot"
+            style={{ '--routine-color': getRoutineColor(routine.colorId) }}
+          />
+        }
+        actions={
+          <>
+            {/* Exportar esta desactivado con la rutina vacia: un PDF sin ejercicios
+                no le sirve a nadie, y es mejor que el boton lo diga que no que falle. */}
+            <DetailAction
+              icon={mdiFilePdfBox}
+              label={tn('settings', 'export.pdf')}
+              busy={exportando}
+              disabled={routineExercises.length === 0}
+              onClick={exportarPdf}
+            />
+            <DetailAction
+              icon={mdiPencil}
+              label={t('detail.editAction')}
+              onClick={() => setIsEditingRoutine(true)}
+            />
+            <DetailAction
+              icon={mdiDelete}
+              label={t('detail.deleteAction')}
+              tone="danger"
+              onClick={() => setShowConfirmDelete(true)}
+            />
+          </>
+        }
+      />
 
       {/* Exercises section */}
       <div className="c-routine-detail__exercises-section">
@@ -213,7 +207,13 @@ export default function RoutineDetail({
       </div>
 
       {/* Exercise picker modal */}
-      <Modal isOpen={showPicker} onClose={() => setShowPicker(false)} closeLabel={closeLabel}>
+      <Modal
+        isOpen={showPicker}
+        onClose={() => setShowPicker(false)}
+        title={t('picker.title')}
+        titleId="exercise-picker-title"
+        closeLabel={closeLabel}
+      >
         <ExercisePicker
           allExercises={allExercises}
           selectedIds={routine.exerciseIds}
@@ -257,8 +257,14 @@ export default function RoutineDetail({
                   <strong>{ex?.name}</strong>
                   {removeAfter}
                 </p>
+                {/* El foco inicial va a Cancelar, la opcion segura: es la convencion
+                    en iOS y en Material, y evita confirmar por inercia con Enter. */}
                 <div className="c-routine-detail__confirm-actions">
-                  <Button variant="ghost" onClick={() => setRemovingExerciseId(null)}>
+                  <Button
+                    data-autofocus
+                    variant="ghost"
+                    onClick={() => setRemovingExerciseId(null)}
+                  >
                     {tn('common', 'action.cancel')}
                   </Button>
                   <Button variant="danger" onClick={handleConfirmRemove}>
@@ -300,8 +306,10 @@ export default function RoutineDetail({
             <strong>{routine.name}</strong>
             {deleteAfter}
           </p>
+          {/* El foco inicial va a Cancelar, la opcion segura: es la convencion en
+              iOS y en Material, y evita confirmar el borrado por inercia con Enter. */}
           <div className="c-routine-detail__confirm-actions">
-            <Button variant="ghost" onClick={() => setShowConfirmDelete(false)}>
+            <Button data-autofocus variant="ghost" onClick={() => setShowConfirmDelete(false)}>
               {tn('common', 'action.cancel')}
             </Button>
             <Button variant="danger" onClick={() => onDelete(routine.id)}>

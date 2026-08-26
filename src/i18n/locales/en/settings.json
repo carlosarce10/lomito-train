@@ -26,7 +26,7 @@
     "pdf": "Routine as PDF",
     "pdfHint": "With blank boxes to write in at the gym",
     "working": "Preparing the file…",
-    "done": "File ready",
+    "done": "Downloaded {{name}}",
     "failed": "The file could not be generated",
     "imported": "Imported {{exercises}} exercises and {{routines}} routines",
     "importFailed": "That file is not a valid Lomito Train backup",
@@ -61,5 +61,11 @@
       "actualWeight": "Actual weight",
       "actualReps": "Actual reps"
     }
+  },
+  "unit": {
+    "label": "Weight unit",
+    "kg": "Kilograms (kg)",
+    "lb": "Pounds (lb)",
+    "hint": "Your data is always stored in kilograms. Changing the unit only changes how it is shown."
   }
 }
