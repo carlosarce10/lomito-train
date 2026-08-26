@@ -50,7 +50,9 @@ export default {
       ],
     ],
     'scope-empty': [1, 'never'],
-    'scope-case': [2, 'always', 'kebab-case'],
+    // lower-case y no kebab-case: kebab-case rechaza los digitos, y a11y es un
+    // ambito legitimo. La lista cerrada de scope-enum ya impide inventarse ambitos.
+    'scope-case': [2, 'always', 'lower-case'],
     // Prohibe capitalizar la primera letra, pero deja pasar los identificadores
     // camelCase y PascalCase del codigo (setState, useExercises, ExercisesPage),
     // que son parte legitima de la descripcion de un cambio.
