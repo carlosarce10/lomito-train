@@ -2,9 +2,11 @@ import { mdiArrowLeft, mdiClose } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useState } from 'react';
 
-import MuscleGroupBadge from '../../../muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
-import Button from '../../../shared/components/Button/Button';
-import Modal from '../../../shared/components/Modal/Modal';
+import Button from '@shared/components/Button/Button';
+import Modal from '@shared/components/Modal/Modal';
+
+import MuscleGroupBadge from '@/muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
+
 import ExerciseForm from '../ExerciseForm/ExerciseForm';
 import './ExerciseDetail.scss';
 

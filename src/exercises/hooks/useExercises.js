@@ -1,8 +1,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import useLocalStorage from '../../shared/hooks/useLocalStorage';
-import useSearch from '../../shared/hooks/useSearch';
+import useLocalStorage from '@shared/hooks/useLocalStorage';
+import useSearch from '@shared/hooks/useSearch';
 
 const getSearchText = (ex) => ex.name;
 

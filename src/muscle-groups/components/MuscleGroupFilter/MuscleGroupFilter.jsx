@@ -1,4 +1,4 @@
-import { MUSCLE_GROUPS } from '../../constants/muscleGroups';
+import { MUSCLE_GROUPS } from '@/muscle-groups/constants/muscleGroups';
 import './MuscleGroupFilter.scss';
 
 export default function MuscleGroupFilter({ activeFilter, onFilterChange }) {

@@ -2,10 +2,11 @@ import { mdiClose, mdiCheck, mdiPlus } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useState } from 'react';
 
-import MuscleGroupFilter from '../../../muscle-groups/components/MuscleGroupFilter/MuscleGroupFilter';
-import { getMuscleGroupColor } from '../../../muscle-groups/constants/muscleGroups';
-import SearchBar from '../../../shared/components/SearchBar/SearchBar';
-import useSearch from '../../../shared/hooks/useSearch';
+import SearchBar from '@shared/components/SearchBar/SearchBar';
+import useSearch from '@shared/hooks/useSearch';
+
+import MuscleGroupFilter from '@/muscle-groups/components/MuscleGroupFilter/MuscleGroupFilter';
+import { getMuscleGroupColor } from '@/muscle-groups/constants/muscleGroups';
 import './ExercisePicker.scss';
 
 const getSearchText = (ex) => ex.name;

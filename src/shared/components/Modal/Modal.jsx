@@ -2,8 +2,8 @@ import { mdiClose } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useEffect, useId } from 'react';
 
-import useFocusTrap from '../../hooks/useFocusTrap';
-import useOnEscape from '../../hooks/useOnEscape';
+import useFocusTrap from '@shared/hooks/useFocusTrap';
+import useOnEscape from '@shared/hooks/useOnEscape';
 
 import './Modal.scss';
 

@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import useLocalStorage from '../../shared/hooks/useLocalStorage';
+import useLocalStorage from '@shared/hooks/useLocalStorage';
+
 import { DEFAULT_COLOR } from '../constants/workoutDayColors';
 
 export default function useWorkoutDays() {

@@ -2,9 +2,10 @@ import { mdiCheck } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useState } from 'react';
 
-import { MUSCLE_GROUPS } from '../../../muscle-groups/constants/muscleGroups';
-import Button from '../../../shared/components/Button/Button';
-import { EQUIPMENT_TYPES } from '../../constants/equipment';
+import Button from '@shared/components/Button/Button';
+
+import { EQUIPMENT_TYPES } from '@/exercises/constants/equipment';
+import { MUSCLE_GROUPS } from '@/muscle-groups/constants/muscleGroups';
 import './ExerciseForm.scss';
 
 export default function ExerciseForm({ onSubmit, initialData = null, onCancel }) {

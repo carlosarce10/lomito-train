@@ -2,7 +2,7 @@ import { mdiChevronDown, mdiChevronUp, mdiDelete, mdiPencil, mdiPlus, mdiClose }
 import Icon from '@mdi/react';
 import { useState, useRef } from 'react';
 
-import MuscleGroupBadge from '../../../muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
+import MuscleGroupBadge from '@/muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
 import './RoutineExerciseCard.scss';
 
 const SWIPE_THRESHOLD = 72;

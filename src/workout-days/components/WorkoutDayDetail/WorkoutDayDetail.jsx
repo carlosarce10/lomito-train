@@ -2,9 +2,11 @@ import { mdiArrowLeft, mdiDelete, mdiPlus } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useState } from 'react';
 
-import ExerciseForm from '../../../exercises/components/ExerciseForm/ExerciseForm';
-import Button from '../../../shared/components/Button/Button';
-import Modal from '../../../shared/components/Modal/Modal';
+import Button from '@shared/components/Button/Button';
+import Modal from '@shared/components/Modal/Modal';
+
+import ExerciseForm from '@/exercises/components/ExerciseForm/ExerciseForm';
+
 import ExercisePicker from '../ExercisePicker/ExercisePicker';
 import RoutineExerciseCard from '../RoutineExerciseCard/RoutineExerciseCard';
 import './WorkoutDayDetail.scss';

@@ -1,8 +1,8 @@
 import { mdiDumbbell, mdiWeightLifter, mdiRun, mdiCog, mdiHelpCircle } from '@mdi/js';
 import Icon from '@mdi/react';
 
-import MuscleGroupBadge from '../../../muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
-import { getEquipmentLabel } from '../../constants/equipment';
+import { getEquipmentLabel } from '@/exercises/constants/equipment';
+import MuscleGroupBadge from '@/muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
 import './ExerciseCard.scss';
 
 const EQUIPMENT_ICONS = {

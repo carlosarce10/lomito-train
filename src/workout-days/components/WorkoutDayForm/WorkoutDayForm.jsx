@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
-import Button from '../../../shared/components/Button/Button';
-import { WORKOUT_DAY_COLORS, DEFAULT_COLOR } from '../../constants/workoutDayColors';
+import Button from '@shared/components/Button/Button';
+
+import { WORKOUT_DAY_COLORS, DEFAULT_COLOR } from '@/workout-days/constants/workoutDayColors';
 import './WorkoutDayForm.scss';
 
 export default function WorkoutDayForm({ onSubmit, onCancel, initialData }) {

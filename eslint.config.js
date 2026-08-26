@@ -47,7 +47,18 @@ export default defineConfig([
     },
     settings: {
       react: { version: 'detect' },
-      'import-x/resolver': { node: { extensions: ['.js', '.jsx'] } },
+      'import-x/resolver': {
+        // Los alias se declaran en tres sitios que deben coincidir: vite.config.js
+        // (build), jsconfig.json (editor) y aqui (lint).
+        alias: {
+          extensions: ['.js', '.jsx'],
+          map: [
+            ['@', './src'],
+            ['@shared', './src/shared'],
+          ],
+        },
+        node: { extensions: ['.js', '.jsx'] },
+      },
     },
     rules: {
       // Sin TypeScript, la validacion de props la hace @domain/validation en runtime.
@@ -66,6 +77,11 @@ export default defineConfig([
         'error',
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          pathGroups: [
+            { pattern: '@shared/**', group: 'internal', position: 'before' },
+            { pattern: '@/**', group: 'internal', position: 'after' },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin', 'external'],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
         },
@@ -85,6 +101,20 @@ export default defineConfig([
 
       // Un catch vacio oculta una perdida de datos: prohibido.
       'no-empty': ['error', { allowEmptyCatch: false }],
+
+      // Salir de la carpeta del componente con rutas relativas: siempre por alias.
+      // '../algo' se permite: sigue siendo local y legible dentro de la feature.
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../../*', '../../../*', '../../../../*'],
+              message: 'Usa un alias (@/ o @shared/) en lugar de subir dos o mas niveles.',
+            },
+          ],
+        },
+      ],
     },
   },
 
