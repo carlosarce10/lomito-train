@@ -2,9 +2,9 @@
   "muscleGroups": {
     "upperbody": "Tren superior",
     "lowerbody": "Tren inferior",
-    "push": "Empuje",
-    "pull": "Tirón",
-    "leg": "Pierna"
+    "push": "Push",
+    "pull": "Pull",
+    "leg": "Leg"
   },
   "equipment": {
     "barbell": "Barra",

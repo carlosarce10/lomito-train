@@ -29,6 +29,7 @@ export default function RoutineExerciseCard({
   onAddSet,
   onUpdateSet,
   onDeleteSet,
+  dragHandle,
 }) {
   const { tn, formatNumber } = useTranslation('routines');
   const { unit, toDisplay, toStorage } = useUnit();
@@ -53,6 +54,7 @@ export default function RoutineExerciseCard({
   // <body>: quien navega con teclado acaba al principio del documento. Para
   // devolverselo hay que poder alcanzar el boton de destino.
   const deleteButtons = useRef(new Map());
+  const weightInputs = useRef(new Map());
   const addSetButton = useRef(null);
 
   const record = getRecord(exercise.sets);
@@ -200,8 +202,16 @@ export default function RoutineExerciseCard({
       setCapReached(true);
       return;
     }
-    if (!onAddSet(exercise.id)?.ok) return;
+    const resultado = onAddSet(exercise.id);
+    if (!resultado?.ok) return;
     setCapReached(false);
+
+    // El foco va al peso de la serie nueva. Sin esto el teclado del movil se cerraba
+    // al pulsar el boton y hacian falta dos toques mas para empezar a escribir, que
+    // entre serie y serie es justo lo que sobra.
+    if (resultado.set) {
+      requestAnimationFrame(() => weightInputs.current.get(resultado.set.id)?.focus());
+    }
   };
 
   const actionOpacity = Math.min(Math.abs(translateX) / SWIPE_THRESHOLD, 1);
@@ -242,38 +252,44 @@ export default function RoutineExerciseCard({
         <div className="c-routine-exercise-card__header">
           <div className="c-routine-exercise-card__title-row">
             <span className="c-routine-exercise-card__name">{exercise.name}</span>
-            <MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} max={2} />
-          </div>
-          {/* Estos dos botones son la alternativa accesible al deslizamiento. Una
-              accion que solo existe como gesto no la puede ejecutar quien navega con
-              teclado o con lector de pantalla, y el aviso de "desliza para quitar"
-              no le sirve de nada. Ver docs/validation.md. */}
-          <div className="c-routine-exercise-card__actions">
             <button
               type="button"
-              className="c-routine-exercise-card__action o-control"
-              onClick={onEdit}
-              aria-label={tn('exercises', 'detail.editAction')}
-            >
-              <Icon path={mdiPencil} size={0.85} />
-            </button>
-            <button
-              type="button"
-              className="c-routine-exercise-card__action c-routine-exercise-card__action--danger o-control"
-              onClick={onRemove}
-              aria-label={tn('routines', 'detail.removeTitle')}
-            >
-              <Icon path={mdiDelete} size={0.85} />
-            </button>
-            <button
-              type="button"
-              className="c-routine-exercise-card__toggle o-control"
+              className="c-routine-exercise-card__toggle"
               onClick={() => setCollapsed((v) => !v)}
               aria-label={tn('exercises', 'detail.setsTitle')}
               aria-expanded={!collapsed}
             >
               <Icon path={collapsed ? mdiChevronDown : mdiChevronUp} size={0.9} />
             </button>
+          </div>
+
+          {/* Los chips y las acciones comparten fila. Con cuatro botones junto al
+              nombre, el nombre se partia en dos lineas en un movil.
+
+              Editar y quitar existen como boton y no solo como gesto: una accion que
+              solo se puede deslizar no la ejecuta quien navega con teclado o con
+              lector de pantalla. Ver docs/validation.md. */}
+          <div className="c-routine-exercise-card__meta-row">
+            <MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} max={2} />
+            <div className="c-routine-exercise-card__actions">
+              {dragHandle}
+              <button
+                type="button"
+                className="c-routine-exercise-card__action"
+                onClick={onEdit}
+                aria-label={tn('exercises', 'detail.editAction')}
+              >
+                <Icon path={mdiPencil} size={0.8} />
+              </button>
+              <button
+                type="button"
+                className="c-routine-exercise-card__action c-routine-exercise-card__action--danger"
+                onClick={onRemove}
+                aria-label={tn('routines', 'detail.removeTitle')}
+              >
+                <Icon path={mdiDelete} size={0.8} />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -329,6 +345,10 @@ export default function RoutineExerciseCard({
                         {formatNumber(i + 1, 'integer')}
                       </span>
                       <NumberField
+                        inputRef={(nodo) => {
+                          if (nodo) weightInputs.current.set(set.id, nodo);
+                          else weightInputs.current.delete(set.id);
+                        }}
                         className="c-routine-exercise-card__sets-input"
                         inputMode="decimal"
                         value={toDisplay(set.weight)}

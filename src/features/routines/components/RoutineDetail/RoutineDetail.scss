@@ -67,6 +67,26 @@
       line-height: 1.6;
     }
 
+    // Envoltorio que recibe el arrastre. touch-action pan-y deja pasar el scroll
+    // vertical mientras el gesto no se ha convertido en arrastre.
+    &__sortable {
+      touch-action: pan-y;
+      transition:
+        opacity $transition-fast,
+        transform $transition-fast;
+
+      &.is-active {
+        opacity: 0.5;
+        transform: scale(0.98);
+      }
+
+      // La tarjeta sobre la que se soltaria: una linea, no un hueco, para que la
+      // lista no salte mientras el dedo se mueve.
+      &.is-selected {
+        box-shadow: inset 0 3px 0 0 var(--accent);
+      }
+    }
+
     &__exercise-list {
       @include flex-column;
       gap: $spacing-sm;

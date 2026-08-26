@@ -1,28 +1,21 @@
 import { getMuscleGroupColor } from '@domain/catalogs';
+import Chip from '@shared/components/Chip/Chip';
 import useTranslation from '@i18n/useTranslation';
-
-import './MuscleGroupBadge.scss';
 
 /**
  * Etiqueta de un grupo muscular.
  *
- * El color viene del catalogo, es decir es dato, no tema. Se inyecta como custom
- * property y es el SCSS el que decide como se usa: la regla 3 de CLAUDE.md prohibe
- * un style en linea con color, fondo o borde, porque un estilo en linea gana a
- * cualquier regla de autor y ningun bloque de tema podria corregirlo.
+ * El color viene del catalogo, es decir es dato, no tema, y Chip lo inyecta como
+ * custom property: la regla 3 de CLAUDE.md prohibe un style en linea con color,
+ * porque gana a cualquier regla de autor y ningun bloque de tema podria corregirlo.
+ * La etiqueta viene de i18n, porque el catalogo solo guarda ids.
  *
  * @param {object} props
  * @param {string} props.groupId Id del catalogo.
  */
 export default function MuscleGroupBadge({ groupId }) {
-  const { tn } = useTranslation('exercises');
-
+  const { tn } = useTranslation();
   return (
-    <span
-      className="c-muscle-group-badge"
-      style={{ '--group-color': getMuscleGroupColor(groupId) }}
-    >
-      {tn('catalog', `muscleGroups.${groupId}`)}
-    </span>
+    <Chip color={getMuscleGroupColor(groupId)}>{tn('catalog', `muscleGroups.${groupId}`)}</Chip>
   );
 }

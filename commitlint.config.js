@@ -37,6 +37,8 @@ export default {
         'catalog',
         'validation',
         'shared',
+        // Cambios de interfaz que cruzan varias features y shared a la vez
+        'ui',
         'styles',
         'theme',
         'i18n',

@@ -1,6 +1,6 @@
-import { mdiDelete, mdiFilePdfBox, mdiPencil, mdiPlus } from '@mdi/js';
+import { mdiDelete, mdiDragHorizontalVariant, mdiFilePdfBox, mdiPencil, mdiPlus } from '@mdi/js';
 import Icon from '@mdi/react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import { getRoutineColor } from '@domain/catalogs';
 import { resolveRoutineExercises } from '@domain/model/routine';
@@ -9,6 +9,8 @@ import DetailAction from '@shared/components/DetailHeader/DetailAction';
 import DetailHeader from '@shared/components/DetailHeader/DetailHeader';
 import Modal from '@shared/components/Modal/Modal';
 import useToast from '@shared/components/ToastProvider/useToast';
+import useLongPressReorder from '@shared/hooks/useLongPressReorder';
+import useUnit from '@shared/hooks/useUnit';
 import useTranslation from '@i18n/useTranslation';
 import { ExerciseForm } from '@features/exercises';
 
@@ -51,21 +53,53 @@ export default function RoutineDetail({
   onDelete,
   onAddExercise,
   onRemoveExercise,
+  onReorderExercises,
   onUpdateExercise,
   onAddSet,
   onUpdateSet,
   onDeleteSet,
 }) {
-  const { t, tn, formatDate } = useTranslation('routines');
+  const { t, tn, formatDate, formatRelative } = useTranslation('routines');
   const [showPicker, setShowPicker] = useState(false);
   const [isEditingRoutine, setIsEditingRoutine] = useState(false);
   const [exportando, setExportando] = useState(false);
+  const idSortHint = useId();
   const toast = useToast();
+  const { unit, toDisplay } = useUnit();
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [editingExercise, setEditingExercise] = useState(null);
   const [removingExerciseId, setRemovingExerciseId] = useState(null);
 
   const routineExercises = resolveRoutineExercises(routine, allExercises);
+
+  // Linea de resumen bajo el nombre: cuantos ejercicios, cuantas series y cuando se
+  // toco por ultima vez. Antes solo habia un punto de color, que no decia nada.
+  const { dragIndex, overIndex, getHandlers } = useLongPressReorder(
+    routineExercises.length,
+    (desde, hasta) => onReorderExercises?.(routine.id, desde, hasta),
+  );
+
+  /**
+   * Mover con el teclado desde la manija. Arrastrar no es accesible por si solo, y
+   * un div con rol de elemento de lista no puede recibir el foco ni manejadores,
+   * asi que la via por teclado necesita un control de verdad.
+   */
+  const alPulsarTecla = (evento, indice) => {
+    const destino =
+      evento.key === 'ArrowUp' ? indice - 1 : evento.key === 'ArrowDown' ? indice + 1 : null;
+    if (destino === null || destino < 0 || destino >= routineExercises.length) return;
+    evento.preventDefault();
+    onReorderExercises?.(routine.id, indice, destino);
+  };
+
+  const totalSeries = routineExercises.reduce((suma, ex) => suma + ex.sets.length, 0);
+  const resumen = [
+    tn('exercises', 'count', { count: routineExercises.length }),
+    tn('exercises', 'setCount', { count: totalSeries }),
+    formatRelative(routine.updatedAt),
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
   /**
    * Genera el PDF de esta rutina. El motor se importa aqui y no arriba para que sus
@@ -83,15 +117,14 @@ export default function RoutineDetail({
           name: ex.name,
           muscleGroups: ex.muscleGroupIds.map((id) => tn('catalog', `muscleGroups.${id}`)),
           equipment: ex.equipmentId ? tn('catalog', `equipment.${ex.equipmentId}`) : '',
-          sets: ex.sets,
+          sets: ex.sets.map((serie) => ({ ...serie, weight: toDisplay(serie.weight) })),
         })),
         labels: {
           appName: tn('common', 'app.name'),
           date: formatDate(new Date().toISOString(), 'date'),
-          targetWeight: tn('settings', 'export.columns.targetWeight'),
-          targetReps: tn('settings', 'export.columns.targetReps'),
-          actualWeight: tn('settings', 'export.columns.actualWeight'),
-          actualReps: tn('settings', 'export.columns.actualReps'),
+          weight: tn('common', 'field.weight', { unit: tn('common', `unit.${unit}`) }),
+          reps: tn('common', 'field.reps'),
+          noSets: tn('exercises', 'detail.setsEmpty'),
         },
       });
       if (!resultado.ok) toast.error(tn('settings', 'export.failed'));
@@ -138,12 +171,8 @@ export default function RoutineDetail({
         backLabel={tn('common', 'nav.routines')}
         onBack={onBack}
         title={routine.name}
-        badges={
-          <span
-            className="c-routine-detail__color-dot"
-            style={{ '--routine-color': getRoutineColor(routine.colorId) }}
-          />
-        }
+        accent={getRoutineColor(routine.colorId)}
+        meta={resumen}
         actions={
           <>
             {/* Exportar esta desactivado con la rutina vacia: un PDF sin ejercicios
@@ -189,18 +218,46 @@ export default function RoutineDetail({
         {routineExercises.length === 0 ? (
           <p className="c-routine-detail__empty">{t('detail.empty')}</p>
         ) : (
-          <div className="c-routine-detail__exercise-list">
-            <p className="c-routine-detail__swipe-hint">{t('detail.swipeHint')}</p>
-            {routineExercises.map((ex) => (
-              <RoutineExerciseCard
+          <div className="c-routine-detail__exercise-list" role="list">
+            <p className="c-routine-detail__swipe-hint" id={idSortHint}>
+              {t('detail.sortHint')}
+            </p>
+            {routineExercises.map((ex, indice) => (
+              <div
                 key={ex.id}
-                exercise={ex}
-                onRemove={() => setRemovingExerciseId(ex.id)}
-                onEdit={() => setEditingExercise(ex)}
-                onAddSet={onAddSet}
-                onUpdateSet={onUpdateSet}
-                onDeleteSet={onDeleteSet}
-              />
+                className={[
+                  'c-routine-detail__sortable',
+                  dragIndex === indice ? 'is-active' : '',
+                  dragIndex !== null && overIndex === indice && dragIndex !== indice
+                    ? 'is-selected'
+                    : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                role="listitem"
+                {...getHandlers(indice)}
+              >
+                <RoutineExerciseCard
+                  exercise={ex}
+                  onRemove={() => setRemovingExerciseId(ex.id)}
+                  onEdit={() => setEditingExercise(ex)}
+                  onAddSet={onAddSet}
+                  onUpdateSet={onUpdateSet}
+                  onDeleteSet={onDeleteSet}
+                  dragHandle={
+                    <button
+                      type="button"
+                      className="c-routine-exercise-card__grip"
+                      aria-label={t('detail.moveAction', { name: ex.name })}
+                      aria-roledescription={t('detail.sortableItem')}
+                      aria-describedby={idSortHint}
+                      onKeyDown={(evento) => alPulsarTecla(evento, indice)}
+                    >
+                      <Icon path={mdiDragHorizontalVariant} size={0.9} />
+                    </button>
+                  }
+                />
+              </div>
             ))}
           </div>
         )}

@@ -2,147 +2,90 @@
 
 @layer components {
   .c-exercise-form {
-    @include flex-column;
+    display: flex;
+    flex-direction: column;
     gap: $spacing-lg;
 
     &__field {
-      @include flex-column;
+      display: flex;
+      flex-direction: column;
       gap: $spacing-sm;
     }
 
+    // La etiqueta y su contador comparten linea, con el contador a la derecha: dice
+    // cuantos llevas y cuantos caben sin que haya que contarlos a ojo.
     &__label {
-      font-size: $font-size-sm;
-      font-weight: $font-weight-semibold;
+      display: flex;
+      gap: $spacing-sm;
+      align-items: baseline;
+      justify-content: space-between;
+      width: 100%;
       color: var(--text-secondary);
-      text-transform: uppercase;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
       letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
+    &__label-count {
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+      text-transform: none;
+    }
+
+    // El nombre se escribe sobre una linea, no dentro de una caja: es el unico campo
+    // de texto de la pantalla y no necesita competir con los chips por peso visual.
     &__input {
-      @include input-base;
-      padding: $spacing-md;
+      width: 100%;
+      min-height: $touch-target;
+      padding: $spacing-sm 0;
+      border: none;
+      border-bottom: 2px solid var(--border-interactive);
+      border-radius: 0;
+      background: none;
+      color: var(--text);
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      transition: border-color $transition-fast;
+
+      &:focus-visible {
+        outline: none;
+        border-bottom-color: var(--accent);
+      }
+
+      &[aria-invalid='true'] {
+        border-bottom-color: var(--danger);
+      }
     }
 
-    // Reserva su linea siempre, igual que el error de Field, para que el
-    // formulario no salte cuando aparece el mensaje.
+    &__options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+    }
+
+    // Reserva su linea siempre para que el formulario no salte al aparecer el error.
     &__error {
       min-height: $font-size-sm;
       color: var(--danger-text);
       font-size: $font-size-sm;
     }
 
-    // Un nombre repetido no impide guardar, asi que no se pinta como un error:
-    // avisa en ambar y el envio sigue disponible.
     &__warning {
       color: var(--warning-text);
       font-size: $font-size-sm;
     }
 
-    &__group-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: $spacing-sm;
-    }
-
-    &__group-option {
-      @include touch-target;
-
-      padding: $spacing-sm $spacing-md;
-      border-radius: $radius-full;
-      font-size: $font-size-sm;
-      font-weight: $font-weight-medium;
-      color: var(--text-secondary);
-      background: var(--surface);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition:
-        transform $transition-fast,
-        background-color $transition-fast,
-        border-color $transition-fast,
-        color $transition-fast,
-        box-shadow $transition-fast;
-      box-shadow: var(--shadow-sm);
-
-      &:active {
-        transform: scale(0.95);
-      }
-
-      // El relleno lo inyecta el color del grupo muscular como custom property, no
-      // un style en linea: un style en linea gana a cualquier regla de tema y deja
-      // el chip fuera del sistema. La tinta es --on-catalog y no --text: los cinco
-      // colores del catalogo son claros en los dos temas, y --text en oscuro es casi
-      // blanco (1,94:1 sobre el naranja del grupo). --on-catalog no conmuta por eso.
-      &.is-selected {
-        border-color: var(--group-color, var(--accent));
-        background: var(--group-color, var(--accent));
-        font-weight: $font-weight-semibold;
-        color: var(--on-catalog);
-        box-shadow: var(--shadow-md);
-      }
-    }
-
-    &__label-count {
-      font-weight: $font-weight-regular;
-      color: var(--text-muted);
-      text-transform: none;
-      letter-spacing: 0;
-    }
-
-    &__group-check {
-      font-size: $font-size-xs;
-    }
-
-    &__equipment-options {
-      display: flex;
-      gap: $spacing-sm;
-      overflow-x: auto;
-      padding-bottom: 2px;
-      @include hide-scrollbar;
-    }
-
-    &__equipment-option {
-      @include touch-target;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: $spacing-xs;
-      flex-shrink: 0;
-      padding: $spacing-xs $spacing-sm;
-      border-radius: $radius-full;
-      font-size: $font-size-xs;
-      font-weight: $font-weight-medium;
-      color: var(--text-secondary);
-      background: var(--surface);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition:
-        transform $transition-fast,
-        background-color $transition-fast,
-        border-color $transition-fast,
-        color $transition-fast;
-
-      &:active {
-        transform: scale(0.95);
-      }
-
-      &.is-selected {
-        background: var(--accent-subtle);
-        border-color: color-mix(in srgb, var(--accent) 30%, transparent);
-        color: var(--accent-text);
-        font-weight: $font-weight-semibold;
-      }
-    }
-
     &__actions {
       display: flex;
       gap: $spacing-sm;
-      justify-content: flex-end;
-      padding-top: $spacing-sm;
+      margin-top: $spacing-sm;
+
+      // Los dos botones reparten el ancho: en un movil no hay motivo para que la
+      // accion principal quede pequena en una esquina.
+      > * {
+        flex: 1;
+      }
     }
   }
 }

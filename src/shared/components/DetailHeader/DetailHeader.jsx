@@ -18,10 +18,13 @@ import './DetailHeader.scss';
  * @param {string} props.backLabel Nombre del destino, por ejemplo "Rutinas".
  * @param {() => void} props.onBack
  * @param {string} props.title Titulo de la pantalla.
+ * @param {string} [props.accent] Color que identifica la pantalla. Pinta una barra
+ *   junto al titulo en lugar de un punto suelto debajo, que no decia de que era.
+ * @param {import('react').ReactNode} [props.meta] Linea de resumen bajo el titulo.
  * @param {import('react').ReactNode} [props.badges] Etiquetas bajo el titulo.
  * @param {import('react').ReactNode} [props.actions] Botones de accion, siempre iconos.
  */
-export default function DetailHeader({ backLabel, onBack, title, badges, actions }) {
+export default function DetailHeader({ backLabel, onBack, title, accent, meta, badges, actions }) {
   return (
     <header className="c-detail-header">
       <div className="c-detail-header__bar">
@@ -35,7 +38,13 @@ export default function DetailHeader({ backLabel, onBack, title, badges, actions
       {/* El h2 es el encabezado real de la pantalla. El h1 es el nombre de la
           aplicacion y no cambia, asi que sin esto un lector de pantalla no sabe
           en que seccion esta. */}
-      <h2 className="c-detail-header__title">{title}</h2>
+      <div className="c-detail-header__heading">
+        {accent && (
+          <span className="c-detail-header__accent" style={{ '--detail-accent': accent }} />
+        )}
+        <h2 className="c-detail-header__title">{title}</h2>
+      </div>
+      {meta && <p className="c-detail-header__meta">{meta}</p>}
       {badges && <div className="c-detail-header__badges">{badges}</div>}
     </header>
   );

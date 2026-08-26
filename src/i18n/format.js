@@ -77,6 +77,40 @@ export function pluralCategory(count, language) {
 }
 
 /**
+ * Formatea una fecha como tiempo relativo: "hace 3 dias", "3 days ago".
+ *
+ * Se resuelve con Intl.RelativeTimeFormat y no restando cadenas a mano, para que el
+ * plural y el orden de las palabras los ponga el idioma y no un ternario.
+ *
+ * @param {string} iso Marca de tiempo.
+ * @param {string} language Idioma activo.
+ * @returns {string} Texto relativo, o cadena vacia si la fecha no es valida.
+ */
+export function formatRelative(iso, language) {
+  const fecha = new Date(iso);
+  if (Number.isNaN(fecha.getTime())) return '';
+
+  const rtf = obtener(
+    `r:${language}`,
+    () => new Intl.RelativeTimeFormat(language, { numeric: 'auto' }),
+  );
+  const segundos = Math.round((fecha.getTime() - Date.now()) / 1000);
+
+  const UNIDADES = [
+    ['year', 31536000],
+    ['month', 2592000],
+    ['week', 604800],
+    ['day', 86400],
+    ['hour', 3600],
+    ['minute', 60],
+  ];
+  for (const [unidad, tamano] of UNIDADES) {
+    if (Math.abs(segundos) >= tamano) return rtf.format(Math.round(segundos / tamano), unidad);
+  }
+  return rtf.format(0, 'day');
+}
+
+/**
  * Convierte a numero un decimal escrito por el usuario en el idioma activo.
  *
  * Es el inverso de formatNumber y vive en el mismo modulo a proposito: si el

@@ -5,7 +5,13 @@ import { settingsRepository } from '@domain/storage/repositories';
 import { CATALOGS } from '../catalogs';
 import { FALLBACK_LANGUAGE, isLanguage } from '../config';
 import { detectLanguage } from '../detectLanguage';
-import { formatDate, formatNumber, parseLocalizedNumber, pluralCategory } from '../format';
+import {
+  formatDate,
+  formatNumber,
+  formatRelative,
+  parseLocalizedNumber,
+  pluralCategory,
+} from '../format';
 import { I18nContext } from '../I18nContext';
 
 /**
@@ -72,6 +78,7 @@ export default function I18nProvider({ children }) {
       t,
       formatNumber: (valor, preset) => formatNumber(valor, preset, language),
       formatDate: (iso, preset) => formatDate(iso, preset, language),
+      formatRelative: (iso) => formatRelative(iso, language),
       parseNumber: (texto) => parseLocalizedNumber(texto, language),
     };
   }, [language, setLanguage]);

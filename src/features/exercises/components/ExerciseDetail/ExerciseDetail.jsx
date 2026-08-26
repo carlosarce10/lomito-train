@@ -64,6 +64,7 @@ export default function ExerciseDetail({
   // <body>: quien navega con teclado acaba al principio del documento. Para
   // devolverselo hay que poder alcanzar el boton de destino.
   const deleteButtons = useRef(new Map());
+  const weightInputs = useRef(new Map());
   const addSetButton = useRef(null);
 
   const idError = (setId) => `${idBase}-${setId}-error`;
@@ -161,8 +162,16 @@ export default function ExerciseDetail({
       setCapReached(true);
       return;
     }
-    if (!onAddSet(exercise.id)?.ok) return;
+    const resultado = onAddSet(exercise.id);
+    if (!resultado?.ok) return;
     setCapReached(false);
+
+    // El foco va al peso de la serie nueva. Sin esto el teclado del movil se cerraba
+    // al pulsar el boton y hacian falta dos toques mas para empezar a escribir, que
+    // entre serie y serie es justo lo que sobra.
+    if (resultado.set) {
+      requestAnimationFrame(() => weightInputs.current.get(resultado.set.id)?.focus());
+    }
   };
 
   // El valor llega crudo: lo valida el dominio y devuelve si lo acepto.
@@ -249,6 +258,10 @@ export default function ExerciseDetail({
                   </span>
                   <div className="c-exercise-detail__sets-cell">
                     <NumberField
+                      inputRef={(nodo) => {
+                        if (nodo) weightInputs.current.set(set.id, nodo);
+                        else weightInputs.current.delete(set.id);
+                      }}
                       className="c-exercise-detail__sets-input"
                       inputMode="decimal"
                       value={toDisplay(set.weight)}

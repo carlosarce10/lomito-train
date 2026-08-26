@@ -49,26 +49,36 @@
     }
 
     // ── Header ───────────────────────────────────────────────────
+    // La cabecera apila dos filas: el nombre con su chevron, y los chips con las
+    // acciones. En fila unica el nombre se partia en dos lineas en un movil.
     &__header {
       display: flex;
-      align-items: flex-start;
-      gap: $spacing-sm;
+      flex-direction: column;
+      gap: $spacing-xs;
     }
 
     &__title-row {
-      flex: 1;
       display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: $spacing-xs;
+      gap: $spacing-sm;
+      align-items: flex-start;
+      justify-content: space-between;
       min-width: 0;
     }
 
     &__name {
+      min-width: 0;
+      color: var(--text);
       font-size: $font-size-base;
       font-weight: $font-weight-semibold;
-      color: var(--text);
-      overflow-wrap: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    &__meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+      align-items: center;
+      justify-content: space-between;
     }
 
     &__actions {
@@ -77,14 +87,18 @@
       gap: $spacing-xs;
     }
 
+    // Se usa touch-target-extended y no touch-target: el minimo de 44px se consigue
+    // con un pseudo-elemento, para que el control siga midiendo 30px a la vista y no
+    // desplace los chips de su fila.
+    &__grip,
     &__action,
     &__toggle {
       @include flex-center;
-      @include touch-target;
+      @include touch-target-extended;
 
       flex-shrink: 0;
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border: 1px solid var(--border);
       border-radius: $radius-full;
       background: var(--surface);
@@ -98,6 +112,15 @@
         border-color: var(--accent);
         background: var(--accent-subtle);
         color: var(--accent-text);
+      }
+    }
+
+    // La manija se distingue del resto: no ejecuta nada, cambia el modo.
+    &__grip {
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
       }
     }
 
@@ -247,24 +270,31 @@
       }
     }
 
+    // Mismo tratamiento que el boton de agregar serie del detalle de ejercicio:
+    // ancho completo y al pie de la lista. Antes eran dos botones distintos para la
+    // misma accion, y el usuario tenia que aprender la pantalla dos veces.
     &__sets-add {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: $spacing-xs;
-      padding: $spacing-xs $spacing-md;
-      font-size: $font-size-sm;
-      font-weight: $font-weight-medium;
-      color: var(--accent-text);
-      background: var(--accent-subtle);
-      border: 1px dashed color-mix(in srgb, var(--accent) 25%, transparent);
-      border-radius: $radius-sm;
-      cursor: pointer;
-      transition: background-color $transition-fast;
-      align-self: flex-start;
+      @include flex-center;
+      @include touch-target;
 
-      &:active {
-        background: color-mix(in srgb, var(--accent) 22%, transparent);
+      gap: $spacing-xs;
+      width: 100%;
+      margin-top: $spacing-sm;
+      border: 1px dashed var(--border-interactive);
+      border-radius: $radius-sm;
+      background: none;
+      color: var(--accent-text);
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition:
+        background-color $transition-fast,
+        border-color $transition-fast;
+
+      &:hover {
+        border-color: var(--accent);
+        background: var(--accent-subtle);
       }
     }
   }

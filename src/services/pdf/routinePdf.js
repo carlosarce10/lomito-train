@@ -32,10 +32,9 @@ export async function loadPdfEngine() {
  * @param {Array<{ name: string, muscleGroups: string[], equipment: string, sets: Array }>}
  *   params.exercises Ejercicios ya resueltos y traducidos.
  * @param {object} params.labels Textos ya traducidos que necesita el documento.
- * @param {number} [params.blankRows] Filas en blanco por ejercicio, para anotar a mano.
  * @returns {Promise<{ ok: boolean, error?: Error }>}
  */
-export async function exportRoutinePdf({ routine, exercises, labels, blankRows = 4 }) {
+export async function exportRoutinePdf({ routine, exercises, labels }) {
   try {
     const { JsPDF, autoTable } = await loadPdfEngine();
     const doc = new JsPDF({ unit: 'mm', format: 'a4' });
@@ -56,28 +55,20 @@ export async function exportRoutinePdf({ routine, exercises, labels, blankRows =
     let cursorY = 38;
 
     for (const ejercicio of exercises) {
-      // Las series guardadas son la referencia; las filas en blanco son para anotar
-      // lo de hoy, que es el motivo de llevarse la rutina impresa.
-      const filas = [
-        ...ejercicio.sets.map((serie, i) => [
-          String(i + 1),
-          serie.weight ? String(serie.weight) : '',
-          serie.reps ? String(serie.reps) : '',
-          '',
-          '',
-        ]),
-        ...Array.from({ length: blankRows }, (_, i) => [
-          String(ejercicio.sets.length + i + 1),
-          '',
-          '',
-          '',
-          '',
-        ]),
-      ];
+      // Solo las series que existen. Antes se anadian cuatro filas en blanco y dos
+      // columnas vacias para anotar a mano, pero nadie las usaba y llenaban el papel
+      // de rejilla vacia.
+      const filas = ejercicio.sets.map((serie, i) => [
+        String(i + 1),
+        serie.weight ? String(serie.weight) : '',
+        serie.reps ? String(serie.reps) : '',
+      ]);
 
       const subtitulo = [ejercicio.muscleGroups.join(' · '), ejercicio.equipment]
         .filter(Boolean)
         .join('  |  ');
+
+      if (filas.length === 0) filas.push([{ content: labels.noSets, colSpan: 3 }]);
 
       autoTable(doc, {
         startY: cursorY,
@@ -91,11 +82,9 @@ export async function exportRoutinePdf({ routine, exercises, labels, blankRows =
         styles: { fontSize: 9, cellPadding: 2.2, lineColor: 210, textColor: 40 },
         headStyles: { fillColor: [241, 245, 249], textColor: 30, fontStyle: 'bold' },
         columnStyles: {
-          0: { cellWidth: 10, halign: 'center' },
-          1: { cellWidth: 26, halign: 'center' },
-          2: { cellWidth: 26, halign: 'center' },
-          3: { halign: 'center' },
-          4: { halign: 'center' },
+          0: { cellWidth: 12, halign: 'center' },
+          1: { halign: 'center' },
+          2: { halign: 'center' },
         },
         // Que una tabla no se parta a mitad y que la cabecera se repita es justo lo
         // que hace falta con rutinas largas, y es lo que autotable resuelve solo.

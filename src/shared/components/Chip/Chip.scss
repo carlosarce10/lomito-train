@@ -1,0 +1,53 @@
+@use 'styles/foundation' as *;
+
+@layer components {
+  .c-chip {
+    display: inline-flex;
+    gap: $spacing-sm;
+    align-items: center;
+    padding: $spacing-xs $spacing-sm;
+    border: 1px solid var(--border);
+    border-radius: $radius-sm;
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  // La barra solo la llevan los chips que representan algo con color de catalogo.
+  // Es lo unico que lleva ese color, asi que el texto no tiene que contrastar contra
+  // el y se lee igual en los dos temas.
+  .c-chip--color::before {
+    content: '';
+    flex-shrink: 0;
+    align-self: stretch;
+    width: 3px;
+    min-height: 1em;
+    border-radius: 2px;
+    background: var(--chip-color);
+  }
+
+  .c-chip--interactive {
+    @include touch-target;
+
+    cursor: pointer;
+    transition:
+      background-color $transition-fast,
+      border-color $transition-fast,
+      color $transition-fast;
+
+    &:hover {
+      border-color: var(--border-interactive);
+      color: var(--text);
+    }
+
+    &.is-selected {
+      border-color: var(--chip-color, var(--accent));
+      background: color-mix(in srgb, var(--chip-color, var(--accent)) 16%, var(--surface));
+      color: var(--text);
+    }
+  }
+}

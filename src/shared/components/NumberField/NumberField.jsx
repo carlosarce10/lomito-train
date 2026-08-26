@@ -14,8 +14,10 @@ import { useState } from 'react';
  *   devuelve si lo acepto, para poder revertir lo que no.
  * @param {string} [props.className]
  * @param {'decimal' | 'numeric'} [props.inputMode]
+ * @param {import('react').Ref<HTMLInputElement>} [props.inputRef] Para llevarle el foco.
  */
 export default function NumberField({
+  inputRef,
   value,
   onCommit,
   className = '',
@@ -41,6 +43,7 @@ export default function NumberField({
 
   return (
     <input
+      ref={inputRef}
       className={className}
       type="text"
       inputMode={inputMode}

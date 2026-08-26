@@ -25,6 +25,7 @@ export default function RoutineDetailPage() {
     deleteRoutine,
     addExerciseToRoutine,
     removeExerciseFromRoutine,
+    reorderExercises,
   } = useRoutines();
   const { exercises, updateExercise, addSet, updateSet, deleteSet } = useExercises();
 
@@ -72,6 +73,7 @@ export default function RoutineDetailPage() {
       }
       onDelete={handleDelete}
       onAddExercise={(id, exerciseId) => avisarSiFallo(addExerciseToRoutine(id, exerciseId))}
+      onReorderExercises={(id, desde, hasta) => avisarSiFallo(reorderExercises(id, desde, hasta))}
       onRemoveExercise={(id, exerciseId) =>
         avisarSiFallo(removeExerciseFromRoutine(id, exerciseId))
       }

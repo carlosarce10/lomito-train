@@ -49,13 +49,17 @@ export default function useExercises() {
   }, []);
 
   const addSet = useCallback((exerciseId) => {
-    return exercisesRepository.update((prev) =>
+    // La serie se crea aqui y no dentro del update para poder devolverla: quien la
+    // crea necesita su id para llevarle el foco.
+    const nueva = createSet();
+    const resultado = exercisesRepository.update((prev) =>
       prev.map((ex) => {
         if (ex.id !== exerciseId) return ex;
         if (ex.sets.length >= LIMITS.setsPerExercise.max) return ex;
-        return { ...ex, sets: [...ex.sets, createSet()], updatedAt: new Date().toISOString() };
+        return { ...ex, sets: [...ex.sets, nueva], updatedAt: new Date().toISOString() };
       }),
     );
+    return resultado.ok ? { ok: true, set: nueva } : resultado;
   }, []);
 
   /**

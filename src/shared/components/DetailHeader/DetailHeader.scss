@@ -39,6 +39,27 @@
       gap: $spacing-xs;
     }
 
+    &__heading {
+      display: flex;
+      gap: $spacing-sm;
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    // La barra dice de que es el color, cosa que un punto suelto bajo el nombre no
+    // hacia: parecia un adorno sin relacion con la rutina.
+    &__accent {
+      flex-shrink: 0;
+      width: 4px;
+      border-radius: 2px;
+      background: var(--detail-accent, var(--accent));
+    }
+
+    &__meta {
+      color: var(--text-muted);
+      font-size: $font-size-sm;
+    }
+
     &__title {
       // Un nombre largo sin espacios estiraba el documento de 375 a 856 px y daba
       // scroll horizontal a toda la pagina, barra inferior incluida.

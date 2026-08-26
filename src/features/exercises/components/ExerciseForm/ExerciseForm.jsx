@@ -1,5 +1,3 @@
-import { mdiCheck } from '@mdi/js';
-import Icon from '@mdi/react';
 import { useId, useState } from 'react';
 
 import { EQUIPMENT_TYPES, MUSCLE_GROUP_IDS, MUSCLE_GROUPS } from '@domain/catalogs';
@@ -8,6 +6,7 @@ import { LIMITS } from '@domain/validation/limits';
 import { normalizeText } from '@domain/validation/normalize';
 import { listOf, text } from '@domain/validation/rules';
 import Button from '@shared/components/Button/Button';
+import Chip from '@shared/components/Chip/Chip';
 import Field from '@shared/components/Field/Field';
 import useTranslation from '@i18n/useTranslation';
 
@@ -121,32 +120,23 @@ export default function ExerciseForm({
       >
         <legend className="c-exercise-form__label">
           {t('form.muscleGroupsLabel')}
-          {muscleGroupIds.length > 0 && (
-            <span className="c-exercise-form__label-count">
-              {' '}
-              ({formatNumber(muscleGroupIds.length, 'integer')})
-            </span>
-          )}
+          <span className="c-exercise-form__label-count">
+            {formatNumber(muscleGroupIds.length, 'integer')} /{' '}
+            {formatNumber(LIMITS.muscleGroupsPerExercise.max, 'integer')}
+          </span>
         </legend>
-        <div className="c-exercise-form__group-options">
-          {MUSCLE_GROUPS.map((group) => {
-            const selected = muscleGroupIds.includes(group.id);
-            return (
-              <button
-                key={group.id}
-                type="button"
-                className={`c-exercise-form__group-option${selected ? ' is-selected' : ''}`}
-                style={{ '--group-color': group.color }}
-                aria-pressed={selected}
-                onClick={() => toggleMuscleGroup(group.id)}
-              >
-                {selected && (
-                  <Icon path={mdiCheck} size={0.65} className="c-exercise-form__group-check" />
-                )}
-                {tn('catalog', `muscleGroups.${group.id}`)}
-              </button>
-            );
-          })}
+        <div className="c-exercise-form__options">
+          {MUSCLE_GROUPS.map((group) => (
+            <Chip
+              key={group.id}
+              as="button"
+              color={group.color}
+              selected={muscleGroupIds.includes(group.id)}
+              onClick={() => toggleMuscleGroup(group.id)}
+            >
+              {tn('catalog', `muscleGroups.${group.id}`)}
+            </Chip>
+          ))}
         </div>
         {/* La region existe siempre, tambien vacia: si apareciera y desapareciera
             del DOM, el lector de pantalla no anunciaria el cambio. */}
@@ -160,17 +150,16 @@ export default function ExerciseForm({
           {t('form.equipmentLabel')}
           <span className="c-exercise-form__label-count"> ({t('form.optional')})</span>
         </legend>
-        <div className="c-exercise-form__equipment-options">
+        <div className="c-exercise-form__options">
           {EQUIPMENT_TYPES.map((eq) => (
-            <button
+            <Chip
               key={eq.id}
-              type="button"
-              className={`c-exercise-form__equipment-option${equipmentId === eq.id ? ' is-selected' : ''}`}
-              aria-pressed={equipmentId === eq.id}
+              as="button"
+              selected={equipmentId === eq.id}
               onClick={() => setEquipmentId((prev) => (prev === eq.id ? null : eq.id))}
             >
               {tn('catalog', `equipment.${eq.id}`)}
-            </button>
+            </Chip>
           ))}
         </div>
       </fieldset>

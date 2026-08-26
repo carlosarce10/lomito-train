@@ -44,5 +44,7 @@
     "empty": "No personal best yet"
   },
   "count_one": "{{count}} exercise",
-  "count_other": "{{count}} exercises"
+  "count_other": "{{count}} exercises",
+  "setCount_one": "{{count}} set",
+  "setCount_other": "{{count}} sets"
 }
