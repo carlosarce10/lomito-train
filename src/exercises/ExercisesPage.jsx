@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
-import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
-import useExercises from './hooks/useExercises';
+import Icon from '@mdi/react';
+import { useState } from 'react';
+
 import MuscleGroupFilter from '../muscle-groups/components/MuscleGroupFilter/MuscleGroupFilter';
+import Modal from '../shared/components/Modal/Modal';
 import SearchBar from '../shared/components/SearchBar/SearchBar';
-import ExerciseList from './components/ExerciseList/ExerciseList';
+
 import ExerciseDetail from './components/ExerciseDetail/ExerciseDetail';
 import ExerciseForm from './components/ExerciseForm/ExerciseForm';
-import Modal from '../shared/components/Modal/Modal';
+import ExerciseList from './components/ExerciseList/ExerciseList';
+import useExercises from './hooks/useExercises';
 import './ExercisesPage.scss';
 
 export default function ExercisesPage() {
@@ -29,17 +31,11 @@ export default function ExercisesPage() {
   const [selectedId, setSelectedId] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  // Find selected exercise from all exercises (not filtered)
+  // Resuelve el ejercicio abierto contra la lista sin filtrar. Si se borro, cae a null
+  // y la pagina vuelve al listado sola, sin necesidad de limpiar selectedId.
   const selectedExercise = selectedId
-    ? allExercises.find((ex) => ex.id === selectedId) || null
+    ? (allExercises.find((ex) => ex.id === selectedId) ?? null)
     : null;
-
-  // Auto-deselect if exercise was deleted
-  useEffect(() => {
-    if (selectedId && !allExercises.find((ex) => ex.id === selectedId)) {
-      setSelectedId(null);
-    }
-  }, [selectedId, allExercises]);
 
   const handleCreateExercise = (data) => {
     addExercise(data.name, data.muscleGroup, data.categories);
@@ -62,16 +58,9 @@ export default function ExercisesPage() {
 
   return (
     <div className="exercises-page">
-      <SearchBar
-        value={searchTerm}
-        onChange={setSearchTerm}
-        placeholder="Buscar ejercicio…"
-      />
+      <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Buscar ejercicio…" />
 
-      <MuscleGroupFilter
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
-      />
+      <MuscleGroupFilter activeFilter={activeFilter} onFilterChange={setActiveFilter} />
 
       <ExerciseList
         exercises={exercises}
@@ -91,10 +80,7 @@ export default function ExercisesPage() {
         onClose={() => setShowCreateForm(false)}
         title="Nuevo ejercicio"
       >
-        <ExerciseForm
-          onSubmit={handleCreateExercise}
-          onCancel={() => setShowCreateForm(false)}
-        />
+        <ExerciseForm onSubmit={handleCreateExercise} onCancel={() => setShowCreateForm(false)} />
       </Modal>
     </div>
   );
