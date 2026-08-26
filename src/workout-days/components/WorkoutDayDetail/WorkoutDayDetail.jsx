@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import Icon from '@mdi/react';
 import { mdiArrowLeft, mdiDelete, mdiPlus } from '@mdi/js';
+import Icon from '@mdi/react';
+import { useState } from 'react';
+
+import ExerciseForm from '../../../exercises/components/ExerciseForm/ExerciseForm';
+import Button from '../../../shared/components/Button/Button';
+import Modal from '../../../shared/components/Modal/Modal';
 import ExercisePicker from '../ExercisePicker/ExercisePicker';
 import RoutineExerciseCard from '../RoutineExerciseCard/RoutineExerciseCard';
-import Modal from '../../../shared/components/Modal/Modal';
-import Button from '../../../shared/components/Button/Button';
-import ExerciseForm from '../../../exercises/components/ExerciseForm/ExerciseForm';
 import './WorkoutDayDetail.scss';
 
 export default function WorkoutDayDetail({
@@ -68,10 +69,7 @@ export default function WorkoutDayDetail({
 
       {/* Routine info */}
       <div className="workout-day-detail__info">
-        <span
-          className="workout-day-detail__color-dot"
-          style={{ background: day.color }}
-        />
+        <span className="workout-day-detail__color-dot" style={{ background: day.color }} />
         <h2 className="workout-day-detail__name">{day.name}</h2>
       </div>
 
@@ -116,11 +114,7 @@ export default function WorkoutDayDetail({
       </div>
 
       {/* Exercise picker modal */}
-      <Modal
-        isOpen={showPicker}
-        onClose={() => setShowPicker(false)}
-        title=""
-      >
+      <Modal isOpen={showPicker} onClose={() => setShowPicker(false)} title="">
         <ExercisePicker
           allExercises={allExercises}
           selectedIds={day.exerciseIds}
@@ -150,24 +144,25 @@ export default function WorkoutDayDetail({
         onClose={() => setRemovingExerciseId(null)}
         title="Quitar ejercicio"
       >
-        {removingExerciseId && (() => {
-          const ex = allExercises.find((e) => e.id === removingExerciseId);
-          return (
-            <div className="workout-day-detail__confirm">
-              <p className="workout-day-detail__confirm-text">
-                ¿Quitar <strong>{ex?.name}</strong> de esta rutina?
-              </p>
-              <div className="workout-day-detail__confirm-actions">
-                <Button variant="ghost" onClick={() => setRemovingExerciseId(null)}>
-                  Cancelar
-                </Button>
-                <Button variant="danger" onClick={handleConfirmRemove}>
-                  Quitar
-                </Button>
+        {removingExerciseId &&
+          (() => {
+            const ex = allExercises.find((e) => e.id === removingExerciseId);
+            return (
+              <div className="workout-day-detail__confirm">
+                <p className="workout-day-detail__confirm-text">
+                  ¿Quitar <strong>{ex?.name}</strong> de esta rutina?
+                </p>
+                <div className="workout-day-detail__confirm-actions">
+                  <Button variant="ghost" onClick={() => setRemovingExerciseId(null)}>
+                    Cancelar
+                  </Button>
+                  <Button variant="danger" onClick={handleConfirmRemove}>
+                    Quitar
+                  </Button>
+                </div>
               </div>
-            </div>
-          );
-        })()}
+            );
+          })()}
       </Modal>
 
       {/* Confirm delete routine modal */}

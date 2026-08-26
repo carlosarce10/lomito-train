@@ -1,13 +1,7 @@
-import { useState, useRef } from 'react';
+import { mdiChevronDown, mdiChevronUp, mdiDelete, mdiPencil, mdiPlus, mdiClose } from '@mdi/js';
 import Icon from '@mdi/react';
-import {
-  mdiChevronDown,
-  mdiChevronUp,
-  mdiDelete,
-  mdiPencil,
-  mdiPlus,
-  mdiClose,
-} from '@mdi/js';
+import { useState, useRef } from 'react';
+
 import MuscleGroupBadge from '../../../muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
 import './RoutineExerciseCard.scss';
 
@@ -132,13 +126,9 @@ export default function RoutineExerciseCard({
         <div className="routine-ex-card__record">
           {record ? (
             <>
-              <span className="routine-ex-card__record-value">
-                {record.weight} kg
-              </span>
+              <span className="routine-ex-card__record-value">{record.weight} kg</span>
               <span className="routine-ex-card__record-sep">×</span>
-              <span className="routine-ex-card__record-value">
-                {record.reps} reps
-              </span>
+              <span className="routine-ex-card__record-value">{record.reps} reps</span>
               <span className="routine-ex-card__record-label">récord</span>
             </>
           ) : (
@@ -195,10 +185,7 @@ export default function RoutineExerciseCard({
                 ))}
               </div>
             )}
-            <button
-              className="routine-ex-card__sets-add"
-              onClick={() => onAddSet(exercise.id)}
-            >
+            <button className="routine-ex-card__sets-add" onClick={() => onAddSet(exercise.id)}>
               <Icon path={mdiPlus} size={0.8} />
               Agregar set
             </button>

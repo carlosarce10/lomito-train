@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import Layout from './shared/components/Layout/Layout';
+
 import ExercisesPage from './exercises/ExercisesPage';
+import Layout from './shared/components/Layout/Layout';
 import RoutinesPage from './workout-days/RoutinesPage';
 import './App.scss';
 
@@ -9,8 +10,10 @@ export default function App() {
 
   const renderPage = () => {
     switch (activePage) {
-      case 'exercises': return <ExercisesPage />;
-      default:          return <RoutinesPage />;
+      case 'exercises':
+        return <ExercisesPage />;
+      default:
+        return <RoutinesPage />;
     }
   };
 

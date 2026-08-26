@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import Icon from '@mdi/react';
 import { mdiArrowLeft, mdiClose } from '@mdi/js';
+import Icon from '@mdi/react';
+import { useState } from 'react';
+
 import MuscleGroupBadge from '../../../muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
 import Button from '../../../shared/components/Button/Button';
 import Modal from '../../../shared/components/Modal/Modal';
@@ -122,11 +123,7 @@ export default function ExerciseDetail({
       </div>
 
       {/* Modal editar ejercicio */}
-      <Modal
-        isOpen={isEditing}
-        onClose={() => setIsEditing(false)}
-        title="Editar ejercicio"
-      >
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)} title="Editar ejercicio">
         <ExerciseForm
           initialData={exercise}
           onSubmit={handleEditSubmit}
@@ -142,7 +139,8 @@ export default function ExerciseDetail({
       >
         <div className="exercise-detail__confirm">
           <p className="exercise-detail__confirm-text">
-            ¿Seguro que quieres eliminar <strong>{exercise.name}</strong>? Esta accion no se puede deshacer.
+            ¿Seguro que quieres eliminar <strong>{exercise.name}</strong>? Esta accion no se puede
+            deshacer.
           </p>
           <div className="exercise-detail__confirm-actions">
             <Button variant="ghost" onClick={() => setShowDeleteConfirm(false)}>

@@ -116,14 +116,16 @@
   &__sets-input {
     width: 100%;
     padding: $spacing-sm;
-    background: rgba(255, 255, 255, 0.60);
+    background: rgba(255, 255, 255, 0.6);
     border: 1px solid $color-glass-border;
     border-radius: $radius-sm;
     color: $color-text-primary;
     font-size: $font-size-base;
     font-weight: $font-weight-medium;
     text-align: center;
-    transition: border-color $transition-fast, box-shadow $transition-fast;
+    transition:
+      border-color $transition-fast,
+      box-shadow $transition-fast;
     -moz-appearance: textfield;
 
     &::-webkit-outer-spin-button,
@@ -138,9 +140,9 @@
 
     &:focus {
       outline: none;
-      border-color: rgba($color-primary, 0.50);
+      border-color: rgba($color-primary, 0.5);
       box-shadow: 0 0 0 3px rgba($color-primary, 0.08);
-      background: rgba(255, 255, 255, 0.80);
+      background: rgba(255, 255, 255, 0.8);
     }
   }
 
@@ -157,7 +159,7 @@
 
     &:active {
       background: $color-danger-light;
-      border-color: rgba($color-danger, 0.20);
+      border-color: rgba($color-danger, 0.2);
       color: $color-danger;
     }
   }

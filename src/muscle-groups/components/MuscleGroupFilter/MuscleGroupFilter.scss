@@ -29,10 +29,10 @@
 
     &--active {
       background: linear-gradient(135deg, $color-primary 0%, #fb923c 100%);
-      color: #ffffff;
+      color: #fff;
       border-color: transparent;
       font-weight: $font-weight-semibold;
-      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.30);
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
     }
   }
 }

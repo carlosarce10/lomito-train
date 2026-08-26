@@ -31,9 +31,9 @@
   // Variants
   &--primary {
     background: $color-primary;
-    color: #ffffff;
+    color: #fff;
     border: none;
-    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.30);
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
 
     &:hover {
       background: $color-primary-dark;
@@ -48,8 +48,8 @@
 
   &--danger {
     background: $color-danger;
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.20);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);
 
     &:active {
@@ -90,7 +90,7 @@
 
   // Disabled
   &--disabled {
-    opacity: 0.40;
+    opacity: 0.4;
     pointer-events: none;
   }
 }

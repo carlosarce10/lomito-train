@@ -39,7 +39,7 @@
     gap: $spacing-xs;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: rgba($color-primary, 0.20) transparent;
+    scrollbar-color: rgba($color-primary, 0.2) transparent;
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -48,7 +48,7 @@
       background: transparent;
     }
     &::-webkit-scrollbar-thumb {
-      background: rgba($color-primary, 0.20);
+      background: rgba($color-primary, 0.2);
       border-radius: 2px;
     }
   }

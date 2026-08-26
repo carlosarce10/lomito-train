@@ -21,13 +21,15 @@
   &__input {
     width: 100%;
     padding: $spacing-sm $spacing-md;
-    background: rgba(255, 255, 255, 0.60);
+    background: rgba(255, 255, 255, 0.6);
     border: 1px solid $color-glass-border;
     border-radius: $radius-sm;
     color: $color-text-primary;
     font-size: $font-size-base;
     font-weight: $font-weight-medium;
-    transition: border-color $transition-fast, box-shadow $transition-fast;
+    transition:
+      border-color $transition-fast,
+      box-shadow $transition-fast;
 
     &::placeholder {
       color: $color-text-muted;
@@ -35,9 +37,9 @@
 
     &:focus {
       outline: none;
-      border-color: rgba($color-primary, 0.50);
+      border-color: rgba($color-primary, 0.5);
       box-shadow: 0 0 0 3px rgba($color-primary, 0.08);
-      background: rgba(255, 255, 255, 0.80);
+      background: rgba(255, 255, 255, 0.8);
     }
   }
 
@@ -53,10 +55,12 @@
     border-radius: $radius-full;
     border: 2px solid transparent;
     cursor: pointer;
-    transition: transform $transition-fast, border-color $transition-fast;
+    transition:
+      transform $transition-fast,
+      border-color $transition-fast;
 
     &:active {
-      transform: scale(0.90);
+      transform: scale(0.9);
     }
 
     &--active {

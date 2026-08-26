@@ -1,12 +1,14 @@
-import { useState } from 'react';
-import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
-import useWorkoutDays from './hooks/useWorkoutDays';
+import Icon from '@mdi/react';
+import { useState } from 'react';
+
 import useExercises from '../exercises/hooks/useExercises';
-import WorkoutDayList from './components/WorkoutDayList/WorkoutDayList';
+import Modal from '../shared/components/Modal/Modal';
+
 import WorkoutDayDetail from './components/WorkoutDayDetail/WorkoutDayDetail';
 import WorkoutDayForm from './components/WorkoutDayForm/WorkoutDayForm';
-import Modal from '../shared/components/Modal/Modal';
+import WorkoutDayList from './components/WorkoutDayList/WorkoutDayList';
+import useWorkoutDays from './hooks/useWorkoutDays';
 import './RoutinesPage.scss';
 
 export default function RoutinesPage() {
@@ -41,7 +43,10 @@ export default function RoutinesPage() {
         allExercises={allExercises}
         onBack={() => setSelectedDay(null)}
         onUpdate={updateWorkoutDay}
-        onDelete={(id) => { deleteWorkoutDay(id); setSelectedDay(null); }}
+        onDelete={(id) => {
+          deleteWorkoutDay(id);
+          setSelectedDay(null);
+        }}
         onAddExercise={addExerciseToDay}
         onRemoveExercise={removeExerciseFromDay}
         onUpdateExercise={updateExercise}
@@ -68,15 +73,8 @@ export default function RoutinesPage() {
         <Icon path={mdiPlus} size={1.2} />
       </button>
 
-      <Modal
-        isOpen={showCreateForm}
-        onClose={() => setShowCreateForm(false)}
-        title="Nueva rutina"
-      >
-        <WorkoutDayForm
-          onSubmit={handleCreate}
-          onCancel={() => setShowCreateForm(false)}
-        />
+      <Modal isOpen={showCreateForm} onClose={() => setShowCreateForm(false)} title="Nueva rutina">
+        <WorkoutDayForm onSubmit={handleCreate} onCancel={() => setShowCreateForm(false)} />
       </Modal>
     </div>
   );

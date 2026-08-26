@@ -1,9 +1,9 @@
-import Icon from '@mdi/react';
 import { mdiDumbbell, mdiCalendarCheck } from '@mdi/js';
+import Icon from '@mdi/react';
 import './BottomNav.scss';
 
 const TABS = [
-  { id: 'routines',  label: 'Rutinas',    icon: mdiCalendarCheck },
+  { id: 'routines', label: 'Rutinas', icon: mdiCalendarCheck },
   { id: 'exercises', label: 'Ejercicios', icon: mdiDumbbell },
 ];
 

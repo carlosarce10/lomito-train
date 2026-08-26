@@ -14,10 +14,11 @@
     height: 56px;
     border-radius: $radius-full;
     background: $color-primary;
-    color: #ffffff;
+    color: #fff;
     @include flex-center;
-    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.40),
-                0 2px 8px rgba(0, 0, 0, 0.10);
+    box-shadow:
+      0 8px 24px rgba(220, 38, 38, 0.4),
+      0 2px 8px rgba(0, 0, 0, 0.1);
     border: none;
     cursor: pointer;
     transition: all $transition-fast;
@@ -30,7 +31,7 @@
     &:active {
       transform: scale(0.92);
       background: $color-primary-dark;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.30);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
     }
   }
 }

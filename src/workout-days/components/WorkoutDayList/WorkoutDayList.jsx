@@ -15,7 +15,7 @@ export default function WorkoutDayList({ workoutDays, allExercises, onDayClick }
     <div className="workout-day-list">
       {workoutDays.map((day) => {
         const exerciseCount = day.exerciseIds.filter((id) =>
-          allExercises.some((ex) => ex.id === id)
+          allExercises.some((ex) => ex.id === id),
         ).length;
         return (
           <WorkoutDayCard

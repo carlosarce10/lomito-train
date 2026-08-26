@@ -1,11 +1,13 @@
-import Icon from '@mdi/react';
 import { mdiMagnify, mdiClose } from '@mdi/js';
+import Icon from '@mdi/react';
 import './SearchBar.scss';
 
 export default function SearchBar({ value, onChange, placeholder = 'Buscar…' }) {
   return (
     <div className="search-bar">
-      <span className="search-bar__icon"><Icon path={mdiMagnify} size={0.85} /></span>
+      <span className="search-bar__icon">
+        <Icon path={mdiMagnify} size={0.85} />
+      </span>
       <input
         className="search-bar__input"
         type="search"

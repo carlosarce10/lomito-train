@@ -12,11 +12,15 @@
   border-radius: $radius-full;
   padding: $spacing-sm $spacing-md;
   box-shadow: $shadow-sm;
-  transition: border-color $transition-fast, box-shadow $transition-fast;
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-fast;
 
   &:focus-within {
-    border-color: rgba($color-primary, 0.40);
-    box-shadow: 0 0 0 3px rgba($color-primary, 0.08), $shadow-sm;
+    border-color: rgba($color-primary, 0.4);
+    box-shadow:
+      0 0 0 3px rgba($color-primary, 0.08),
+      $shadow-sm;
   }
 
   &__icon {

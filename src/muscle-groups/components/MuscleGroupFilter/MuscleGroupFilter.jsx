@@ -15,9 +15,7 @@ export default function MuscleGroupFilter({ activeFilter, onFilterChange }) {
           key={group.id}
           className={`muscle-group-filter__chip ${activeFilter === group.id ? 'muscle-group-filter__chip--active' : ''}`}
           style={
-            activeFilter === group.id
-              ? { backgroundColor: group.color, color: '#1A1A1A' }
-              : {}
+            activeFilter === group.id ? { backgroundColor: group.color, color: '#1A1A1A' } : {}
           }
           onClick={() => onFilterChange(group.id)}
         >

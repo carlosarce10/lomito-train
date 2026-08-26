@@ -1,5 +1,6 @@
-import Icon from '@mdi/react';
 import { mdiDumbbell } from '@mdi/js';
+import Icon from '@mdi/react';
+
 import BottomNav from '../BottomNav/BottomNav';
 import './Layout.scss';
 
@@ -14,9 +15,7 @@ export default function Layout({ children, activePage, onPageChange }) {
           Lomito Train
         </h1>
       </header>
-      <main className="layout__content">
-        {children}
-      </main>
+      <main className="layout__content">{children}</main>
       <BottomNav activePage={activePage} onPageChange={onPageChange} />
     </div>
   );
