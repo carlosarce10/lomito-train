@@ -1,0 +1,45 @@
+{
+  "page": {
+    "searchPlaceholder": "Buscar ejercicio…"
+  },
+  "list": {
+    "emptyTitle": "No hay ejercicios registrados",
+    "emptyHint": "Toca el botón + para agregar tu primer ejercicio"
+  },
+  "card": {
+    "sets": "Series",
+    "maxWeight": "Máx kg"
+  },
+  "filter": {
+    "all": "Todos"
+  },
+  "form": {
+    "createTitle": "Nuevo ejercicio",
+    "editTitle": "Editar ejercicio",
+    "nameLabel": "Nombre del ejercicio",
+    "namePlaceholder": "Ej: Press de banca",
+    "muscleGroupsLabel": "Grupos musculares",
+    "equipmentLabel": "Equipamiento",
+    "optional": "opcional",
+    "submitCreate": "Crear ejercicio",
+    "submitEdit": "Guardar cambios"
+  },
+  "detail": {
+    "createAction": "Crear ejercicio",
+    "editAction": "Editar ejercicio",
+    "deleteAction": "Eliminar ejercicio",
+    "setsTitle": "Series",
+    "addSet": "Agregar serie",
+    "deleteSet": "Eliminar serie",
+    "setsEmpty": "Agrega una serie para registrar peso y repeticiones",
+    "deleteTitle": "Eliminar ejercicio",
+    "deleteConfirm": "¿Seguro que quieres eliminar {{name}}? Esta acción no se puede deshacer."
+  },
+  "record": {
+    "label": "récord",
+    "empty": "Sin récord aún"
+  },
+  "count_one": "{{count}} ejercicio",
+  "count_other": "{{count}} ejercicios",
+  "count_many": "{{count}} ejercicios"
+}

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 
 import Modal from '@shared/components/Modal/Modal';
 import SearchBar from '@shared/components/SearchBar/SearchBar';
+import useTranslation from '@i18n/useTranslation';
 
 import ExerciseForm from '../../components/ExerciseForm/ExerciseForm';
 import ExerciseList from '../../components/ExerciseList/ExerciseList';
@@ -17,6 +18,7 @@ import './ExercisesPage.scss';
 /** Listado de ejercicios del catalogo, con busqueda y filtro por grupo muscular. */
 export default function ExercisesPage() {
   const navegar = useNavigate();
+  const { t } = useTranslation('exercises');
   const { exercises, addExercise } = useExercises();
   const { filtered, activeFilter, setActiveFilter, searchTerm, setSearchTerm } =
     useExerciseFilters(exercises);
@@ -30,7 +32,11 @@ export default function ExercisesPage() {
 
   return (
     <div className="c-exercises-page">
-      <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Buscar ejercicio…" />
+      <SearchBar
+        value={searchTerm}
+        onChange={setSearchTerm}
+        placeholder={t('page.searchPlaceholder')}
+      />
 
       <MuscleGroupFilter activeFilter={activeFilter} onFilterChange={setActiveFilter} />
 
@@ -43,7 +49,7 @@ export default function ExercisesPage() {
         type="button"
         className="c-exercises-page__fab"
         onClick={() => setShowCreateForm(true)}
-        aria-label="Crear ejercicio"
+        aria-label={t('detail.createAction')}
       >
         <Icon path={mdiPlus} size={1.2} />
       </button>
@@ -51,7 +57,7 @@ export default function ExercisesPage() {
       <Modal
         isOpen={showCreateForm}
         onClose={() => setShowCreateForm(false)}
-        title="Nuevo ejercicio"
+        title={t('form.createTitle')}
       >
         <ExerciseForm onSubmit={handleCreate} onCancel={() => setShowCreateForm(false)} />
       </Modal>

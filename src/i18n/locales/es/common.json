@@ -1,0 +1,52 @@
+{
+  "app": {
+    "name": "Lomito Train"
+  },
+  "action": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "create": "Crear",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "remove": "Quitar",
+    "add": "Agregar",
+    "back": "Volver",
+    "close": "Cerrar",
+    "retry": "Reintentar",
+    "download": "Descargar"
+  },
+  "nav": {
+    "routines": "Rutinas",
+    "exercises": "Ejercicios",
+    "settings": "Ajustes"
+  },
+  "search": {
+    "placeholder": "Buscar…",
+    "clear": "Limpiar búsqueda",
+    "empty": "Sin resultados"
+  },
+  "unit": {
+    "kg": "kg",
+    "reps": "reps"
+  },
+  "field": {
+    "weight": "Peso (kg)",
+    "reps": "Reps",
+    "weightAria": "Peso en kilos",
+    "repsAria": "Repeticiones"
+  },
+  "recovery": {
+    "title": "No se pudo abrir Lomito Train",
+    "hint": "Tus datos siguen en el dispositivo. Descarga una copia antes de hacer nada más.",
+    "download": "Descargar copia de seguridad",
+    "unavailable": "El navegador no permite guardar datos. Puede que estés en modo privado.",
+    "downgrade": "Estos datos vienen de una versión más nueva de la aplicación.",
+    "corrupt": "Los datos guardados no se pueden leer.",
+    "quotaExceeded": "No queda espacio de almacenamiento en el navegador.",
+    "render": "Algo se rompió al dibujar la pantalla."
+  },
+  "error": {
+    "duplicateName": "Ya existe algo con ese nombre",
+    "writeFailed": "No se pudo guardar. Puede que no quede espacio en el navegador."
+  }
+}

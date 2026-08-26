@@ -1,14 +1,11 @@
 import { dumpRaw } from '@domain/storage/driver';
+import useTranslation from '@i18n/useTranslation';
 
 import './RecoveryScreen.scss';
 
-const MENSAJES = {
-  unavailable: 'El navegador no permite guardar datos. Puede que estes en modo privado.',
-  downgrade: 'Estos datos vienen de una version mas nueva de la aplicacion.',
-  corrupt: 'Los datos guardados no se pueden leer.',
-  quotaExceeded: 'No queda espacio de almacenamiento en el navegador.',
-  render: 'Algo se rompio al dibujar la pantalla.',
-};
+// Razones con mensaje propio en common.recovery. Cualquier otra cae en render, para
+// que la pantalla nunca muestre una clave sin traducir.
+const REASONS = ['unavailable', 'downgrade', 'corrupt', 'quotaExceeded', 'render'];
 
 /**
  * Pantalla de ultimo recurso cuando la aplicacion no puede arrancar con garantias.
@@ -18,6 +15,9 @@ const MENSAJES = {
  * ningun servidor y no hay forma de recuperarlos si se pierden aqui.
  */
 export default function RecoveryScreen({ reason, detail }) {
+  const { t } = useTranslation('common');
+  const razon = REASONS.includes(reason) ? reason : 'render';
+
   const descargar = () => {
     const contenido = JSON.stringify(
       { exportedAt: new Date().toISOString(), reason, raw: dumpRaw() },
@@ -38,20 +38,18 @@ export default function RecoveryScreen({ reason, detail }) {
   return (
     <div className="c-recovery-screen">
       <div className="c-recovery-screen__panel">
-        <h1 className="c-recovery-screen__title">No se pudo abrir Lomito Train</h1>
-        <p className="c-recovery-screen__message">{MENSAJES[reason] ?? MENSAJES.render}</p>
-        <p className="c-recovery-screen__hint">
-          Tus datos siguen en el dispositivo. Descarga una copia antes de hacer nada mas.
-        </p>
+        <h1 className="c-recovery-screen__title">{t('recovery.title')}</h1>
+        <p className="c-recovery-screen__message">{t(`recovery.${razon}`)}</p>
+        <p className="c-recovery-screen__hint">{t('recovery.hint')}</p>
         <button className="c-recovery-screen__action" type="button" onClick={descargar}>
-          Descargar copia de seguridad
+          {t('recovery.download')}
         </button>
         <button
           className="c-recovery-screen__retry"
           type="button"
           onClick={() => window.location.reload()}
         >
-          Reintentar
+          {t('action.retry')}
         </button>
         {detail && <pre className="c-recovery-screen__detail">{String(detail)}</pre>}
       </div>

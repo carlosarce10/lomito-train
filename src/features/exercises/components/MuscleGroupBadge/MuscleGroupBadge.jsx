@@ -1,4 +1,5 @@
-import { getMuscleGroupColor, getMuscleGroupLabel } from '@domain/catalogs';
+import { getMuscleGroupColor } from '@domain/catalogs';
+import useTranslation from '@i18n/useTranslation';
 
 import './MuscleGroupBadge.scss';
 
@@ -14,12 +15,14 @@ import './MuscleGroupBadge.scss';
  * @param {string} props.groupId Id del catalogo.
  */
 export default function MuscleGroupBadge({ groupId }) {
+  const { tn } = useTranslation('exercises');
+
   return (
     <span
       className="c-muscle-group-badge"
       style={{ '--group-color': getMuscleGroupColor(groupId) }}
     >
-      {getMuscleGroupLabel(groupId)}
+      {tn('catalog', `muscleGroups.${groupId}`)}
     </span>
   );
 }

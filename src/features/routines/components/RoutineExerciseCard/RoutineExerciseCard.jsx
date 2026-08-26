@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 
 import { getRecord } from '@domain/model/records';
 import NumberField from '@shared/components/NumberField/NumberField';
+import useTranslation from '@i18n/useTranslation';
 import { MuscleGroupBadgeList } from '@features/exercises';
 
 import './RoutineExerciseCard.scss';
@@ -18,6 +19,7 @@ export default function RoutineExerciseCard({
   onUpdateSet,
   onDeleteSet,
 }) {
+  const { tn, formatNumber } = useTranslation('routines');
   const [collapsed, setCollapsed] = useState(true);
   const [translateX, setTranslateX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
@@ -78,14 +80,14 @@ export default function RoutineExerciseCard({
         style={{ opacity: showEdit ? actionOpacity : 0 }}
       >
         <Icon path={mdiPencil} size={1} />
-        <span>Editar</span>
+        <span>{tn('common', 'action.edit')}</span>
       </div>
       <div
         className="c-routine-exercise-card__bg c-routine-exercise-card__bg--delete"
         style={{ opacity: showDelete ? actionOpacity : 0 }}
       >
         <Icon path={mdiDelete} size={1} />
-        <span>Eliminar</span>
+        <span>{tn('common', 'action.delete')}</span>
       </div>
 
       {/* ── Main card content ── */}
@@ -108,7 +110,8 @@ export default function RoutineExerciseCard({
           <button
             className="c-routine-exercise-card__toggle"
             onClick={() => setCollapsed((v) => !v)}
-            aria-label={collapsed ? 'Ver sets' : 'Ocultar sets'}
+            aria-label={tn('exercises', 'detail.setsTitle')}
+            aria-expanded={!collapsed}
           >
             <Icon path={collapsed ? mdiChevronDown : mdiChevronUp} size={0.9} />
           </button>
@@ -118,13 +121,21 @@ export default function RoutineExerciseCard({
         <div className="c-routine-exercise-card__record">
           {record ? (
             <>
-              <span className="c-routine-exercise-card__record-value">{record.weight} kg</span>
+              <span className="c-routine-exercise-card__record-value">
+                {formatNumber(record.weight, 'weight')} {tn('common', 'unit.kg')}
+              </span>
               <span className="c-routine-exercise-card__record-sep">×</span>
-              <span className="c-routine-exercise-card__record-value">{record.reps} reps</span>
-              <span className="c-routine-exercise-card__record-label">récord</span>
+              <span className="c-routine-exercise-card__record-value">
+                {formatNumber(record.reps, 'reps')} {tn('common', 'unit.reps')}
+              </span>
+              <span className="c-routine-exercise-card__record-label">
+                {tn('exercises', 'record.label')}
+              </span>
             </>
           ) : (
-            <span className="c-routine-exercise-card__record-empty">Sin récord aún</span>
+            <span className="c-routine-exercise-card__record-empty">
+              {tn('exercises', 'record.empty')}
+            </span>
           )}
         </div>
 
@@ -133,14 +144,14 @@ export default function RoutineExerciseCard({
           <div className="c-routine-exercise-card__sets">
             {exercise.sets.length === 0 ? (
               <p className="c-routine-exercise-card__sets-empty">
-                Sin sets. Agrega uno con el botón de abajo.
+                {tn('exercises', 'detail.setsEmpty')}
               </p>
             ) : (
               <div className="c-routine-exercise-card__sets-table">
                 <div className="c-routine-exercise-card__sets-head">
                   <span>#</span>
-                  <span>Peso (kg)</span>
-                  <span>Reps</span>
+                  <span>{tn('common', 'field.weight')}</span>
+                  <span>{tn('common', 'field.reps')}</span>
                   <span />
                 </div>
                 {exercise.sets.map((set, i) => (
@@ -151,7 +162,7 @@ export default function RoutineExerciseCard({
                       inputMode="decimal"
                       value={set.weight}
                       placeholder="0"
-                      aria-label="Peso en kilos"
+                      aria-label={tn('common', 'field.weightAria')}
                       onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
                     />
                     <NumberField
@@ -159,13 +170,13 @@ export default function RoutineExerciseCard({
                       inputMode="numeric"
                       value={set.reps}
                       placeholder="0"
-                      aria-label="Repeticiones"
+                      aria-label={tn('common', 'field.repsAria')}
                       onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
                     />
                     <button
                       className="c-routine-exercise-card__sets-del"
                       onClick={() => onDeleteSet(exercise.id, set.id)}
-                      aria-label="Eliminar set"
+                      aria-label={tn('exercises', 'detail.deleteSet')}
                     >
                       <Icon path={mdiClose} size={0.7} />
                     </button>
@@ -178,7 +189,7 @@ export default function RoutineExerciseCard({
               onClick={() => onAddSet(exercise.id)}
             >
               <Icon path={mdiPlus} size={0.8} />
-              Agregar set
+              {tn('exercises', 'detail.addSet')}
             </button>
           </div>
         )}

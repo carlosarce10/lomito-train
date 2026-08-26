@@ -16,6 +16,7 @@ export default defineConfig({
       '@app': src('app'),
       '@domain': src('domain'),
       '@features': src('features'),
+      '@i18n': src('i18n'),
       '@shared': src('shared'),
       '@styles': src('styles'),
       '@theme': src('theme'),

@@ -1,14 +1,18 @@
 import { resolveRoutineExercises } from '@domain/model/routine';
+import useTranslation from '@i18n/useTranslation';
 
 import RoutineCard from '../RoutineCard/RoutineCard';
 import './RoutineList.scss';
 
+/** Lista de rutinas del usuario, o el estado vacio si todavia no hay ninguna. */
 export default function RoutineList({ routines, allExercises, onRoutineClick }) {
+  const { t } = useTranslation('routines');
+
   if (routines.length === 0) {
     return (
       <div className="c-routine-list__empty">
-        <p>No tienes rutinas todavía.</p>
-        <p>Crea tu primera rutina con el botón +</p>
+        <p>{t('list.emptyTitle')}</p>
+        <p>{t('list.emptyHint')}</p>
       </div>
     );
   }

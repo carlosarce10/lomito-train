@@ -16,6 +16,7 @@ import { bootstrap } from './app/bootstrap/bootstrap';
 import ErrorBoundary from './app/bootstrap/ErrorBoundary/ErrorBoundary';
 import RecoveryScreen from './app/bootstrap/RecoveryScreen/RecoveryScreen';
 import { routes } from './app/routes';
+import I18nProvider from './i18n/I18nProvider/I18nProvider';
 
 const arranque = bootstrap();
 
@@ -23,16 +24,22 @@ const arranque = bootstrap();
 // hosting sin reescrituras devolveria 404 al recargar en /routines/<id>.
 const router = createHashRouter(routes);
 
+// El proveedor de idioma envuelve tambien la pantalla de rescate, y no solo el
+// enrutador: RecoveryScreen traduce sus textos, y useTranslation lanza si no
+// encuentra el contexto. Puede ir aqui sin riesgo porque el proveedor solo lee los
+// ajustes a traves del driver, que nunca lanza y cae a los valores por defecto.
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {arranque.ok ? (
-      <ErrorBoundary
-        fallback={(error) => <RecoveryScreen reason="render" detail={error.message} />}
-      >
-        <RouterProvider router={router} />
-      </ErrorBoundary>
-    ) : (
-      <RecoveryScreen reason={arranque.reason} detail={arranque.migration?.error?.message} />
-    )}
+    <I18nProvider>
+      {arranque.ok ? (
+        <ErrorBoundary
+          fallback={(error) => <RecoveryScreen reason="render" detail={error.message} />}
+        >
+          <RouterProvider router={router} />
+        </ErrorBoundary>
+      ) : (
+        <RecoveryScreen reason={arranque.reason} detail={arranque.migration?.error?.message} />
+      )}
+    </I18nProvider>
   </StrictMode>,
 );

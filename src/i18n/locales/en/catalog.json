@@ -1,0 +1,25 @@
+{
+  "muscleGroups": {
+    "upperbody": "Upper body",
+    "lowerbody": "Lower body",
+    "push": "Push",
+    "pull": "Pull",
+    "leg": "Leg"
+  },
+  "equipment": {
+    "barbell": "Barbell",
+    "dumbbell": "Dumbbells",
+    "cable": "Cable",
+    "machine": "Machine",
+    "bodyweight": "Bodyweight",
+    "other": "Other"
+  },
+  "colors": {
+    "lavender": "Lavender",
+    "mint": "Mint",
+    "sky": "Sky",
+    "peach": "Peach",
+    "violet": "Violet",
+    "pink": "Pink"
+  }
+}

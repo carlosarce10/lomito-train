@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import Modal from '@shared/components/Modal/Modal';
+import useTranslation from '@i18n/useTranslation';
 import { useExercises } from '@features/exercises';
 
 import RoutineForm from '../../components/RoutineForm/RoutineForm';
@@ -14,15 +15,16 @@ import './RoutinesPage.scss';
 
 /** Listado de rutinas. */
 export default function RoutinesPage() {
-  const navegar = useNavigate();
+  const navigate = useNavigate();
+  const { t } = useTranslation('routines');
   const { routines, addRoutine } = useRoutines();
   const { exercises } = useExercises();
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const handleCreate = (datos) => {
-    const resultado = addRoutine(datos);
+  const handleCreate = (data) => {
+    const result = addRoutine(data);
     setShowCreateForm(false);
-    if (resultado.ok) navegar(`/routines/${resultado.routine.id}`);
+    if (result.ok) navigate(`/routines/${result.routine.id}`);
   };
 
   return (
@@ -30,19 +32,23 @@ export default function RoutinesPage() {
       <RoutineList
         routines={routines}
         allExercises={exercises}
-        onRoutineClick={(routine) => navegar(`/routines/${routine.id}`)}
+        onRoutineClick={(routine) => navigate(`/routines/${routine.id}`)}
       />
 
       <button
         type="button"
         className="c-routines-page__fab"
         onClick={() => setShowCreateForm(true)}
-        aria-label="Crear rutina"
+        aria-label={t('detail.createAction')}
       >
         <Icon path={mdiPlus} size={1.2} />
       </button>
 
-      <Modal isOpen={showCreateForm} onClose={() => setShowCreateForm(false)} title="Nueva rutina">
+      <Modal
+        isOpen={showCreateForm}
+        onClose={() => setShowCreateForm(false)}
+        title={t('form.createTitle')}
+      >
         <RoutineForm onSubmit={handleCreate} onCancel={() => setShowCreateForm(false)} />
       </Modal>
     </div>

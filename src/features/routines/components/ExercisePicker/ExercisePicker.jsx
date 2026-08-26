@@ -5,11 +5,13 @@ import { useState } from 'react';
 import { getMuscleGroupColor } from '@domain/catalogs';
 import { toComparableText } from '@domain/validation/normalize';
 import SearchBar from '@shared/components/SearchBar/SearchBar';
+import useTranslation from '@i18n/useTranslation';
 import { MuscleGroupFilter } from '@features/exercises';
 
 import './ExercisePicker.scss';
 
 export default function ExercisePicker({ allExercises, selectedIds, onToggle, onClose }) {
+  const { t, tn } = useTranslation('routines');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState(null);
 
@@ -23,14 +25,22 @@ export default function ExercisePicker({ allExercises, selectedIds, onToggle, on
   return (
     <div className="c-exercise-picker">
       <div className="c-exercise-picker__header">
-        <h2 className="c-exercise-picker__title">Agregar ejercicio</h2>
-        <button className="c-exercise-picker__close" onClick={onClose} aria-label="Cerrar">
+        <h2 className="c-exercise-picker__title">{t('picker.title')}</h2>
+        <button
+          className="c-exercise-picker__close"
+          onClick={onClose}
+          aria-label={tn('common', 'action.close')}
+        >
           <Icon path={mdiClose} size={0.85} />
         </button>
       </div>
 
       <div>
-        <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Buscar ejercicio…" />
+        <SearchBar
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder={tn('exercises', 'page.searchPlaceholder')}
+        />
       </div>
 
       <div>
@@ -39,7 +49,7 @@ export default function ExercisePicker({ allExercises, selectedIds, onToggle, on
 
       <div className="c-exercise-picker__list">
         {filtered.length === 0 ? (
-          <p className="c-exercise-picker__empty">Sin resultados</p>
+          <p className="c-exercise-picker__empty">{tn('common', 'search.empty')}</p>
         ) : (
           filtered.map((ex) => {
             const isSelected = selectedIds.includes(ex.id);

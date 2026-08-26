@@ -1,0 +1,11 @@
+{
+  "title": "Ajustes",
+  "theme": {
+    "label": "Tema",
+    "system": "El del sistema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "toggle": "Tema: {{value}}"
+  },
+  "language": { "label": "Idioma" }
+}

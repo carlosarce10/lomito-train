@@ -1,0 +1,19 @@
+{
+  "required": "Este campo es obligatorio",
+  "tooShort": "Usa al menos {{min}} caracteres",
+  "tooLong": "Máximo {{max}} caracteres",
+  "notANumber": "Escribe un número",
+  "notInteger": "Escribe un número entero",
+  "tooSmall": "El mínimo es {{min}}",
+  "tooLarge": "El máximo es {{max}}",
+  "notAStep": "Usa múltiplos de {{step}}",
+  "outOfRange": "Valor fuera de rango",
+  "notInCatalog": "Selecciona una opción válida",
+  "tooFewItems": "Selecciona al menos {{min}}",
+  "tooManyItems": "Como máximo {{max}}",
+  "notAList": "El dato guardado no tiene la forma esperada",
+  "notAnObject": "El dato guardado no tiene la forma esperada",
+  "invalidId": "Identificador no valido",
+  "invalidDate": "Fecha no valida",
+  "duplicateItems": "Hay elementos repetidos"
+}

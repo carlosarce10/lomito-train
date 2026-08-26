@@ -1,8 +1,21 @@
 import { mdiMagnify, mdiClose } from '@mdi/js';
 import Icon from '@mdi/react';
+
+import useTranslation from '@i18n/useTranslation';
+
 import './SearchBar.scss';
 
-export default function SearchBar({ value, onChange, placeholder = 'Buscar…' }) {
+/**
+ * Campo de busqueda con icono y boton de limpiado.
+ *
+ * @param {object} props
+ * @param {string} props.value Texto actual del filtro.
+ * @param {(valor: string) => void} props.onChange Notifica cada cambio del texto.
+ * @param {string} [props.placeholder] Texto de ayuda; si falta se usa el generico.
+ */
+export default function SearchBar({ value, onChange, placeholder }) {
+  const { t } = useTranslation('common');
+
   return (
     <div className="c-search-bar">
       <span className="c-search-bar__icon">
@@ -13,7 +26,7 @@ export default function SearchBar({ value, onChange, placeholder = 'Buscar…' }
         type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t('search.placeholder')}
         autoCapitalize="off"
         autoCorrect="off"
         spellCheck={false}
@@ -22,7 +35,7 @@ export default function SearchBar({ value, onChange, placeholder = 'Buscar…' }
         <button
           className="c-search-bar__clear"
           onClick={() => onChange('')}
-          aria-label="Limpiar búsqueda"
+          aria-label={t('search.clear')}
           type="button"
         >
           <Icon path={mdiClose} size={0.75} />

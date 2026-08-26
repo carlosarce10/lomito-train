@@ -1,4 +1,5 @@
 import { MUSCLE_GROUPS } from '@domain/catalogs';
+import useTranslation from '@i18n/useTranslation';
 
 import './MuscleGroupFilter.scss';
 
@@ -14,6 +15,8 @@ import './MuscleGroupFilter.scss';
  * @param {(id: string|null) => void} props.onFilterChange
  */
 export default function MuscleGroupFilter({ activeFilter, onFilterChange }) {
+  const { t, tn } = useTranslation('exercises');
+
   return (
     <div className="c-muscle-group-filter o-scroll-x">
       <button
@@ -22,7 +25,7 @@ export default function MuscleGroupFilter({ activeFilter, onFilterChange }) {
         aria-pressed={!activeFilter}
         onClick={() => onFilterChange(null)}
       >
-        Todos
+        {t('filter.all')}
       </button>
       {MUSCLE_GROUPS.map((group) => (
         <button
@@ -33,7 +36,7 @@ export default function MuscleGroupFilter({ activeFilter, onFilterChange }) {
           aria-pressed={activeFilter === group.id}
           onClick={() => onFilterChange(group.id)}
         >
-          {group.label}
+          {tn('catalog', `muscleGroups.${group.id}`)}
         </button>
       ))}
     </div>

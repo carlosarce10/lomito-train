@@ -6,12 +6,24 @@ import { getRoutineColor } from '@domain/catalogs';
 import { resolveRoutineExercises } from '@domain/model/routine';
 import Button from '@shared/components/Button/Button';
 import Modal from '@shared/components/Modal/Modal';
+import useTranslation from '@i18n/useTranslation';
 import { ExerciseForm } from '@features/exercises';
 
 import ExercisePicker from '../ExercisePicker/ExercisePicker';
 import RoutineExerciseCard from '../RoutineExerciseCard/RoutineExerciseCard';
 import RoutineForm from '../RoutineForm/RoutineForm';
 import './RoutineDetail.scss';
+
+// El nombre lo escribe el usuario y no se traduce. La frase se pide sin
+// interpolar y se parte por el hueco: asi la traduccion decide donde va el nombre
+// y la interfaz puede seguir destacandolo, como ya hace ExerciseDetail.
+const NAME_SLOT = '{{name}}';
+
+/** Parte una frase con hueco de nombre en las dos mitades que lo rodean. */
+function splitAroundName(phrase) {
+  const [before, after = ''] = phrase.split(NAME_SLOT);
+  return [before, after];
+}
 
 export default function RoutineDetail({
   routine,
@@ -26,6 +38,7 @@ export default function RoutineDetail({
   onUpdateSet,
   onDeleteSet,
 }) {
+  const { t, tn } = useTranslation('routines');
   const [showPicker, setShowPicker] = useState(false);
   const [isEditingRoutine, setIsEditingRoutine] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -33,6 +46,9 @@ export default function RoutineDetail({
   const [removingExerciseId, setRemovingExerciseId] = useState(null);
 
   const routineExercises = resolveRoutineExercises(routine, allExercises);
+  // Modal trae 'Cerrar' escrito a mano en su valor por defecto: se le pasa siempre.
+  const closeLabel = tn('common', 'action.close');
+  const [deleteBefore, deleteAfter] = splitAroundName(t('detail.deleteConfirm'));
 
   const handleToggleExercise = (exerciseId) => {
     if (routine.exerciseIds.includes(exerciseId)) {
@@ -60,20 +76,20 @@ export default function RoutineDetail({
       <div className="c-routine-detail__top">
         <button className="c-routine-detail__back" onClick={onBack}>
           <Icon path={mdiArrowLeft} size={0.9} />
-          Rutinas
+          {tn('common', 'nav.routines')}
         </button>
         <div className="c-routine-detail__top-actions">
           <button
             className="c-routine-detail__edit"
             onClick={() => setIsEditingRoutine(true)}
-            aria-label="Editar rutina"
+            aria-label={t('detail.editAction')}
           >
             <Icon path={mdiPencil} size={0.9} />
           </button>
           <button
             className="c-routine-detail__delete"
             onClick={() => setShowConfirmDelete(true)}
-            aria-label="Eliminar rutina"
+            aria-label={t('detail.deleteAction')}
           >
             <Icon path={mdiDelete} size={0.9} />
           </button>
@@ -93,27 +109,23 @@ export default function RoutineDetail({
       <div className="c-routine-detail__exercises-section">
         <div className="c-routine-detail__exercises-header">
           <span className="c-routine-detail__exercises-title">
-            Ejercicios ({routineExercises.length})
+            {t('detail.exercisesTitle', { count: routineExercises.length })}
           </span>
           <button
             className="c-routine-detail__add-btn"
             onClick={() => setShowPicker(true)}
-            aria-label="Agregar ejercicio"
+            aria-label={t('detail.addExercise')}
           >
             <Icon path={mdiPlus} size={0.85} />
-            Agregar
+            {tn('common', 'action.add')}
           </button>
         </div>
 
         {routineExercises.length === 0 ? (
-          <p className="c-routine-detail__empty">
-            Sin ejercicios. Agrega algunos con el botón de arriba.
-          </p>
+          <p className="c-routine-detail__empty">{t('detail.empty')}</p>
         ) : (
           <div className="c-routine-detail__exercise-list">
-            <p className="c-routine-detail__swipe-hint">
-              Desliza ← para quitar &nbsp;·&nbsp; → para editar
-            </p>
+            <p className="c-routine-detail__swipe-hint">{t('detail.swipeHint')}</p>
             {routineExercises.map((ex) => (
               <RoutineExerciseCard
                 key={ex.id}
@@ -130,7 +142,7 @@ export default function RoutineDetail({
       </div>
 
       {/* Exercise picker modal */}
-      <Modal isOpen={showPicker} onClose={() => setShowPicker(false)} title="">
+      <Modal isOpen={showPicker} onClose={() => setShowPicker(false)} closeLabel={closeLabel}>
         <ExercisePicker
           allExercises={allExercises}
           selectedIds={routine.exerciseIds}
@@ -143,7 +155,8 @@ export default function RoutineDetail({
       <Modal
         isOpen={!!editingExercise}
         onClose={() => setEditingExercise(null)}
-        title="Editar ejercicio"
+        title={tn('exercises', 'form.editTitle')}
+        closeLabel={closeLabel}
       >
         {editingExercise && (
           <ExerciseForm
@@ -158,22 +171,26 @@ export default function RoutineDetail({
       <Modal
         isOpen={!!removingExerciseId}
         onClose={() => setRemovingExerciseId(null)}
-        title="Quitar ejercicio"
+        title={t('detail.removeTitle')}
+        closeLabel={closeLabel}
       >
         {removingExerciseId &&
           (() => {
             const ex = allExercises.find((e) => e.id === removingExerciseId);
+            const [removeBefore, removeAfter] = splitAroundName(t('detail.removeConfirm'));
             return (
               <div className="c-routine-detail__confirm">
                 <p className="c-routine-detail__confirm-text">
-                  ¿Quitar <strong>{ex?.name}</strong> de esta rutina?
+                  {removeBefore}
+                  <strong>{ex?.name}</strong>
+                  {removeAfter}
                 </p>
                 <div className="c-routine-detail__confirm-actions">
                   <Button variant="ghost" onClick={() => setRemovingExerciseId(null)}>
-                    Cancelar
+                    {tn('common', 'action.cancel')}
                   </Button>
                   <Button variant="danger" onClick={handleConfirmRemove}>
-                    Quitar
+                    {tn('common', 'action.remove')}
                   </Button>
                 </div>
               </div>
@@ -185,7 +202,8 @@ export default function RoutineDetail({
       <Modal
         isOpen={isEditingRoutine}
         onClose={() => setIsEditingRoutine(false)}
-        title="Editar rutina"
+        title={t('form.editTitle')}
+        closeLabel={closeLabel}
       >
         <RoutineForm
           initialData={routine}
@@ -201,18 +219,21 @@ export default function RoutineDetail({
       <Modal
         isOpen={showConfirmDelete}
         onClose={() => setShowConfirmDelete(false)}
-        title="Eliminar rutina"
+        title={t('detail.deleteTitle')}
+        closeLabel={closeLabel}
       >
         <div className="c-routine-detail__confirm">
           <p className="c-routine-detail__confirm-text">
-            ¿Eliminar <strong>{routine.name}</strong>? Esta acción no se puede deshacer.
+            {deleteBefore}
+            <strong>{routine.name}</strong>
+            {deleteAfter}
           </p>
           <div className="c-routine-detail__confirm-actions">
             <Button variant="ghost" onClick={() => setShowConfirmDelete(false)}>
-              Cancelar
+              {tn('common', 'action.cancel')}
             </Button>
             <Button variant="danger" onClick={() => onDelete(routine.id)}>
-              Eliminar
+              {tn('common', 'action.delete')}
             </Button>
           </div>
         </div>

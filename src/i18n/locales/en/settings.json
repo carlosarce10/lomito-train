@@ -1,0 +1,11 @@
+{
+  "title": "Settings",
+  "theme": {
+    "label": "Theme",
+    "system": "Match system",
+    "light": "Light",
+    "dark": "Dark",
+    "toggle": "Theme: {{value}}"
+  },
+  "language": { "label": "Language" }
+}

@@ -5,10 +5,16 @@ import { useState } from 'react';
 import Button from '@shared/components/Button/Button';
 import Modal from '@shared/components/Modal/Modal';
 import NumberField from '@shared/components/NumberField/NumberField';
+import useTranslation from '@i18n/useTranslation';
 
 import ExerciseForm from '../ExerciseForm/ExerciseForm';
 import MuscleGroupBadgeList from '../MuscleGroupBadgeList/MuscleGroupBadgeList';
 import './ExerciseDetail.scss';
+
+// El nombre del ejercicio va en negrita dentro de la frase de confirmacion. En vez
+// de meter etiquetas HTML en la clave, se pide la frase sin interpolar y se parte
+// por el hueco: asi la traduccion puede mover el nombre a donde su idioma lo ponga.
+const NAME_SLOT = '{{name}}';
 
 export default function ExerciseDetail({
   exercise,
@@ -19,6 +25,7 @@ export default function ExerciseDetail({
   onUpdateSet,
   onDeleteSet,
 }) {
+  const { t, tn, formatNumber } = useTranslation('exercises');
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -36,19 +43,21 @@ export default function ExerciseDetail({
   const handleSetChange = (setId, field, raw) =>
     raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: raw });
 
+  const [confirmBefore, confirmAfter = ''] = t('detail.deleteConfirm').split(NAME_SLOT);
+
   return (
     <div className="c-exercise-detail">
       <div className="c-exercise-detail__top">
         <button className="c-exercise-detail__back" onClick={onClose}>
           <Icon path={mdiArrowLeft} size={0.9} />
-          Volver
+          {tn('common', 'action.back')}
         </button>
         <div className="c-exercise-detail__actions-top">
           <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
-            Editar
+            {tn('common', 'action.edit')}
           </Button>
           <Button variant="danger" size="sm" onClick={() => setShowDeleteConfirm(true)}>
-            Eliminar
+            {tn('common', 'action.delete')}
           </Button>
         </div>
       </div>
@@ -60,30 +69,28 @@ export default function ExerciseDetail({
 
       <div className="c-exercise-detail__sets-section">
         <div className="c-exercise-detail__sets-header">
-          <h3 className="c-exercise-detail__sets-title">Sets</h3>
+          <h3 className="c-exercise-detail__sets-title">{t('detail.setsTitle')}</h3>
           <Button size="sm" onClick={() => onAddSet(exercise.id)}>
-            + Set
+            {t('detail.addSet')}
           </Button>
         </div>
 
         {exercise.sets.length === 0 ? (
-          <p className="c-exercise-detail__sets-empty">
-            Agrega un set para registrar peso y repeticiones
-          </p>
+          <p className="c-exercise-detail__sets-empty">{t('detail.setsEmpty')}</p>
         ) : (
           <div className="c-exercise-detail__sets-table">
             <div className="c-exercise-detail__sets-row c-exercise-detail__sets-row--header">
               <span className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--num">
                 #
               </span>
-              <span className="c-exercise-detail__sets-cell">Peso (kg)</span>
-              <span className="c-exercise-detail__sets-cell">Reps</span>
+              <span className="c-exercise-detail__sets-cell">{tn('common', 'field.weight')}</span>
+              <span className="c-exercise-detail__sets-cell">{tn('common', 'field.reps')}</span>
               <span className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--action"></span>
             </div>
             {exercise.sets.map((set, index) => (
               <div key={set.id} className="c-exercise-detail__sets-row">
                 <span className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--num">
-                  {index + 1}
+                  {formatNumber(index + 1, 'integer')}
                 </span>
                 <div className="c-exercise-detail__sets-cell">
                   <NumberField
@@ -91,7 +98,7 @@ export default function ExerciseDetail({
                     inputMode="decimal"
                     value={set.weight}
                     placeholder="0"
-                    aria-label="Peso en kilos"
+                    aria-label={tn('common', 'field.weightAria')}
                     onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
                   />
                 </div>
@@ -101,7 +108,7 @@ export default function ExerciseDetail({
                     inputMode="numeric"
                     value={set.reps}
                     placeholder="0"
-                    aria-label="Repeticiones"
+                    aria-label={tn('common', 'field.repsAria')}
                     onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
                   />
                 </div>
@@ -109,7 +116,7 @@ export default function ExerciseDetail({
                   <button
                     className="c-exercise-detail__sets-delete"
                     onClick={() => onDeleteSet(exercise.id, set.id)}
-                    aria-label="Eliminar set"
+                    aria-label={t('detail.deleteSet')}
                   >
                     <Icon path={mdiClose} size={0.7} />
                   </button>
@@ -121,7 +128,7 @@ export default function ExerciseDetail({
       </div>
 
       {/* Modal editar ejercicio */}
-      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)} title="Editar ejercicio">
+      <Modal isOpen={isEditing} onClose={() => setIsEditing(false)} title={t('form.editTitle')}>
         <ExerciseForm
           initialData={exercise}
           onSubmit={handleEditSubmit}
@@ -133,19 +140,20 @@ export default function ExerciseDetail({
       <Modal
         isOpen={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}
-        title="Eliminar ejercicio"
+        title={t('detail.deleteTitle')}
       >
         <div className="c-exercise-detail__confirm">
           <p className="c-exercise-detail__confirm-text">
-            ¿Seguro que quieres eliminar <strong>{exercise.name}</strong>? Esta accion no se puede
-            deshacer.
+            {confirmBefore}
+            <strong>{exercise.name}</strong>
+            {confirmAfter}
           </p>
           <div className="c-exercise-detail__confirm-actions">
             <Button variant="ghost" onClick={() => setShowDeleteConfirm(false)}>
-              Cancelar
+              {tn('common', 'action.cancel')}
             </Button>
             <Button variant="danger" onClick={handleDelete}>
-              Eliminar
+              {tn('common', 'action.delete')}
             </Button>
           </div>
         </div>

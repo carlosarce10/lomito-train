@@ -1,0 +1,52 @@
+{
+  "app": {
+    "name": "Lomito Train"
+  },
+  "action": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "remove": "Remove",
+    "add": "Add",
+    "back": "Back",
+    "close": "Close",
+    "retry": "Retry",
+    "download": "Download"
+  },
+  "nav": {
+    "routines": "Routines",
+    "exercises": "Exercises",
+    "settings": "Settings"
+  },
+  "search": {
+    "placeholder": "Search…",
+    "clear": "Clear search",
+    "empty": "No results"
+  },
+  "unit": {
+    "kg": "kg",
+    "reps": "reps"
+  },
+  "field": {
+    "weight": "Weight (kg)",
+    "reps": "Reps",
+    "weightAria": "Weight in kilograms",
+    "repsAria": "Repetitions"
+  },
+  "recovery": {
+    "title": "Lomito Train could not start",
+    "hint": "Your data is still on this device. Download a copy before doing anything else.",
+    "download": "Download backup",
+    "unavailable": "This browser will not let the app save data. You may be in private mode.",
+    "downgrade": "This data comes from a newer version of the app.",
+    "corrupt": "The saved data cannot be read.",
+    "quotaExceeded": "The browser has run out of storage space.",
+    "render": "Something broke while drawing the screen."
+  },
+  "error": {
+    "duplicateName": "Something with that name already exists",
+    "writeFailed": "Could not save. The browser may be out of space."
+  }
+}

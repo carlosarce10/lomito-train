@@ -1,0 +1,25 @@
+{
+  "muscleGroups": {
+    "upperbody": "Tren superior",
+    "lowerbody": "Tren inferior",
+    "push": "Empuje",
+    "pull": "Tirón",
+    "leg": "Pierna"
+  },
+  "equipment": {
+    "barbell": "Barra",
+    "dumbbell": "Mancuernas",
+    "cable": "Cable",
+    "machine": "Máquina",
+    "bodyweight": "Corporal",
+    "other": "Otro"
+  },
+  "colors": {
+    "lavender": "Lavanda",
+    "mint": "Menta",
+    "sky": "Cielo",
+    "peach": "Melocotón",
+    "violet": "Violeta",
+    "pink": "Rosa"
+  }
+}

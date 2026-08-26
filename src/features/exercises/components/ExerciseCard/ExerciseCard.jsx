@@ -1,8 +1,8 @@
 import { mdiDumbbell, mdiWeightLifter, mdiRun, mdiCog, mdiHelpCircle } from '@mdi/js';
 import Icon from '@mdi/react';
 
-import { getEquipmentLabel } from '@domain/catalogs';
 import { getMaxWeight } from '@domain/model/records';
+import useTranslation from '@i18n/useTranslation';
 
 import MuscleGroupBadgeList from '../MuscleGroupBadgeList/MuscleGroupBadgeList';
 import './ExerciseCard.scss';
@@ -17,6 +17,7 @@ const EQUIPMENT_ICONS = {
 };
 
 export default function ExerciseCard({ exercise, onClick }) {
+  const { t, tn, formatNumber } = useTranslation('exercises');
   const totalSets = exercise.sets.length;
   const maxWeight = getMaxWeight(exercise.sets);
   const equipmentIcon = exercise.equipmentId
@@ -30,7 +31,7 @@ export default function ExerciseCard({ exercise, onClick }) {
         {equipmentIcon && (
           <span
             className="c-exercise-card__equipment"
-            title={getEquipmentLabel(exercise.equipmentId)}
+            title={tn('catalog', `equipment.${exercise.equipmentId}`)}
           >
             <Icon path={equipmentIcon} size={0.75} />
           </span>
@@ -41,12 +42,12 @@ export default function ExerciseCard({ exercise, onClick }) {
       <MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} max={3} />
       <div className="c-exercise-card__stats">
         <div className="c-exercise-card__stat">
-          <span className="c-exercise-card__stat-value">{totalSets}</span>
-          <span className="c-exercise-card__stat-label">Sets</span>
+          <span className="c-exercise-card__stat-value">{formatNumber(totalSets, 'integer')}</span>
+          <span className="c-exercise-card__stat-label">{t('card.sets')}</span>
         </div>
         <div className="c-exercise-card__stat">
-          <span className="c-exercise-card__stat-value">{maxWeight}</span>
-          <span className="c-exercise-card__stat-label">Max kg</span>
+          <span className="c-exercise-card__stat-value">{formatNumber(maxWeight, 'weight')}</span>
+          <span className="c-exercise-card__stat-label">{t('card.maxWeight')}</span>
         </div>
       </div>
     </button>
