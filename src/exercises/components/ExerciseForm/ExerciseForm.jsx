@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import Icon from '@mdi/react';
 import { mdiCheck } from '@mdi/js';
+import Icon from '@mdi/react';
+import { useState } from 'react';
+
 import { MUSCLE_GROUPS } from '../../../muscle-groups/constants/muscleGroups';
-import { EQUIPMENT_TYPES } from '../../constants/equipment';
 import Button from '../../../shared/components/Button/Button';
+import { EQUIPMENT_TYPES } from '../../constants/equipment';
 import './ExerciseForm.scss';
 
 export default function ExerciseForm({ onSubmit, initialData = null, onCancel }) {
@@ -13,7 +14,7 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
       ? initialData.categories
       : initialData?.muscleGroup
         ? [initialData.muscleGroup]
-        : []
+        : [],
   );
   const [equipment, setEquipment] = useState(initialData?.equipment || '');
 
@@ -21,9 +22,7 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
   const isValid = name.trim() && categories.length > 0;
 
   const toggleCategory = (id) => {
-    setCategories((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
-    );
+    setCategories((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
   };
 
   const handleSubmit = (e) => {
@@ -50,18 +49,18 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
           placeholder="Ej: Press de banca"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          autoFocus
+          data-autofocus
           maxLength={60}
         />
       </div>
 
-      <div className="exercise-form__field">
-        <label className="exercise-form__label">
+      <fieldset className="exercise-form__field">
+        <legend className="exercise-form__label">
           Grupos musculares
           {categories.length > 0 && (
             <span className="exercise-form__label-count"> ({categories.length})</span>
           )}
-        </label>
+        </legend>
         <div className="exercise-form__group-options">
           {MUSCLE_GROUPS.map((group) => {
             const selected = categories.includes(group.id);
@@ -71,27 +70,31 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
                 type="button"
                 className={`exercise-form__group-option${selected ? ' exercise-form__group-option--selected' : ''}`}
                 style={selected ? { backgroundColor: group.color, borderColor: group.color } : {}}
+                aria-pressed={selected}
                 onClick={() => toggleCategory(group.id)}
               >
-                {selected && <Icon path={mdiCheck} size={0.65} className="exercise-form__group-check" />}
+                {selected && (
+                  <Icon path={mdiCheck} size={0.65} className="exercise-form__group-check" />
+                )}
                 {group.label}
               </button>
             );
           })}
         </div>
-      </div>
+      </fieldset>
 
-      <div className="exercise-form__field">
-        <label className="exercise-form__label">
+      <fieldset className="exercise-form__field">
+        <legend className="exercise-form__label">
           Equipamiento
           <span className="exercise-form__label-count"> (opcional)</span>
-        </label>
+        </legend>
         <div className="exercise-form__equipment-options">
           {EQUIPMENT_TYPES.map((eq) => (
             <button
               key={eq.id}
               type="button"
               className={`exercise-form__equipment-option${equipment === eq.id ? ' exercise-form__equipment-option--selected' : ''}`}
+              aria-pressed={equipment === eq.id}
               onClick={() => setEquipment((prev) => (prev === eq.id ? '' : eq.id))}
             >
               <span>{eq.icon}</span>
@@ -99,7 +102,7 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
             </button>
           ))}
         </div>
-      </div>
+      </fieldset>
 
       <div className="exercise-form__actions">
         {onCancel && (

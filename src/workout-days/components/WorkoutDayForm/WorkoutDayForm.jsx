@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { WORKOUT_DAY_COLORS, DEFAULT_COLOR } from '../../constants/workoutDayColors';
+
 import Button from '../../../shared/components/Button/Button';
+import { WORKOUT_DAY_COLORS, DEFAULT_COLOR } from '../../constants/workoutDayColors';
 import './WorkoutDayForm.scss';
 
 export default function WorkoutDayForm({ onSubmit, onCancel, initialData }) {
@@ -26,13 +27,13 @@ export default function WorkoutDayForm({ onSubmit, onCancel, initialData }) {
           placeholder="ej. Empuje, Piernas, Full Body…"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          autoFocus
+          data-autofocus
           maxLength={40}
         />
       </div>
 
-      <div className="workout-day-form__field">
-        <label className="workout-day-form__label">Color</label>
+      <fieldset className="workout-day-form__field">
+        <legend className="workout-day-form__label">Color</legend>
         <div className="workout-day-form__colors">
           {WORKOUT_DAY_COLORS.map((c) => (
             <button
@@ -41,11 +42,12 @@ export default function WorkoutDayForm({ onSubmit, onCancel, initialData }) {
               className={`workout-day-form__color-swatch${color === c ? ' workout-day-form__color-swatch--active' : ''}`}
               style={{ background: c }}
               onClick={() => setColor(c)}
+              aria-pressed={color === c}
               aria-label={`Color ${c}`}
             />
           ))}
         </div>
-      </div>
+      </fieldset>
 
       <div className="workout-day-form__actions">
         <Button type="button" variant="ghost" onClick={onCancel}>

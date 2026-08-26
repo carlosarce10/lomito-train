@@ -21,8 +21,8 @@ body {
   background-image:
     radial-gradient(ellipse at 15% 15%, rgba(59, 130, 246, 0.28) 0%, transparent 55%),
     radial-gradient(ellipse at 85% 80%, rgba(147, 197, 253, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 65% 5%,  rgba(96, 165, 250, 0.22) 0%, transparent 50%),
-    radial-gradient(ellipse at 5%  90%, rgba(37, 99, 235, 0.14) 0%, transparent 50%),
+    radial-gradient(ellipse at 65% 5%, rgba(96, 165, 250, 0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at 5% 90%, rgba(37, 99, 235, 0.14) 0%, transparent 50%),
     linear-gradient(145deg, #eff6ff 0%, #dbeafe 50%, #eff6ff 100%);
   background-attachment: fixed;
 }
@@ -39,6 +39,14 @@ textarea,
 select {
   font: inherit;
   color: inherit;
+}
+
+fieldset {
+  border: none;
+}
+
+legend {
+  padding: 0;
 }
 
 button {
