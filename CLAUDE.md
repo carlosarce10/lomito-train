@@ -219,7 +219,7 @@ verdad. El hook `commit-msg` los verifica. Detalle en [CONTRIBUTING.md](CONTRIBU
 ## 14. Estado de la migracion
 
 La estructura descrita en las secciones 5 a 10 es el objetivo acordado, y se alcanza
-por fases. **Lo que ya es cierto hoy y lo que todavia no** esta en
+por fases. El contenido de cada fase esta en [docs/plan.md](docs/plan.md). **Lo que ya es cierto hoy y lo que todavia no** esta en
 [docs/roadmap.md](docs/roadmap.md), con la fase en la que entra cada pieza.
 
 Antes de dar por hecho que una carpeta existe, se comprueba. Este archivo describe
