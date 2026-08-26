@@ -58,6 +58,7 @@ export default defineConfig([
             ['@domain', './src/domain'],
             ['@features', './src/features'],
             ['@i18n', './src/i18n'],
+            ['@services', './src/services'],
             ['@shared', './src/shared'],
             ['@styles', './src/styles'],
             ['@theme', './src/theme'],
@@ -85,6 +86,7 @@ export default defineConfig([
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           pathGroups: [
             { pattern: '@domain/**', group: 'internal', position: 'before' },
+            { pattern: '@services/**', group: 'internal', position: 'before' },
             { pattern: '@shared/**', group: 'internal', position: 'before' },
             { pattern: '@theme/**', group: 'internal', position: 'before' },
             { pattern: '@i18n/**', group: 'internal', position: 'before' },

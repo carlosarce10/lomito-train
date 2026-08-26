@@ -7,5 +7,59 @@
     "dark": "Dark",
     "toggle": "Theme: {{value}}"
   },
-  "language": { "label": "Language" }
+  "language": {
+    "label": "Language"
+  },
+  "export": {
+    "title": "Your data",
+    "hint": "Your data lives only on this device. If you clear the browser data, it is gone.",
+    "excel": "Download Excel",
+    "excelHint": "Exercises, routines and sets in a multi-sheet workbook",
+    "csv": "Download CSV",
+    "csvHint": "One sheet per download, no network needed",
+    "backup": "Backup",
+    "backupHint": "A JSON file to move your data to another device",
+    "import": "Import backup",
+    "importHint": "Replaces what you have now with the contents of the file",
+    "importConfirmTitle": "Import backup",
+    "importConfirmText": "This will replace your {{exercises}} exercises and {{routines}} routines with the contents of the file. This cannot be undone.",
+    "pdf": "Routine as PDF",
+    "pdfHint": "With blank boxes to write in at the gym",
+    "working": "Preparing the file…",
+    "done": "File ready",
+    "failed": "The file could not be generated",
+    "imported": "Imported {{exercises}} exercises and {{routines}} routines",
+    "importFailed": "That file is not a valid Lomito Train backup",
+    "importDiscarded": "{{count}} items were discarded because they did not have the expected shape",
+    "sheets": {
+      "exercises": "Exercises",
+      "routines": "Routines",
+      "routineExercises": "Routine_Exercises",
+      "sets": "Sets",
+      "metadata": "Metadata"
+    },
+    "columns": {
+      "id": "Id",
+      "name": "Name",
+      "muscleGroups": "Muscle groups",
+      "equipment": "Equipment",
+      "setCount": "Sets",
+      "maxWeight": "Max weight (kg)",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "color": "Color",
+      "exerciseCount": "Exercises",
+      "routine": "Routine",
+      "position": "Order",
+      "exercise": "Exercise",
+      "weight": "Weight (kg)",
+      "reps": "Reps",
+      "key": "Key",
+      "value": "Value",
+      "targetWeight": "Target weight",
+      "targetReps": "Target reps",
+      "actualWeight": "Actual weight",
+      "actualReps": "Actual reps"
+    }
+  }
 }

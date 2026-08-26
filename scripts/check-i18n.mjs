@@ -127,15 +127,10 @@ for (const clave of Object.keys(catalogos[IDIOMAS[0]])) {
   }
 }
 
-// Claves que existen para una fase posterior y todavia no las consume nadie.
-// Se listan una a una a proposito: una lista explicita se revisa, un comodin no.
-const PENDIENTES = new Set([
-  'common.error.duplicateName',
-  'common.error.writeFailed',
-  'common.action.download',
-  'exercises.detail.editAction',
-  'exercises.detail.deleteAction',
-]);
+// Claves que existen para una fase posterior y todavia no las consume nadie. Se
+// listan una a una a proposito: una lista explicita se revisa, un comodin no. Hoy
+// esta vacia, que es como deberia estar.
+const PENDIENTES = new Set();
 for (const clave of PENDIENTES) usadas.add(clave);
 
 const prefijos = [...usadas].filter((k) => k.endsWith('.*')).map((k) => k.slice(0, -2));

@@ -23,6 +23,21 @@
       padding: $spacing-md;
     }
 
+    // Reserva su linea siempre, igual que el error de Field, para que el
+    // formulario no salte cuando aparece el mensaje.
+    &__error {
+      min-height: $font-size-sm;
+      color: var(--danger-text);
+      font-size: $font-size-sm;
+    }
+
+    // Un nombre repetido no impide guardar, asi que no se pinta como un error:
+    // avisa en ambar y el envio sigue disponible.
+    &__warning {
+      color: var(--warning-text);
+      font-size: $font-size-sm;
+    }
+
     &__group-options {
       display: flex;
       flex-wrap: wrap;
@@ -30,6 +45,8 @@
     }
 
     &__group-option {
+      @include touch-target;
+
       padding: $spacing-sm $spacing-md;
       border-radius: $radius-full;
       font-size: $font-size-sm;
@@ -52,11 +69,14 @@
         transform: scale(0.95);
       }
 
-      // El relleno lo inyecta el color del grupo muscular, no un token de acento.
-      // La tinta es --on-catalog y no --text: los cinco colores del catalogo son
-      // claros en los dos temas, y --text en oscuro es casi blanco (1,94:1 sobre el
-      // naranja del grupo). --on-catalog no conmuta por esa razon.
+      // El relleno lo inyecta el color del grupo muscular como custom property, no
+      // un style en linea: un style en linea gana a cualquier regla de tema y deja
+      // el chip fuera del sistema. La tinta es --on-catalog y no --text: los cinco
+      // colores del catalogo son claros en los dos temas, y --text en oscuro es casi
+      // blanco (1,94:1 sobre el naranja del grupo). --on-catalog no conmuta por eso.
       &.is-selected {
+        border-color: var(--group-color, var(--accent));
+        background: var(--group-color, var(--accent));
         font-weight: $font-weight-semibold;
         color: var(--on-catalog);
         box-shadow: var(--shadow-md);
@@ -83,9 +103,12 @@
     }
 
     &__equipment-option {
+      @include touch-target;
+
       display: flex;
       align-items: center;
-      gap: 4px;
+      justify-content: center;
+      gap: $spacing-xs;
       flex-shrink: 0;
       padding: $spacing-xs $spacing-sm;
       border-radius: $radius-full;

@@ -1,4 +1,4 @@
-import { mdiArrowLeft, mdiDelete, mdiPencil, mdiPlus } from '@mdi/js';
+import { mdiArrowLeft, mdiDelete, mdiFilePdfBox, mdiPencil, mdiPlus } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useState } from 'react';
 
@@ -6,6 +6,7 @@ import { getRoutineColor } from '@domain/catalogs';
 import { resolveRoutineExercises } from '@domain/model/routine';
 import Button from '@shared/components/Button/Button';
 import Modal from '@shared/components/Modal/Modal';
+import useToast from '@shared/components/ToastProvider/useToast';
 import useTranslation from '@i18n/useTranslation';
 import { ExerciseForm } from '@features/exercises';
 
@@ -25,9 +26,24 @@ function splitAroundName(phrase) {
   return [before, after];
 }
 
+/**
+ * Detalle de una rutina: cabecera, exportacion a PDF y sus ejercicios con series.
+ *
+ * El aviso de escritura fallida lo emite la pantalla que inyecta las operaciones, en
+ * el unico punto por el que pasan todas; aqui solo se lee el `ok` para decidir si la
+ * interfaz puede avanzar, porque cerrar un formulario que no se guardo borra lo que el
+ * usuario acababa de escribir.
+ *
+ * @param {object} props
+ * @param {object} props.routine Rutina a mostrar.
+ * @param {Array} props.allExercises Catalogo completo de ejercicios.
+ * @param {Array<{ id: string, name: string }>} [props.existingNames] Rutinas ya
+ *   guardadas, para que el formulario de edicion avise de un nombre repetido.
+ */
 export default function RoutineDetail({
   routine,
   allExercises,
+  existingNames = [],
   onBack,
   onUpdate,
   onDelete,
@@ -38,14 +54,49 @@ export default function RoutineDetail({
   onUpdateSet,
   onDeleteSet,
 }) {
-  const { t, tn } = useTranslation('routines');
+  const { t, tn, formatDate } = useTranslation('routines');
   const [showPicker, setShowPicker] = useState(false);
   const [isEditingRoutine, setIsEditingRoutine] = useState(false);
+  const [exportando, setExportando] = useState(false);
+  const toast = useToast();
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [editingExercise, setEditingExercise] = useState(null);
   const [removingExerciseId, setRemovingExerciseId] = useState(null);
 
   const routineExercises = resolveRoutineExercises(routine, allExercises);
+
+  /**
+   * Genera el PDF de esta rutina. El motor se importa aqui y no arriba para que sus
+   * 130 kB no entren en el arranque de la aplicacion.
+   *
+   * Las etiquetas se resuelven en este lado: el servicio de PDF no conoce i18n.
+   */
+  const exportarPdf = async () => {
+    setExportando(true);
+    try {
+      const { exportRoutinePdf } = await import('@services/pdf/routinePdf');
+      const resultado = await exportRoutinePdf({
+        routine,
+        exercises: routineExercises.map((ex) => ({
+          name: ex.name,
+          muscleGroups: ex.muscleGroupIds.map((id) => tn('catalog', `muscleGroups.${id}`)),
+          equipment: ex.equipmentId ? tn('catalog', `equipment.${ex.equipmentId}`) : '',
+          sets: ex.sets,
+        })),
+        labels: {
+          appName: tn('common', 'app.name'),
+          date: formatDate(new Date().toISOString(), 'date'),
+          targetWeight: tn('settings', 'export.columns.targetWeight'),
+          targetReps: tn('settings', 'export.columns.targetReps'),
+          actualWeight: tn('settings', 'export.columns.actualWeight'),
+          actualReps: tn('settings', 'export.columns.actualReps'),
+        },
+      });
+      if (!resultado.ok) toast.error(tn('settings', 'export.failed'));
+    } finally {
+      setExportando(false);
+    }
+  };
   // Modal trae 'Cerrar' escrito a mano en su valor por defecto: se le pasa siempre.
   const closeLabel = tn('common', 'action.close');
   const [deleteBefore, deleteAfter] = splitAroundName(t('detail.deleteConfirm'));
@@ -58,16 +109,24 @@ export default function RoutineDetail({
     }
   };
 
+  // Si la escritura falla, el formulario se queda abierto con lo escrito: cerrarlo
+  // borraria el nombre que el usuario acaba de teclear justo cuando no se guardo.
+  const handleRoutineEditSubmit = (datos) => {
+    if (!onUpdate(routine.id, datos)?.ok) return;
+    setIsEditingRoutine(false);
+  };
+
   const handleEditSubmit = (data) => {
-    onUpdateExercise(editingExercise.id, data);
+    if (!onUpdateExercise(editingExercise.id, data)?.ok) return;
     setEditingExercise(null);
   };
 
+  // Si el ejercicio sigue en la rutina porque la escritura fallo, la confirmacion se
+  // queda abierta: cerrarla haria creer que se quito.
   const handleConfirmRemove = () => {
-    if (removingExerciseId) {
-      onRemoveExercise(routine.id, removingExerciseId);
-      setRemovingExerciseId(null);
-    }
+    if (!removingExerciseId) return;
+    if (!onRemoveExercise(routine.id, removingExerciseId)?.ok) return;
+    setRemovingExerciseId(null);
   };
 
   return (
@@ -79,6 +138,18 @@ export default function RoutineDetail({
           {tn('common', 'nav.routines')}
         </button>
         <div className="c-routine-detail__top-actions">
+          {/* Exportar esta desactivado con la rutina vacia: un PDF sin ejercicios no
+              le sirve a nadie, y es mejor que el boton lo diga que no que falle. */}
+          <button
+            type="button"
+            className="c-routine-detail__export"
+            onClick={exportarPdf}
+            disabled={exportando || routineExercises.length === 0}
+            aria-label={tn('settings', 'export.pdf')}
+            title={tn('settings', 'export.pdf')}
+          >
+            <Icon path={mdiFilePdfBox} size={0.9} />
+          </button>
           <button
             className="c-routine-detail__edit"
             onClick={() => setIsEditingRoutine(true)}
@@ -161,6 +232,7 @@ export default function RoutineDetail({
         {editingExercise && (
           <ExerciseForm
             initialData={editingExercise}
+            existingNames={allExercises}
             onSubmit={handleEditSubmit}
             onCancel={() => setEditingExercise(null)}
           />
@@ -205,12 +277,12 @@ export default function RoutineDetail({
         title={t('form.editTitle')}
         closeLabel={closeLabel}
       >
+        {/* La coleccion completa baja desde la pagina: sin ella el formulario no
+            puede avisar de un nombre repetido al editar. */}
         <RoutineForm
           initialData={routine}
-          onSubmit={(datos) => {
-            onUpdate(routine.id, datos);
-            setIsEditingRoutine(false);
-          }}
+          existingNames={existingNames}
+          onSubmit={handleRoutineEditSubmit}
           onCancel={() => setIsEditingRoutine(false)}
         />
       </Modal>

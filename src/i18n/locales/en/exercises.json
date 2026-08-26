@@ -1,11 +1,18 @@
 {
-  "page": { "searchPlaceholder": "Search exercise…" },
+  "page": {
+    "searchPlaceholder": "Search exercise…"
+  },
   "list": {
     "emptyTitle": "No exercises yet",
     "emptyHint": "Tap the + button to add your first exercise"
   },
-  "card": { "sets": "Sets", "maxWeight": "Max kg" },
-  "filter": { "all": "All" },
+  "card": {
+    "sets": "Sets",
+    "maxWeight": "Max kg"
+  },
+  "filter": {
+    "all": "All"
+  },
   "form": {
     "createTitle": "New exercise",
     "editTitle": "Edit exercise",
@@ -20,7 +27,6 @@
   "detail": {
     "createAction": "Create exercise",
     "editAction": "Edit exercise",
-    "deleteAction": "Delete exercise",
     "setsTitle": "Sets",
     "addSet": "Add set",
     "deleteSet": "Delete set",
@@ -28,7 +34,10 @@
     "deleteTitle": "Delete exercise",
     "deleteConfirm": "Delete {{name}}? This cannot be undone."
   },
-  "record": { "label": "personal best", "empty": "No personal best yet" },
+  "record": {
+    "label": "personal best",
+    "empty": "No personal best yet"
+  },
   "count_one": "{{count}} exercise",
   "count_other": "{{count}} exercises"
 }

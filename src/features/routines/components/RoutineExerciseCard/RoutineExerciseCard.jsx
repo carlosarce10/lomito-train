@@ -1,8 +1,9 @@
 import { mdiChevronDown, mdiChevronUp, mdiDelete, mdiPencil, mdiPlus, mdiClose } from '@mdi/js';
 import Icon from '@mdi/react';
-import { useState, useRef } from 'react';
+import { useId, useState, useRef } from 'react';
 
 import { getRecord } from '@domain/model/records';
+import { LIMITS } from '@domain/validation/limits';
 import NumberField from '@shared/components/NumberField/NumberField';
 import useTranslation from '@i18n/useTranslation';
 import { MuscleGroupBadgeList } from '@features/exercises';
@@ -11,6 +12,14 @@ import './RoutineExerciseCard.scss';
 
 const SWIPE_THRESHOLD = 72;
 
+/**
+ * Tarjeta de un ejercicio dentro de una rutina, con su marca y sus series.
+ *
+ * El error de una serie se pinta en su propia fila, con el codigo que devuelve el
+ * dominio: NumberField ya revertia el valor rechazado, pero sin decir por que. El
+ * aviso de escritura fallida lo emite la pantalla que inyecta las operaciones, en el
+ * unico punto por el que pasan todas.
+ */
 export default function RoutineExerciseCard({
   exercise,
   onRemove,
@@ -23,17 +32,41 @@ export default function RoutineExerciseCard({
   const [collapsed, setCollapsed] = useState(true);
   const [translateX, setTranslateX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
+  // Codigo de validacion por serie: { [setId]: { field, code } }. Se pinta en la
+  // fila y no como aviso flotante porque NumberField confirma en cada pulsacion.
+  const [setIssues, setSetIssues] = useState({});
+  // Campos de los que el usuario ya salio: { [setId]: { weight, reps } }. Un error no
+  // aparece mientras se escribe por primera vez, igual que en ExerciseForm: NumberField
+  // confirma en cada pulsacion, y avisar en la segunda tecla regana antes de acabar.
+  // Al salir del campo el aviso aparece, y desde entonces se actualiza en vivo.
+  const [visitedFields, setVisitedFields] = useState({});
+  // El usuario ya intento anadir una serie estando en el tope.
+  const [capReached, setCapReached] = useState(false);
+  const idBase = useId();
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const isHorizontal = useRef(false);
 
   const record = getRecord(exercise.sets);
 
-  // ── Swipe handlers ──────────────────────────────────────────
+  // ── Deslizamiento ───────────────────────────────────────────
+  // El deslizamiento es un atajo, no la unica via: las mismas dos acciones estan
+  // en botones siempre visibles y alcanzables por teclado. Ver docs/validation.md.
+
+  /** Devuelve la tarjeta a su sitio sin disparar ninguna accion. */
+  const cancelarDeslizamiento = () => {
+    setIsSwiping(false);
+    isHorizontal.current = false;
+    setTranslateX(0);
+  };
+
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     isHorizontal.current = false;
+    // Se parte siempre de cero: si un gesto anterior acabo en touchcancel, la
+    // tarjeta podia quedarse desplazada y el siguiente toque disparaba la accion.
+    setTranslateX(0);
     setIsSwiping(true);
   };
 
@@ -42,31 +75,97 @@ export default function RoutineExerciseCard({
     const dx = e.touches[0].clientX - touchStartX.current;
     const dy = e.touches[0].clientY - touchStartY.current;
 
-    // Determine scroll vs swipe direction on first move
+    // La direccion se decide en el primer movimiento que pasa del umbral de ruido.
     if (!isHorizontal.current && Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-    if (!isHorizontal.current) {
-      isHorizontal.current = Math.abs(dx) > Math.abs(dy);
-    }
+    if (!isHorizontal.current) isHorizontal.current = Math.abs(dx) > Math.abs(dy);
     if (!isHorizontal.current) return;
 
-    e.preventDefault();
-    const clamped = Math.max(-120, Math.min(120, dx));
-    setTranslateX(clamped);
+    // Aqui habia un e.preventDefault() que no hacia nada: React registra touchmove
+    // como pasivo, asi que la llamada se ignoraba y Chrome avisaba por consola. Lo
+    // que de verdad impide el desplazamiento horizontal es touch-action: pan-y en
+    // el SCSS, que ademas deja pasar el vertical, que es justo lo que se quiere.
+    setTranslateX(Math.max(-120, Math.min(120, dx)));
   };
 
   const handleTouchEnd = () => {
-    setIsSwiping(false);
-    if (translateX < -SWIPE_THRESHOLD) {
-      onRemove();
-    } else if (translateX > SWIPE_THRESHOLD) {
-      onEdit();
-    }
-    setTranslateX(0);
+    const recorrido = translateX;
+    cancelarDeslizamiento();
+    if (recorrido < -SWIPE_THRESHOLD) onRemove();
+    else if (recorrido > SWIPE_THRESHOLD) onEdit();
+  };
+
+  // ── Series ──────────────────────────────────────────────────
+
+  const idError = (setId) => `${idBase}-${setId}-error`;
+  const idCapError = `${idBase}-cap-error`;
+
+  const marcarIssue = (setId, field, code) =>
+    setSetIssues((prev) =>
+      prev[setId]?.code === code && prev[setId]?.field === field
+        ? prev
+        : { ...prev, [setId]: { field, code } },
+    );
+
+  const olvidarIssue = (setId) =>
+    setSetIssues((prev) => {
+      if (!(setId in prev)) return prev;
+      const siguiente = { ...prev };
+      delete siguiente[setId];
+      return siguiente;
+    });
+
+  /** Anota que el usuario ya salio de ese campo: desde ahora su error si se ve. */
+  const marcarVisitado = (setId, field) => {
+    if (field !== 'weight' && field !== 'reps') return;
+    setVisitedFields((prev) =>
+      prev[setId]?.[field] ? prev : { ...prev, [setId]: { ...prev[setId], [field]: true } },
+    );
+  };
+
+  /** El error de una serie solo se pinta si el campo que lo provoco ya se abandono. */
+  const issueVisible = (setId) => {
+    const issue = setIssues[setId];
+    return issue && visitedFields[setId]?.[issue.field] ? issue : null;
   };
 
   // El valor llega crudo: lo valida el dominio y devuelve si lo acepto.
-  const handleSetChange = (setId, field, raw) =>
-    raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: raw });
+  const handleSetChange = (setId, field, raw) => {
+    const resultado = raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: raw });
+
+    // Un valor que el dominio rechaza vuelve con `issue`, y ese es el mensaje de la
+    // fila. Una escritura que falla por almacenamiento no trae issue y no se pinta
+    // aqui: la avisa la pantalla, que si puede hacerlo una sola vez.
+    if (resultado?.ok) olvidarIssue(setId);
+    else if (resultado?.issue) marcarIssue(setId, field, resultado.issue);
+
+    return resultado;
+  };
+
+  const handleDeleteSet = (setId) => {
+    if (!onDeleteSet(exercise.id, setId)?.ok) return;
+    olvidarIssue(setId);
+    setVisitedFields((prev) => {
+      if (!(setId in prev)) return prev;
+      const siguiente = { ...prev };
+      delete siguiente[setId];
+      return siguiente;
+    });
+  };
+
+  // El tope de series lo fija el dominio, no el JSX: al alcanzarlo, addSet no guardaba
+  // nada y devolvia ok, asi que el boton parecia responder y no pasaba nada. Aqui se
+  // avisa antes de escribir, y el resultado de la escritura se lee para no retirar el
+  // aviso cuando la serie no llego a guardarse.
+  const setsAtCap = exercise.sets.length >= LIMITS.setsPerExercise.max;
+
+  const handleAddSet = () => {
+    if (setsAtCap) {
+      setCapReached(true);
+      return;
+    }
+    if (!onAddSet(exercise.id)?.ok) return;
+    setCapReached(false);
+  };
 
   const actionOpacity = Math.min(Math.abs(translateX) / SWIPE_THRESHOLD, 1);
   const showDelete = translateX < -16;
@@ -100,6 +199,7 @@ export default function RoutineExerciseCard({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onTouchCancel={cancelarDeslizamiento}
       >
         {/* Header row */}
         <div className="c-routine-exercise-card__header">
@@ -107,14 +207,37 @@ export default function RoutineExerciseCard({
             <span className="c-routine-exercise-card__name">{exercise.name}</span>
             <MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} max={2} />
           </div>
-          <button
-            className="c-routine-exercise-card__toggle"
-            onClick={() => setCollapsed((v) => !v)}
-            aria-label={tn('exercises', 'detail.setsTitle')}
-            aria-expanded={!collapsed}
-          >
-            <Icon path={collapsed ? mdiChevronDown : mdiChevronUp} size={0.9} />
-          </button>
+          {/* Estos dos botones son la alternativa accesible al deslizamiento. Una
+              accion que solo existe como gesto no la puede ejecutar quien navega con
+              teclado o con lector de pantalla, y el aviso de "desliza para quitar"
+              no le sirve de nada. Ver docs/validation.md. */}
+          <div className="c-routine-exercise-card__actions">
+            <button
+              type="button"
+              className="c-routine-exercise-card__action o-control"
+              onClick={onEdit}
+              aria-label={tn('exercises', 'detail.editAction')}
+            >
+              <Icon path={mdiPencil} size={0.85} />
+            </button>
+            <button
+              type="button"
+              className="c-routine-exercise-card__action c-routine-exercise-card__action--danger o-control"
+              onClick={onRemove}
+              aria-label={tn('routines', 'detail.removeTitle')}
+            >
+              <Icon path={mdiDelete} size={0.85} />
+            </button>
+            <button
+              type="button"
+              className="c-routine-exercise-card__toggle o-control"
+              onClick={() => setCollapsed((v) => !v)}
+              aria-label={tn('exercises', 'detail.setsTitle')}
+              aria-expanded={!collapsed}
+            >
+              <Icon path={collapsed ? mdiChevronDown : mdiChevronUp} size={0.9} />
+            </button>
+          </div>
         </div>
 
         {/* Record row */}
@@ -154,43 +277,82 @@ export default function RoutineExerciseCard({
                   <span>{tn('common', 'field.reps')}</span>
                   <span />
                 </div>
-                {exercise.sets.map((set, i) => (
-                  <div key={set.id} className="c-routine-exercise-card__sets-row">
-                    <span className="c-routine-exercise-card__sets-num">{i + 1}</span>
-                    <NumberField
-                      className="c-routine-exercise-card__sets-input"
-                      inputMode="decimal"
-                      value={set.weight}
-                      placeholder="0"
-                      aria-label={tn('common', 'field.weightAria')}
-                      onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
-                    />
-                    <NumberField
-                      className="c-routine-exercise-card__sets-input"
-                      inputMode="numeric"
-                      value={set.reps}
-                      placeholder="0"
-                      aria-label={tn('common', 'field.repsAria')}
-                      onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
-                    />
-                    <button
-                      className="c-routine-exercise-card__sets-del"
-                      onClick={() => onDeleteSet(exercise.id, set.id)}
-                      aria-label={tn('exercises', 'detail.deleteSet')}
+                {exercise.sets.map((set, i) => {
+                  const issue = issueVisible(set.id);
+
+                  return (
+                    // El focusout burbujea, asi que una sola escucha en la fila cubre
+                    // sus dos campos; data-field dice de cual se acaba de salir.
+                    <div
+                      key={set.id}
+                      className="c-routine-exercise-card__sets-row"
+                      onBlur={(event) => marcarVisitado(set.id, event.target.dataset.field)}
                     >
-                      <Icon path={mdiClose} size={0.7} />
-                    </button>
-                  </div>
-                ))}
+                      <span className="c-routine-exercise-card__sets-num">
+                        {formatNumber(i + 1, 'integer')}
+                      </span>
+                      <NumberField
+                        className="c-routine-exercise-card__sets-input"
+                        inputMode="decimal"
+                        value={set.weight}
+                        placeholder="0"
+                        data-field="weight"
+                        aria-label={tn('common', 'field.weightAria')}
+                        aria-invalid={issue?.field === 'weight' || undefined}
+                        aria-describedby={issue?.field === 'weight' ? idError(set.id) : undefined}
+                        onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
+                      />
+                      <NumberField
+                        className="c-routine-exercise-card__sets-input"
+                        inputMode="numeric"
+                        value={set.reps}
+                        placeholder="0"
+                        data-field="reps"
+                        aria-label={tn('common', 'field.repsAria')}
+                        aria-invalid={issue?.field === 'reps' || undefined}
+                        aria-describedby={issue?.field === 'reps' ? idError(set.id) : undefined}
+                        onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
+                      />
+                      <button
+                        className="c-routine-exercise-card__sets-del"
+                        onClick={() => handleDeleteSet(set.id)}
+                        aria-label={tn('exercises', 'detail.deleteSet')}
+                      >
+                        <Icon path={mdiClose} size={0.7} />
+                      </button>
+                      {/* NumberField ya revierte el valor rechazado al salir del
+                          campo; esto es lo que faltaba: decir por que se revirtio.
+                          Aparece al salir, no en la pulsacion que lo provoca. */}
+                      {issue && (
+                        <p
+                          className="c-routine-exercise-card__sets-error"
+                          id={idError(set.id)}
+                          role="alert"
+                        >
+                          {tn('validation', issue.code)}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
             <button
               className="c-routine-exercise-card__sets-add"
-              onClick={() => onAddSet(exercise.id)}
+              onClick={handleAddSet}
+              aria-describedby={capReached && setsAtCap ? idCapError : undefined}
             >
               <Icon path={mdiPlus} size={0.8} />
               {tn('exercises', 'detail.addSet')}
             </button>
+
+            {/* El limite viene de LIMITS: si se escribiera aqui, el JSX y el dominio
+                podrian discrepar y el boton no diria la verdad. */}
+            {capReached && setsAtCap && (
+              <p className="c-routine-exercise-card__sets-error" id={idCapError} role="alert">
+                {tn('validation', 'tooManyItems', { max: LIMITS.setsPerExercise.max })}
+              </p>
+            )}
           </div>
         )}
       </div>

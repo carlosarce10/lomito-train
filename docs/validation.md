@@ -1,6 +1,6 @@
 # Validacion de entrada
 
-Entra en la fase 7, sobre la capa creada en la fase 2. Ver [plan.md](plan.md).
+Vigente desde la fase 7. Ver [plan.md](plan.md).
 
 ## Contrato
 

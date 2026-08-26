@@ -8,14 +8,14 @@ Se actualiza en el mismo commit que cierra cada fase.
 | Fase | Nombre                                 | Estado     |
 | ---- | -------------------------------------- | ---------- |
 | 0    | Limpieza y suelo firme                 | Completada |
-| 1    | Alias de importacion                   | Pendiente  |
-| 2    | Capa de dominio y almacenamiento       | Pendiente  |
-| 3    | Renombrado a `routines` y migracion v3 | Pendiente  |
-| 4    | ITCSS, BEMIT y tokens                  | Pendiente  |
-| 5    | Enrutado y pagina de ajustes           | Pendiente  |
-| 6    | Internacionalizacion                   | Pendiente  |
-| 7    | Validacion visible y accesibilidad     | Pendiente  |
-| 8    | Exportacion a PDF y Excel              | Pendiente  |
+| 1    | Alias de importacion                   | Completada |
+| 2    | Capa de dominio y almacenamiento       | Completada |
+| 3    | Renombrado a `routines` y migracion v3 | Completada |
+| 4    | ITCSS, BEMIT y tokens                  | Completada |
+| 5    | Enrutado y pagina de ajustes           | Completada |
+| 6    | Internacionalizacion                   | Completada |
+| 7    | Validacion visible y accesibilidad     | Completada |
+| 8    | Exportacion a PDF y Excel              | Completada |
 
 ## Lo que es cierto hoy
 
@@ -26,29 +26,31 @@ src/
   domain/                 catalogs/ model/ schemas/ validation/ storage/
   features/exercises/     index.js + pages/ + components/ + hooks/
   features/routines/      index.js + pages/ + components/ + hooks/
-  features/settings/      index.js + pages/ + components/
+  features/settings/      index.js + pages/ + components/ + hooks/
+  i18n/                   config + format + provider + locales/{es,en}
+  services/               file/ + pdf/ + excel/
   shared/                 components/ + hooks/
   styles/                 las siete capas de ITCSS
   theme/                  themes + applyTheme + useTheme
 ```
 
-Todavia **no existen**: `src/services/` y `src/i18n/`.
+El arbol de la seccion 5 de CLAUDE.md ya existe completo.
 
 Estado de las reglas duras de CLAUDE.md:
 
-| Regla                               | Estado                             |
-| ----------------------------------- | ---------------------------------- |
-| 4 (localStorage solo en el dominio) | **Vigente**, impuesta por ESLint   |
-| 5 (ninguna clave literal)           | **Vigente**                        |
-| 6 (validar antes de escribir)       | **Vigente**                        |
-| 7 (ningun error silenciado)         | **Vigente**, `no-empty` como error |
-| 8 (migraciones verificadas)         | **Vigente**                        |
-| 9 (alias siempre)                   | **Vigente**, impuesta por ESLint   |
-| 11 (el dominio no importa React)    | **Vigente**, impuesta por ESLint   |
-| 1 (nada de texto en el JSX)         | Objetivo. Fase 6                   |
-| 2, 3 (colores y estilos en linea)   | Objetivo. Fase 4                   |
-| 10 (features aisladas)              | Objetivo. Fase 3                   |
-| 12 (nombre de bloque BEM)           | Objetivo. Fase 4                   |
+| Regla                               | Estado                                                             |
+| ----------------------------------- | ------------------------------------------------------------------ |
+| 4 (localStorage solo en el dominio) | **Vigente**, impuesta por ESLint                                   |
+| 5 (ninguna clave literal)           | **Vigente**                                                        |
+| 6 (validar antes de escribir)       | **Vigente**                                                        |
+| 7 (ningun error silenciado)         | **Vigente**, `no-empty` como error                                 |
+| 8 (migraciones verificadas)         | **Vigente**                                                        |
+| 9 (alias siempre)                   | **Vigente**, impuesta por ESLint                                   |
+| 11 (el dominio no importa React)    | **Vigente**, impuesta por ESLint                                   |
+| 1 (nada de texto en el JSX)         | **Vigente**, lo vigila `npm run lint:i18n`                         |
+| 2, 3 (colores y estilos en linea)   | **Vigente**: cero literales, y el dato inyecta una custom property |
+| 10 (features aisladas)              | **Vigente**, impuesta por ESLint                                   |
+| 12 (nombre de bloque BEM)           | **Vigente**, lo vigila `npm run lint:classes`                      |
 
 `no-restricted-properties` sigue desactivada en un unico archivo,
 `src/domain/storage/driver.js`, que es el contrato: es el unico modulo que puede
@@ -246,6 +248,94 @@ encuentra una clase sin prefijo, una clase sin regla, un estado fuera del vocabu
 cerrado o un bloque cuyo nombre no coincide con su componente. La regla 12 se
 incumplio dos veces: lo que se incumple dos veces se automatiza.
 
+## Fase 6 — Internacionalizacion (completada)
+
+Solucion propia sobre `Intl.PluralRules`, `Intl.NumberFormat` e `Intl.DateTimeFormat`.
+Cero dependencias nuevas: medido contra los 71,8 kB gzip del bundle, la propia anade
+un 1,7 por ciento, i18next un 29 y react-intl un 63.
+
+168 claves en seis espacios de nombres. Verificado en navegador que un peso se
+muestra como 82,5 en espanol y 82.5 en ingles, que `document.documentElement.lang`
+sigue al idioma activo, que los catalogos traducen, y que el nombre de un ejercicio
+no se traduce porque lo escribe el usuario.
+
+Los catalogos del dominio dejan de mezclar dato y presentacion: guardaban etiquetas,
+y de forma incoherente, porque `equipment.js` las tenia en espanol y con emojis
+mientras `muscleGroups.js` las tenia en ingles.
+
+`npm run lint:i18n` comprueba paridad entre idiomas, claves huerfanas en las dos
+direcciones, y la completitud de los plurales contra las categorias que **cada idioma
+declara de verdad**. Eso destapo que el espanol declara la categoria `many`, que un
+ternario nunca habria cubierto. Ademas cruza los mensajes de validacion contra los
+codigos que el dominio emite, en ambos sentidos, y eso destapo cinco codigos sin
+mensaje.
+
+## Fase 7 — Validacion visible y accesibilidad (completada)
+
+La capa de dominio ya validaba y ya devolvia resultados explicitos, pero la interfaz
+no mostraba nada: los formularios solo deshabilitaban el boton sin decir por que, y
+una escritura fallida era invisible.
+
+- `ToastProvider` con `aria-live="polite"`, no `assertive`: un aviso de guardado no
+  debe interrumpir lo que el lector de pantalla esta diciendo. Vive en `shared` y no
+  en `app` porque las features lo consumen, y una feature no puede importar de `app`
+  sin invertir la direccion de las dependencias.
+- `Field` enlaza etiqueta, control y error por id, con `aria-invalid` y
+  `aria-describedby`. La region de error existe siempre, tambien vacia: si apareciera
+  y desapareciera del DOM, el lector de pantalla no anunciaria el cambio.
+- Los mensajes salen del **codigo** que devuelve el dominio, traducido con
+  `tn('validation', code, params)`. Los formularios reutilizan las reglas del dominio
+  (`text(LIMITS.name)`, `listOf(...)`), asi que no pueden discrepar del esquema.
+- El error aparece al salir del campo o al intentar enviar, nunca mientras se escribe
+  por primera vez. El boton de enviar deja de estar deshabilitado: enviar es justo lo
+  que revela el error de un campo que no se ha tocado.
+- Aviso de nombre repetido con `isDuplicateName`, pasando el id propio como
+  `ignoreId` al editar. No bloquea: dos ejercicios con el mismo nombre son legitimos.
+- Toda operacion de escritura comprueba su `{ ok }` y avisa si falla. Esta es la
+  regla 7, y era el motivo de que existiera el `ToastProvider`.
+
+Los tres defectos del deslizamiento, verificados:
+
+| Defecto                                                                                                                               | Correccion                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Sin `touchcancel`, la tarjeta se congelaba desplazada con el fondo de "Eliminar" a la vista, y el siguiente toque disparaba la accion | Se maneja `touchcancel` y se parte de cero en cada `touchstart`                                                                     |
+| `preventDefault()` en `onTouchMove` no hacia nada, porque React registra ese evento como pasivo                                       | Se retira. Lo que de verdad controla el gesto es `touch-action: pan-y` en el SCSS, que ademas deja pasar el desplazamiento vertical |
+| El deslizamiento era la unica via de editar y quitar                                                                                  | Hay botones para las dos acciones en cada tarjeta, alcanzables por teclado. El aviso de la pantalla los menciona                    |
+
+## Fase 8 — Exportacion a PDF, Excel y copia (completada)
+
+`src/services/` con `file/`, `pdf/` y `excel/`. Nada de esto conoce React ni i18n:
+las etiquetas llegan ya traducidas desde quien llama.
+
+Los motores se cargan con `import()` diferido y quedan en chunks propios, verificado
+en el build: el bundle principal se queda en 118 kB gzip, jsPDF pesa 126 kB y exceljs
+271 kB, y solo bajan cuando el usuario exporta.
+
+| Comprobado en navegador | Resultado                                                                              |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| Libro de Excel          | `lomito-train_datos_2026-08-26.xlsx`, cinco hojas, 10,6 kB                             |
+| CSV                     | BOM presente, delimitador `;` y decimal `82,5` en espanol                              |
+| Inyeccion de formulas   | `=HYPERLINK("http://malo","clic")` sale como `"'=HYPERLINK(""http://malo"",""clic"")"` |
+| Copia de seguridad      | JSON con version de esquema y zona horaria                                             |
+| PDF de rutina           | `%PDF-` y `%%EOF`, con tabla por ejercicio y casillas en blanco                        |
+
+Detalles que no son adorno:
+
+- Las fechas se escriben como hora de pared local, no como el instante UTC, porque
+  XLSX no tiene concepto de zona horaria y un `Date` con la marca Z se ve desplazado.
+  La zona queda declarada en la hoja de metadatos para que sea reversible.
+- Los numeros van crudos y sin localizar en XLSX. Convertirlos a texto los volveria
+  cadenas y romperia cualquier suma o grafica. En CSV es lo contrario, porque ahi no
+  hay tipos.
+- El delimitador y el separador decimal van emparejados por necesidad: en un Windows
+  con configuracion regional espanola el separador de lista es el punto y coma, asi
+  que un CSV con comas caeria entero en la columna A.
+- `saveBlob` comparte en movil si el navegador lo permite y descarga si no. En una PWA
+  instalada un enlace de descarga puede abrir el fichero en la propia ventana y sacar
+  al usuario de la aplicacion.
+- La importacion valida todo antes de escribir nada, para que un fichero corrupto no
+  deje los ejercicios importados y las rutinas viejas.
+
 ## Deuda conocida, pendiente de fase
 
 Hallazgos confirmados por la auditoria que siguen vivos en el codigo:
@@ -273,6 +363,12 @@ Hallazgos confirmados por la auditoria que siguen vivos en el codigo:
 
 ## Como se lee este archivo
 
-Una fila en "Pendiente" significa que el codigo **no** cumple todavia la regla
-correspondiente de CLAUDE.md. No es una invitacion a saltarsela en codigo nuevo: lo
-que se escriba a partir de ahora sigue la regla, y lo antiguo se migra en su fase.
+Las ocho fases del plan estan cerradas, asi que las diecisiete reglas duras de
+CLAUDE.md describen el codigo real y no un objetivo. Cuatro de ellas ya no dependen de
+que nadie se acuerde: las vigilan `npm run lint`, `npm run lint:css`,
+`npm run lint:classes` y `npm run lint:i18n`, y las cuatro corren dentro de
+`npm run check`.
+
+Lo que queda en la tabla de deuda de mas arriba no es de ninguna fase: son hallazgos
+menores de la auditoria que sobreviven, y cada uno lleva la fase en la que se decidio
+no atenderlo.

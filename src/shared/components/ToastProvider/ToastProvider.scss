@@ -1,0 +1,37 @@
+@use 'styles/foundation' as *;
+
+@layer components {
+  .c-toast-provider {
+    position: fixed;
+    right: $spacing-md;
+    bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + #{$spacing-md});
+    left: $spacing-md;
+    z-index: $z-modal;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    // La region existe siempre para que el lector de pantalla la observe, pero no
+    // debe capturar toques cuando esta vacia.
+    pointer-events: none;
+
+    &__item {
+      @include glass-card-strong($radius-sm);
+
+      padding: $spacing-sm $spacing-md;
+      color: var(--text);
+      font-size: $font-size-sm;
+      text-align: left;
+      pointer-events: auto;
+    }
+
+    &__item--error {
+      border-color: var(--danger);
+      color: var(--danger-text);
+    }
+
+    &__item--success {
+      border-color: var(--success);
+      color: var(--success-text);
+    }
+  }
+}

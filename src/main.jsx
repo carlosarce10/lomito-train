@@ -12,6 +12,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createHashRouter, RouterProvider } from 'react-router';
 
+import ToastProvider from '@shared/components/ToastProvider/ToastProvider';
+
 import { bootstrap } from './app/bootstrap/bootstrap';
 import ErrorBoundary from './app/bootstrap/ErrorBoundary/ErrorBoundary';
 import RecoveryScreen from './app/bootstrap/RecoveryScreen/RecoveryScreen';
@@ -35,7 +37,9 @@ createRoot(document.getElementById('root')).render(
         <ErrorBoundary
           fallback={(error) => <RecoveryScreen reason="render" detail={error.message} />}
         >
-          <RouterProvider router={router} />
+          <ToastProvider>
+            <RouterProvider router={router} />
+          </ToastProvider>
         </ErrorBoundary>
       ) : (
         <RecoveryScreen reason={arranque.reason} detail={arranque.migration?.error?.message} />

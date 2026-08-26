@@ -12,8 +12,7 @@
     "add": "Add",
     "back": "Back",
     "close": "Close",
-    "retry": "Retry",
-    "download": "Download"
+    "retry": "Retry"
   },
   "nav": {
     "routines": "Routines",

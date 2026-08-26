@@ -36,6 +36,7 @@
     }
 
     // La geometria es comun; el color lo decide el significado de cada accion.
+    &__export,
     &__edit,
     &__delete {
       @include flex-center;

@@ -17,11 +17,13 @@
     "exercisesTitle": "Ejercicios ({{count}})",
     "addExercise": "Agregar ejercicio",
     "empty": "Sin ejercicios. Agrega algunos con el botón de arriba.",
-    "swipeHint": "Desliza a la izquierda para quitar, a la derecha para editar",
+    "swipeHint": "Desliza para quitar o editar, o usa los botones de cada tarjeta",
     "deleteTitle": "Eliminar rutina",
     "deleteConfirm": "¿Eliminar {{name}}? Esta acción no se puede deshacer.",
     "removeTitle": "Quitar ejercicio",
     "removeConfirm": "¿Quitar {{name}} de esta rutina?"
   },
-  "picker": { "title": "Agregar ejercicio" }
+  "picker": {
+    "title": "Agregar ejercicio"
+  }
 }

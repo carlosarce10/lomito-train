@@ -66,7 +66,10 @@ export default function useExercises() {
   const editSet = useCallback((exerciseId, setId, cambios) => {
     const ejercicio = exercisesRepository.getAll().find((ex) => ex.id === exerciseId);
     const serie = ejercicio?.sets.find((s) => s.id === setId);
-    if (!serie) return { ok: false, issue: 'notFound' };
+    // Sin `issue`: que la serie ya no exista no es un mensaje de validacion, y
+    // 'notFound' no es un codigo del dominio, asi que la fila pintaba la clave cruda
+    // "validation.notFound". Como fallo de escritura, lo avisa la pantalla.
+    if (!serie) return { ok: false, error: 'setNotFound' };
 
     const { set, ok, issue } = updateSet(serie, cambios);
     if (!ok) return { ok: false, issue };

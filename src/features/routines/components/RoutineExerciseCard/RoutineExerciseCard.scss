@@ -71,6 +71,24 @@
       overflow-wrap: break-word;
     }
 
+    &__actions {
+      display: flex;
+      flex-shrink: 0;
+      gap: $spacing-xs;
+    }
+
+    &__action {
+      color: var(--text-secondary);
+
+      &:hover {
+        color: var(--accent-text);
+      }
+    }
+
+    &__action--danger:hover {
+      color: var(--danger-text);
+    }
+
     &__toggle {
       @include touch-target;
       display: flex;
@@ -200,6 +218,14 @@
         -webkit-appearance: none;
         margin: 0;
       }
+    }
+
+    // El error de una serie ocupa toda la fila que lo provoca: asi el mensaje
+    // queda pegado al campo que lo genero, en vez de flotar sin contexto.
+    &__sets-error {
+      grid-column: 1 / -1;
+      color: var(--danger-text);
+      font-size: $font-size-xs;
     }
 
     // Borrar una serie es destructivo: peligro.

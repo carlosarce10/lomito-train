@@ -1,5 +1,6 @@
 import useTranslation from '@i18n/useTranslation';
 
+import DataPanel from '../../components/DataPanel/DataPanel';
 import LanguagePicker from '../../components/LanguagePicker/LanguagePicker';
 import ThemePicker from '../../components/ThemePicker/ThemePicker';
 
@@ -8,8 +9,8 @@ import './SettingsPage.scss';
 /**
  * Ajustes de la aplicacion.
  *
- * El panel de datos entra en la fase 8; hasta entonces esta pantalla contiene solo
- * lo que ya funciona, no huecos vacios.
+ * Tema, idioma y datos. El panel de datos es lo mas importante de esta pantalla: sin
+ * servidor, es la unica copia de seguridad que existe.
  */
 export default function SettingsPage() {
   const { t } = useTranslation('settings');
@@ -24,6 +25,10 @@ export default function SettingsPage() {
 
       <section className="c-settings-page__section">
         <LanguagePicker />
+      </section>
+
+      <section className="c-settings-page__section">
+        <DataPanel />
       </section>
     </div>
   );

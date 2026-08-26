@@ -31,6 +31,13 @@
       }
     }
 
+    // El nombre repetido es un aviso, no un error: se distingue del mensaje de
+    // validacion por el color, y no reserva linea propia porque casi nunca aparece.
+    &__warning {
+      color: var(--warning-text);
+      font-size: $font-size-sm;
+    }
+
     &__colors {
       display: flex;
       gap: $spacing-sm;
@@ -54,9 +61,9 @@
         transform: scale(0.9);
       }
 
-      // El color del swatch es el contenido, no la decoracion: el estado activo se
+      // El color del swatch es el contenido, no la decoracion: el color elegido se
       // marca con un anillo de texto, que se lee sobre cualquiera de los colores.
-      &.is-active {
+      &.is-selected {
         border-color: var(--text);
         transform: scale(1.15);
       }

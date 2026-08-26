@@ -139,6 +139,14 @@
       }
     }
 
+    // El error de una serie ocupa toda la fila que lo provoca: asi el mensaje
+    // queda pegado al campo que lo genero, en vez de flotar sin contexto.
+    &__sets-error {
+      grid-column: 1 / -1;
+      color: var(--danger-text);
+      font-size: $font-size-xs;
+    }
+
     &__sets-delete {
       @include flex-center;
       @include touch-target;

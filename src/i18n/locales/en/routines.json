@@ -17,11 +17,13 @@
     "exercisesTitle": "Exercises ({{count}})",
     "addExercise": "Add exercise",
     "empty": "No exercises yet. Add some with the button above.",
-    "swipeHint": "Swipe left to remove, right to edit",
+    "swipeHint": "Swipe to remove or edit, or use the buttons on each card",
     "deleteTitle": "Delete routine",
     "deleteConfirm": "Delete {{name}}? This cannot be undone.",
     "removeTitle": "Remove exercise",
     "removeConfirm": "Remove {{name}} from this routine?"
   },
-  "picker": { "title": "Add exercise" }
+  "picker": {
+    "title": "Add exercise"
+  }
 }

@@ -66,12 +66,25 @@ const definidas = new Set();
 for (const archivo of recorrer(RAIZ, '.scss')) {
   const texto = readFileSync(archivo, 'utf8');
   const pila = [];
+  // Prettier reparte una lista de selectores en varias lineas, asi que hay que
+  // acumular hasta encontrar la llave de apertura. Sin esto, un bloque
+  // "&__a,\n&__b {" solo registraba el ultimo de los dos.
+  let acumulado = '';
   for (const cruda of texto.split('\n')) {
     const linea = cruda.replace(/\/\/.*$/, '').trim();
     if (linea === '') continue;
 
-    if (linea.endsWith('{')) {
-      const selector = linea.slice(0, -1).trim();
+    if (linea.startsWith('}')) {
+      acumulado = '';
+      pila.pop();
+      continue;
+    }
+
+    acumulado = acumulado ? `${acumulado} ${linea}` : linea;
+
+    if (acumulado.endsWith('{')) {
+      const selector = acumulado.slice(0, -1).trim();
+      acumulado = '';
       const padre = pila.length > 0 ? pila[pila.length - 1] : null;
       let resuelto = null;
 
@@ -90,8 +103,10 @@ for (const archivo of recorrer(RAIZ, '.scss')) {
       }
       // Un at-rule o un selector sin clase no cambia el contexto BEM.
       pila.push(resuelto ?? padre);
-    } else if (linea.startsWith('}')) {
-      pila.pop();
+    } else if (!acumulado.endsWith(',')) {
+      // Una declaracion normal cierra el acumulado. Una linea que acaba en coma es
+      // la continuacion de una lista de selectores y tiene que seguir acumulando.
+      acumulado = '';
     }
 
     // Clases compuestas dentro de la linea: &.is-active, .c-x .c-y

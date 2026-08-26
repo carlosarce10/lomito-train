@@ -241,14 +241,16 @@ verdad. El hook `commit-msg` los verifica. Detalle en [CONTRIBUTING.md](CONTRIBU
 16. Ningun emoji en codigo, comentarios, documentacion ni mensajes de commit.
 17. `npm run check` en verde antes de cada commit.
 
-## 14. Estado de la migracion
+## 14. Estado
 
-La estructura descrita en las secciones 5 a 10 es el objetivo acordado, y se alcanza
-por fases. El contenido de cada fase esta en [docs/plan.md](docs/plan.md). **Lo que ya es cierto hoy y lo que todavia no** esta en
-[docs/roadmap.md](docs/roadmap.md), con la fase en la que entra cada pieza.
+Las ocho fases del plan estan cerradas, asi que este archivo describe el codigo real
+y no un objetivo. El contenido de cada fase esta en [docs/plan.md](docs/plan.md) y su
+resultado en [docs/roadmap.md](docs/roadmap.md), que es tambien donde vive la deuda
+conocida que sigue abierta.
 
-Antes de dar por hecho que una carpeta existe, se comprueba. Este archivo describe
-adonde va el proyecto; el roadmap dice por donde va.
+Cuatro de las reglas duras no dependen de que nadie se acuerde: las vigilan
+`npm run lint`, `npm run lint:css`, `npm run lint:classes` y `npm run lint:i18n`, y
+las cuatro corren dentro de `npm run check`.
 
 ## 15. Mantenimiento de este archivo
 

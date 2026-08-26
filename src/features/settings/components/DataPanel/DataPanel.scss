@@ -1,0 +1,108 @@
+@use 'styles/foundation' as *;
+
+@layer components {
+  .c-data-panel {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    &__title {
+      font-size: $font-size-base;
+    }
+
+    &__hint {
+      color: var(--text-muted);
+      font-size: $font-size-sm;
+    }
+
+    &__actions {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+      margin-top: $spacing-xs;
+    }
+
+    &__action {
+      display: flex;
+      gap: $spacing-md;
+      align-items: center;
+      min-height: $touch-target;
+      padding: $spacing-sm $spacing-md;
+      border: 1px solid var(--border);
+      border-radius: $radius-sm;
+      background: var(--surface);
+      color: var(--accent-text);
+      text-align: left;
+      transition:
+        background-color $transition-fast,
+        border-color $transition-fast;
+
+      &:hover:not(:disabled) {
+        border-color: var(--accent);
+        background: var(--accent-subtle);
+      }
+
+      &:disabled {
+        opacity: 0.55;
+        cursor: default;
+      }
+    }
+
+    // Importar sustituye lo que hay: se senala como destructivo, no como una descarga.
+    &__action--danger {
+      color: var(--danger-text);
+
+      &:hover:not(:disabled) {
+        border-color: var(--danger);
+        background: var(--danger-subtle);
+      }
+    }
+
+    &__action-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    &__action-label {
+      font-weight: $font-weight-semibold;
+    }
+
+    &__action-hint {
+      color: var(--text-muted);
+      font-size: $font-size-xs;
+      font-weight: $font-weight-regular;
+    }
+
+    &__confirm {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-md;
+      color: var(--text);
+    }
+
+    &__confirm-actions {
+      display: flex;
+      gap: $spacing-sm;
+      justify-content: flex-end;
+    }
+
+    &__confirm-cancel,
+    &__confirm-accept {
+      min-height: $touch-target;
+      padding: $spacing-sm $spacing-lg;
+      border-radius: $radius-sm;
+      font-weight: $font-weight-semibold;
+    }
+
+    &__confirm-cancel {
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    &__confirm-accept {
+      background: var(--danger);
+      color: var(--on-danger);
+    }
+  }
+}

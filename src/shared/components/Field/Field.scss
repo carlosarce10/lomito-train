@@ -1,0 +1,27 @@
+@use 'styles/foundation' as *;
+
+@layer components {
+  .c-field {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    &__label {
+      color: var(--text-secondary);
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+    }
+
+    &__hint {
+      color: var(--text-muted);
+      font-weight: $font-weight-regular;
+    }
+
+    // Reserva su linea siempre para que el formulario no salte al aparecer el error.
+    &__error {
+      min-height: $font-size-sm;
+      color: var(--danger-text);
+      font-size: $font-size-sm;
+    }
+  }
+}

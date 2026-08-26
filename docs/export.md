@@ -1,6 +1,6 @@
 # Exportacion: PDF, Excel y respaldo
 
-Entra en la fase 8. Ver [plan.md](plan.md).
+Vigente desde la fase 8. Ver [plan.md](plan.md).
 
 Ambos exportadores viven en `src/services/`, leen de la capa de dominio y **nunca de
 un hook de React**, y comparten un unico saneador de texto y un unico `saveBlob()`.
