@@ -95,15 +95,20 @@ canonico se fija en CLAUDE.md y manda sobre codigo, carpetas, interfaz y traducc
 ## Brand Commitments
 
 - Nombre: Lomito Train. Confirmado y no se toca.
-- El tema claro conserva la identidad azul actual. Es una restriccion explicita del usuario.
+- El tema claro conserva la identidad azul actual. Es una restriccion explicita del
+  usuario, y convive con un logotipo rojo: el logotipo es una marca con su propia
+  paleta, no la fuente del color de acento de la interfaz.
 - Sin emojis ni iconos decorativos en documentacion, comentarios ni mensajes de commit.
 
 ## Evidence on Hand
 
 - Codigo fuente en src/, aproximadamente 4.400 lineas entre JSX, JS y SCSS.
 - Repositorio: https://github.com/carlosarce10/lomito-train (publico, sin commits todavia).
-- No hay logotipo, ni iconos de aplicacion, ni capturas, ni textos de marketing, ni datos
-  de usuarios reales. Nada de eso debe inventarse ni darse por existente.
+- Logotipo en `assets/logo-master.png`: un pinscher musculado con una mancuerna, la
+  palabra Lomito Train, y guinos a codigo (`</>`, `push(); train(); repeat();`). Su
+  paleta es rojo, negro, tostado y hueso, y viene con forma de icono de aplicacion.
+- No hay capturas, ni textos de marketing, ni datos de usuarios reales. Nada de eso
+  debe inventarse ni darse por existente.
 
 ## Product Principles
 

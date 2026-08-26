@@ -1,5 +1,5 @@
-import { mdiDumbbell } from '@mdi/js';
-import Icon from '@mdi/react';
+import useTranslation from '@i18n/useTranslation';
+import logoMark from '@/assets/logo-mark.png';
 
 import BottomNav from '../BottomNav/BottomNav';
 
@@ -14,14 +14,14 @@ import './Layout.scss';
  * @param {import('react').ReactNode} [props.headerAction] Control a la derecha del titulo.
  */
 export default function Layout({ children, tabs, headerAction }) {
+  const { t } = useTranslation('common');
+
   return (
     <div className="c-layout">
       <header className="c-layout__header">
         <h1 className="c-layout__logo">
-          <span className="c-layout__logo-icon">
-            <Icon path={mdiDumbbell} size={1.2} />
-          </span>
-          Lomito Train
+          <img className="c-layout__logo-mark" src={logoMark} alt="" width="32" height="32" />
+          {t('app.name')}
         </h1>
         {headerAction}
       </header>

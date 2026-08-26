@@ -38,6 +38,15 @@
       color: var(--accent-text);
     }
 
+    // La marca es una imagen con su propia paleta, asi que no sigue al tema. El
+    // radio recorta el cuadrado del icono para que no choque con la cabecera.
+    &__logo-mark {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: $radius-sm;
+    }
+
     &__logo-icon {
       display: flex;
       align-items: center;

@@ -73,18 +73,21 @@ primera linea de codigo.
 
 ## 5. Donde va cada cosa
 
-| Voy a anadir                                 | Va en                                               |
-| -------------------------------------------- | --------------------------------------------------- |
-| Una pantalla                                 | `src/features/<feature>/pages/`                     |
-| Un componente que conoce el dominio          | `src/features/<feature>/components/`                |
-| Un componente generico (boton, modal, campo) | `src/shared/components/`                            |
-| Una regla de negocio o un invariante         | `src/domain/model/`                                 |
-| Una lista fija de valores                    | `src/domain/catalogs/`                              |
-| Una clave de localStorage                    | `src/domain/storage/keys.js` y en ningun otro sitio |
-| Un cambio de forma de los datos              | `src/domain/schemas/` mas su migracion              |
-| Texto visible                                | `src/i18n/locales/{es,en}/<namespace>.json`         |
-| Un color, un radio, una sombra, un espaciado | `src/styles/settings/`                              |
-| Un adaptador a una libreria externa          | `src/services/`                                     |
+| Voy a anadir                                  | Va en                                                |
+| --------------------------------------------- | ---------------------------------------------------- |
+| Una pantalla                                  | `src/features/<feature>/pages/`                      |
+| Un componente que conoce el dominio           | `src/features/<feature>/components/`                 |
+| Un componente generico (boton, modal, campo)  | `src/shared/components/`                             |
+| Una regla de negocio o un invariante          | `src/domain/model/`                                  |
+| Una lista fija de valores                     | `src/domain/catalogs/`                               |
+| Una clave de localStorage                     | `src/domain/storage/keys.js` y en ningun otro sitio  |
+| Un cambio de forma de los datos               | `src/domain/schemas/` mas su migracion               |
+| Texto visible                                 | `src/i18n/locales/{es,en}/<namespace>.json`          |
+| Un color, un radio, una sombra, un espaciado  | `src/styles/settings/`                               |
+| Un adaptador a una libreria externa           | `src/services/`                                      |
+| Un icono de la aplicacion, favicon o manifest | `public/`, por URL fija                              |
+| Una imagen que consume un componente          | `src/assets/`, importada para que Vite le ponga hash |
+| El archivo original de un asset               | `assets/` en la raiz. Nunca en `src/`                |
 
 Anatomia obligatoria de una feature: `index.js` como unica API publica, mas
 `pages/`, `components/` y `hooks/`. Un hook de datos y un hook de UI nunca se
