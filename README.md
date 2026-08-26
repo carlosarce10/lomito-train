@@ -1,16 +1,48 @@
-# React + Vite
+# Lomito Train
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Registro de entrenamiento de fuerza que funciona sin cuenta, sin red y sin backend.
+El usuario mantiene su propio catalogo de ejercicios, los agrupa en rutinas y anota
+series con peso y repeticiones.
 
-Currently, two official plugins are available:
+Los datos viven solo en el dispositivo, en `localStorage`. No hay servidor y no hay
+sincronizacion: por eso exportar los datos es parte del producto, no un extra.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Puesta en marcha
 
-## React Compiler
+```bash
+npm install
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+El servidor escucha en el puerto 5173 y acepta conexiones desde la red local, para
+poder abrirlo desde el movil durante el desarrollo.
 
-## Expanding the ESLint configuration
+## Comandos
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Comando            | Que hace                                                            |
+| ------------------ | ------------------------------------------------------------------- |
+| `npm run dev`      | Servidor de desarrollo                                              |
+| `npm run build`    | Build de produccion en `dist/`                                      |
+| `npm run preview`  | Sirve el build de produccion                                        |
+| `npm run lint`     | ESLint                                                              |
+| `npm run lint:css` | Stylelint                                                           |
+| `npm run format`   | Prettier en modo escritura                                          |
+| `npm run check`    | Formato, ESLint, Stylelint y build. Puerta unica antes de commitear |
+
+## Stack
+
+React con Vite, Sass, iconos Material Design y `uuid`. Sin TypeScript: la seguridad
+de tipos se resuelve con validacion en tiempo de ejecucion. Las versiones exactas
+estan en `package.json`.
+
+## Documentacion
+
+| Documento                          | Para que                                                               |
+| ---------------------------------- | ---------------------------------------------------------------------- |
+| [PRODUCT.md](PRODUCT.md)           | Que es el producto, para quien y con que restricciones                 |
+| [CLAUDE.md](CLAUDE.md)             | Contexto tecnico: vocabulario, estructura, convenciones y reglas duras |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Commits, atribucion y flujo de trabajo                                 |
+| [docs/roadmap.md](docs/roadmap.md) | Que parte de la arquitectura objetivo ya es real                       |
+
+Antes de escribir codigo se lee CLAUDE.md. Antes de escribir un commit se lee
+CONTRIBUTING.md.
