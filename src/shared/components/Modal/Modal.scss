@@ -1,0 +1,90 @@
+@use '../../../shared/styles/variables' as *;
+@use '../../../shared/styles/mixins' as *;
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  @include flex-center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: $spacing-md;
+  animation: modal-fade-in $transition-base;
+
+  &__content {
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: $radius-xl;
+    box-shadow: $shadow-lg, inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    animation: modal-slide-up $transition-base;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba($color-primary, 0.20) transparent;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba($color-primary, 0.20);
+      border-radius: 2px;
+    }
+  }
+
+  &__header {
+    @include flex-between;
+    padding: $spacing-md $spacing-lg;
+    border-bottom: 1px solid $color-divider;
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+  }
+
+  &__close {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-full;
+    color: $color-text-secondary;
+    font-size: $font-size-lg;
+    background: $color-surface;
+    border: 1px solid $color-glass-border;
+    transition: all $transition-fast;
+
+    &:active {
+      background: $color-surface-hover;
+      color: $color-text-primary;
+    }
+  }
+
+  &__body {
+    padding: $spacing-lg;
+  }
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modal-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

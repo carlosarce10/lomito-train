@@ -1,0 +1,63 @@
+@use '../../../shared/styles/variables' as *;
+@use '../../../shared/styles/mixins' as *;
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  background: $color-surface;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid $color-glass-border;
+  border-radius: $radius-full;
+  padding: $spacing-sm $spacing-md;
+  box-shadow: $shadow-sm;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &:focus-within {
+    border-color: rgba($color-primary, 0.40);
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.08), $shadow-sm;
+  }
+
+  &__icon {
+    font-size: $font-size-sm;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  &__input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    min-width: 0;
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+
+    // Remove native search clear button
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  &__clear {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $color-text-muted;
+    font-size: $font-size-xs;
+    padding: 2px 4px;
+    border-radius: $radius-full;
+    transition: color $transition-fast;
+    line-height: 1;
+
+    &:active {
+      color: $color-text-primary;
+    }
+  }
+}

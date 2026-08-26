@@ -1,0 +1,73 @@
+@use '../../../shared/styles/variables' as *;
+@use '../../../shared/styles/mixins' as *;
+
+.workout-day-form {
+  @include flex-column;
+  gap: $spacing-lg;
+
+  &__field {
+    @include flex-column;
+    gap: $spacing-sm;
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__input {
+    width: 100%;
+    padding: $spacing-sm $spacing-md;
+    background: rgba(255, 255, 255, 0.60);
+    border: 1px solid $color-glass-border;
+    border-radius: $radius-sm;
+    color: $color-text-primary;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: rgba($color-primary, 0.50);
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.08);
+      background: rgba(255, 255, 255, 0.80);
+    }
+  }
+
+  &__colors {
+    display: flex;
+    gap: $spacing-sm;
+    flex-wrap: wrap;
+  }
+
+  &__color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-full;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform $transition-fast, border-color $transition-fast;
+
+    &:active {
+      transform: scale(0.90);
+    }
+
+    &--active {
+      border-color: $color-text-primary;
+      transform: scale(1.15);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    justify-content: flex-end;
+  }
+}

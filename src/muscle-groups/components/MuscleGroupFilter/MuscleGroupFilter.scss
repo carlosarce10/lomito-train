@@ -1,0 +1,38 @@
+@use '../../../shared/styles/variables' as *;
+@use '../../../shared/styles/mixins' as *;
+
+.muscle-group-filter {
+  display: flex;
+  gap: $spacing-sm;
+  overflow-x: auto;
+  padding: $spacing-sm 0;
+  @include hide-scrollbar;
+
+  &__chip {
+    flex-shrink: 0;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $radius-full;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-secondary;
+    background: $color-surface;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid $color-glass-border;
+    box-shadow: $shadow-sm;
+    transition: all $transition-fast;
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &--active {
+      background: linear-gradient(135deg, $color-primary 0%, #fb923c 100%);
+      color: #ffffff;
+      border-color: transparent;
+      font-weight: $font-weight-semibold;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.30);
+    }
+  }
+}

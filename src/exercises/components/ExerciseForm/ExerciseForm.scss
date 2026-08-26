@@ -1,0 +1,111 @@
+@use '../../../shared/styles/variables' as *;
+@use '../../../shared/styles/mixins' as *;
+
+.exercise-form {
+  @include flex-column;
+  gap: $spacing-lg;
+
+  &__field {
+    @include flex-column;
+    gap: $spacing-sm;
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__input {
+    @include input-base;
+    padding: $spacing-md;
+  }
+
+  &__group-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
+
+  &__group-option {
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-full;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-secondary;
+    background: $color-surface;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid $color-glass-border;
+    cursor: pointer;
+    transition: all $transition-fast;
+    box-shadow: $shadow-sm;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &--selected {
+      font-weight: $font-weight-semibold;
+      color: #1a1a1a;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &__label-count {
+    font-weight: $font-weight-regular;
+    color: $color-text-muted;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  &__group-check {
+    font-size: $font-size-xs;
+  }
+
+  &__equipment-options {
+    display: flex;
+    gap: $spacing-sm;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    @include hide-scrollbar;
+  }
+
+  &__equipment-option {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-full;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $color-text-secondary;
+    background: $color-surface;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid $color-glass-border;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &--selected {
+      background: $color-primary-light;
+      border-color: rgba($color-primary, 0.30);
+      color: $color-primary;
+      font-weight: $font-weight-semibold;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    justify-content: flex-end;
+    padding-top: $spacing-sm;
+  }
+}

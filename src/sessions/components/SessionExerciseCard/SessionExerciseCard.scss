@@ -1,0 +1,170 @@
+@use '../../../shared/styles/variables' as *;
+@use '../../../shared/styles/mixins' as *;
+
+.session-exercise-card {
+  @include flex-column;
+  gap: $spacing-sm;
+  background: $color-surface;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm, inset 0 1px 0 rgba(255, 255, 255, 0.50);
+  padding: $spacing-md;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: $radius-full;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  &__prev {
+    display: flex;
+    align-items: baseline;
+    gap: $spacing-xs;
+    padding: $spacing-xs $spacing-sm;
+    background: rgba($color-success, 0.07);
+    border: 1px solid rgba($color-success, 0.18);
+    border-radius: $radius-sm;
+  }
+
+  &__prev-label {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $color-success;
+    flex-shrink: 0;
+  }
+
+  &__prev-values {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__table {
+    @include flex-column;
+    gap: $spacing-xs;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 24px 1fr 1fr 32px 24px;
+    gap: $spacing-xs;
+    align-items: center;
+
+    &--header {
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+      color: $color-text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 $spacing-xs $spacing-xs;
+      border-bottom: 1px solid $color-divider;
+
+      span { text-align: center; }
+    }
+
+    &--done {
+      opacity: 0.55;
+
+      .session-exercise-card__input {
+        text-decoration: line-through;
+        color: $color-text-muted;
+      }
+    }
+  }
+
+  &__num {
+    font-weight: $font-weight-bold;
+    font-size: $font-size-xs;
+    background: linear-gradient(135deg, $color-primary 0%, #fb923c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+  }
+
+  &__input {
+    width: 100%;
+    padding: $spacing-xs;
+    background: rgba(255, 255, 255, 0.60);
+    border: 1px solid $color-glass-border;
+    border-radius: $radius-sm;
+    color: $color-text-primary;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    text-align: center;
+    -moz-appearance: textfield;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &::placeholder { color: $color-text-muted; }
+
+    &:focus {
+      outline: none;
+      border-color: rgba($color-primary, 0.50);
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.08);
+      background: rgba(255, 255, 255, 0.80);
+    }
+  }
+
+  &__done {
+    @include flex-center;
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-full;
+    border: 1.5px solid $color-glass-border;
+    background: transparent;
+    color: $color-text-muted;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &--active {
+      background: $color-success;
+      border-color: $color-success;
+      color: #ffffff;
+    }
+  }
+
+  &__delete {
+    @include flex-center;
+    width: 20px;
+    height: 20px;
+    border-radius: $radius-full;
+    background: transparent;
+    border: none;
+    color: $color-text-muted;
+    font-size: 0.625rem;
+    cursor: pointer;
+    transition: color $transition-fast;
+
+    &:active {
+      color: $color-danger;
+    }
+
+    &:disabled {
+      opacity: 0.25;
+      pointer-events: none;
+    }
+  }
+}

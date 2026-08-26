@@ -1,0 +1,36 @@
+@use '../shared/styles/variables' as *;
+@use '../shared/styles/mixins' as *;
+
+.exercises-page {
+  @include flex-column;
+  gap: $spacing-md;
+  padding-bottom: 80px; // space for FAB
+
+  &__fab {
+    position: fixed;
+    bottom: calc(var(--nav-height) + $spacing-md);
+    right: $spacing-xl;
+    width: 56px;
+    height: 56px;
+    border-radius: $radius-full;
+    background: $color-primary;
+    color: #ffffff;
+    @include flex-center;
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.40),
+                0 2px 8px rgba(0, 0, 0, 0.10);
+    border: none;
+    cursor: pointer;
+    transition: all $transition-fast;
+    z-index: 40;
+
+    &:hover {
+      background: $color-primary-dark;
+    }
+
+    &:active {
+      transform: scale(0.92);
+      background: $color-primary-dark;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.30);
+    }
+  }
+}

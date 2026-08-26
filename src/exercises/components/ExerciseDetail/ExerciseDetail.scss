@@ -1,0 +1,185 @@
+@use '../../../shared/styles/variables' as *;
+@use '../../../shared/styles/mixins' as *;
+
+.exercise-detail {
+  @include flex-column;
+  gap: $spacing-lg;
+
+  &__top {
+    @include flex-between;
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    border-radius: $radius-full;
+    cursor: pointer;
+    padding: $spacing-xs $spacing-md;
+    transition: all $transition-fast;
+
+    &:active {
+      background: rgba(37, 99, 235, 0.15);
+    }
+  }
+
+  &__actions-top {
+    display: flex;
+    gap: $spacing-xs;
+  }
+
+  &__info {
+    @include flex-column;
+    gap: $spacing-sm;
+  }
+
+  &__name {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+  }
+
+  // Sets section
+  &__sets-section {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+
+  &__sets-header {
+    @include flex-between;
+  }
+
+  &__sets-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  &__sets-empty {
+    text-align: center;
+    padding: $spacing-xl;
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
+  }
+
+  &__sets-table {
+    @include flex-column;
+    gap: $spacing-xs;
+  }
+
+  &__sets-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr 36px;
+    gap: $spacing-sm;
+    align-items: center;
+    padding: $spacing-sm;
+    border-radius: $radius-sm;
+
+    &--header {
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+      color: $color-text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding-bottom: $spacing-xs;
+      border-bottom: 1px solid $color-divider;
+    }
+
+    &:not(&--header) {
+      background: $color-surface;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: $radius-sm;
+    }
+  }
+
+  &__sets-cell {
+    &--num {
+      font-weight: $font-weight-bold;
+      color: $color-primary;
+      text-align: center;
+    }
+
+    &--action {
+      @include flex-center;
+    }
+  }
+
+  &__sets-input {
+    width: 100%;
+    padding: $spacing-sm;
+    background: rgba(255, 255, 255, 0.60);
+    border: 1px solid $color-glass-border;
+    border-radius: $radius-sm;
+    color: $color-text-primary;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    text-align: center;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: rgba($color-primary, 0.50);
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.08);
+      background: rgba(255, 255, 255, 0.80);
+    }
+  }
+
+  &__sets-delete {
+    @include flex-center;
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-full;
+    color: $color-text-muted;
+    font-size: $font-size-xs;
+    background: transparent;
+    border: 1px solid transparent;
+    transition: all $transition-fast;
+
+    &:active {
+      background: $color-danger-light;
+      border-color: rgba($color-danger, 0.20);
+      color: $color-danger;
+    }
+  }
+
+  // Confirm dialog
+  &__confirm {
+    @include flex-column;
+    gap: $spacing-lg;
+  }
+
+  &__confirm-text {
+    color: $color-text-secondary;
+    line-height: 1.6;
+
+    strong {
+      color: $color-text-primary;
+    }
+  }
+
+  &__confirm-actions {
+    display: flex;
+    gap: $spacing-sm;
+    justify-content: flex-end;
+  }
+}
