@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 import Button from '@shared/components/Button/Button';
 
-import { WORKOUT_DAY_COLORS, DEFAULT_COLOR } from '@/workout-days/constants/workoutDayColors';
+import { ROUTINE_COLOR_VALUES, DEFAULT_ROUTINE_COLOR } from '@/domain/catalogs';
 import './WorkoutDayForm.scss';
 
 export default function WorkoutDayForm({ onSubmit, onCancel, initialData }) {
   const [name, setName] = useState(initialData?.name ?? '');
-  const [color, setColor] = useState(initialData?.color ?? DEFAULT_COLOR);
+  const [color, setColor] = useState(initialData?.color ?? DEFAULT_ROUTINE_COLOR);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ export default function WorkoutDayForm({ onSubmit, onCancel, initialData }) {
       <fieldset className="workout-day-form__field">
         <legend className="workout-day-form__label">Color</legend>
         <div className="workout-day-form__colors">
-          {WORKOUT_DAY_COLORS.map((c) => (
+          {ROUTINE_COLOR_VALUES.map((c) => (
             <button
               key={c}
               type="button"

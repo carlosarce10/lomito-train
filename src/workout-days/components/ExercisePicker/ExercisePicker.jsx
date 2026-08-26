@@ -3,25 +3,22 @@ import Icon from '@mdi/react';
 import { useState } from 'react';
 
 import SearchBar from '@shared/components/SearchBar/SearchBar';
-import useSearch from '@shared/hooks/useSearch';
 
+import { getMuscleGroupColor } from '@/domain/catalogs';
+import { toComparableText } from '@/domain/validation/normalize';
 import MuscleGroupFilter from '@/muscle-groups/components/MuscleGroupFilter/MuscleGroupFilter';
-import { getMuscleGroupColor } from '@/muscle-groups/constants/muscleGroups';
 import './ExercisePicker.scss';
-
-const getSearchText = (ex) => ex.name;
 
 export default function ExercisePicker({ allExercises, selectedIds, onToggle, onClose }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState(null);
 
-  const searched = useSearch(allExercises, searchTerm, getSearchText);
-
-  const filtered = activeFilter
-    ? searched.filter(
-        (ex) => ex.muscleGroup === activeFilter || ex.categories?.includes(activeFilter),
-      )
-    : searched;
+  const termino = toComparableText(searchTerm);
+  const filtered = allExercises.filter((ex) => {
+    if (activeFilter && !ex.categories.includes(activeFilter)) return false;
+    if (termino && !toComparableText(ex.name).includes(termino)) return false;
+    return true;
+  });
 
   return (
     <div className="exercise-picker">

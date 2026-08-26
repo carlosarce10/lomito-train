@@ -1,20 +1,23 @@
-import { mdiArrowLeft, mdiDelete, mdiPlus } from '@mdi/js';
+import { mdiArrowLeft, mdiDelete, mdiPencil, mdiPlus } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useState } from 'react';
 
 import Button from '@shared/components/Button/Button';
 import Modal from '@shared/components/Modal/Modal';
 
+import { resolveRoutineExercises } from '@/domain/model/routine';
 import ExerciseForm from '@/exercises/components/ExerciseForm/ExerciseForm';
 
 import ExercisePicker from '../ExercisePicker/ExercisePicker';
 import RoutineExerciseCard from '../RoutineExerciseCard/RoutineExerciseCard';
+import WorkoutDayForm from '../WorkoutDayForm/WorkoutDayForm';
 import './WorkoutDayDetail.scss';
 
 export default function WorkoutDayDetail({
   day,
   allExercises,
   onBack,
+  onUpdate,
   onDelete,
   onAddExercise,
   onRemoveExercise,
@@ -24,13 +27,12 @@ export default function WorkoutDayDetail({
   onDeleteSet,
 }) {
   const [showPicker, setShowPicker] = useState(false);
+  const [isEditingRoutine, setIsEditingRoutine] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [editingExercise, setEditingExercise] = useState(null);
   const [removingExerciseId, setRemovingExerciseId] = useState(null);
 
-  const dayExercises = day.exerciseIds
-    .map((id) => allExercises.find((ex) => ex.id === id))
-    .filter(Boolean);
+  const dayExercises = resolveRoutineExercises(day, allExercises);
 
   const handleToggleExercise = (exerciseId) => {
     if (day.exerciseIds.includes(exerciseId)) {
@@ -60,13 +62,22 @@ export default function WorkoutDayDetail({
           <Icon path={mdiArrowLeft} size={0.9} />
           Rutinas
         </button>
-        <button
-          className="workout-day-detail__delete"
-          onClick={() => setShowConfirmDelete(true)}
-          aria-label="Eliminar rutina"
-        >
-          <Icon path={mdiDelete} size={0.9} />
-        </button>
+        <div className="workout-day-detail__top-actions">
+          <button
+            className="workout-day-detail__edit"
+            onClick={() => setIsEditingRoutine(true)}
+            aria-label="Editar rutina"
+          >
+            <Icon path={mdiPencil} size={0.9} />
+          </button>
+          <button
+            className="workout-day-detail__delete"
+            onClick={() => setShowConfirmDelete(true)}
+            aria-label="Eliminar rutina"
+          >
+            <Icon path={mdiDelete} size={0.9} />
+          </button>
+        </div>
       </div>
 
       {/* Routine info */}
@@ -165,6 +176,22 @@ export default function WorkoutDayDetail({
               </div>
             );
           })()}
+      </Modal>
+
+      {/* Editar la rutina: nombre y color */}
+      <Modal
+        isOpen={isEditingRoutine}
+        onClose={() => setIsEditingRoutine(false)}
+        title="Editar rutina"
+      >
+        <WorkoutDayForm
+          initialData={day}
+          onSubmit={(datos) => {
+            onUpdate(day.id, datos);
+            setIsEditingRoutine(false);
+          }}
+          onCancel={() => setIsEditingRoutine(false)}
+        />
       </Modal>
 
       {/* Confirm delete routine modal */}

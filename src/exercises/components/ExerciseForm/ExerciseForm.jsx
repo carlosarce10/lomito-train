@@ -4,8 +4,7 @@ import { useState } from 'react';
 
 import Button from '@shared/components/Button/Button';
 
-import { EQUIPMENT_TYPES } from '@/exercises/constants/equipment';
-import { MUSCLE_GROUPS } from '@/muscle-groups/constants/muscleGroups';
+import { EQUIPMENT_TYPES, MUSCLE_GROUPS } from '@/domain/catalogs';
 import './ExerciseForm.scss';
 
 export default function ExerciseForm({ onSubmit, initialData = null, onCancel }) {

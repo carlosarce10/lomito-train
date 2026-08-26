@@ -1,86 +1,63 @@
-import { useCallback } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useCallback, useSyncExternalStore } from 'react';
 
-import useLocalStorage from '@shared/hooks/useLocalStorage';
+import {
+  addExerciseToRoutine,
+  createRoutine,
+  removeExerciseFromRoutine,
+  reorderRoutineExercises,
+  updateRoutine,
+} from '@/domain/model/routine';
+import { routinesRepository } from '@/domain/storage/repositories';
 
-import { DEFAULT_COLOR } from '../constants/workoutDayColors';
-
+/**
+ * Acceso a la coleccion de rutinas. Todas las operaciones devuelven `{ ok }` para
+ * que la interfaz pueda avisar si la escritura fallo.
+ *
+ * La carpeta y el hook se renombran a `routines` en la fase 3, junto con su clave
+ * de almacenamiento y su migracion. Ver docs/plan.md.
+ */
 export default function useWorkoutDays() {
-  const [workoutDays, setWorkoutDays] = useLocalStorage('lomito-train-workout-days', []);
+  const { store } = routinesRepository;
+  const workoutDays = useSyncExternalStore(store.subscribe, store.getSnapshot);
 
-  const addWorkoutDay = useCallback(
-    (name, color = DEFAULT_COLOR) => {
-      const newDay = {
-        id: uuidv4(),
-        name,
-        color,
-        exerciseIds: [],
-        createdAt: new Date().toISOString(),
-      };
-      setWorkoutDays((prev) => [...prev, newDay]);
-      return newDay;
-    },
-    [setWorkoutDays],
-  );
+  const addWorkoutDay = useCallback((name, color) => {
+    const nueva = createRoutine({ name, color });
+    const resultado = routinesRepository.update((prev) => [...prev, nueva]);
+    return resultado.ok ? { ok: true, routine: nueva } : resultado;
+  }, []);
 
-  const updateWorkoutDay = useCallback(
-    (id, updates) => {
-      setWorkoutDays((prev) => prev.map((day) => (day.id === id ? { ...day, ...updates } : day)));
-    },
-    [setWorkoutDays],
-  );
+  const editWorkoutDay = useCallback((id, cambios) => {
+    return routinesRepository.update((prev) =>
+      prev.map((day) => (day.id === id ? updateRoutine(day, cambios) : day)),
+    );
+  }, []);
 
-  const deleteWorkoutDay = useCallback(
-    (id) => {
-      setWorkoutDays((prev) => prev.filter((day) => day.id !== id));
-    },
-    [setWorkoutDays],
-  );
+  const deleteWorkoutDay = useCallback((id) => {
+    return routinesRepository.update((prev) => prev.filter((day) => day.id !== id));
+  }, []);
 
-  const addExerciseToDay = useCallback(
-    (dayId, exerciseId) => {
-      setWorkoutDays((prev) =>
-        prev.map((day) => {
-          if (day.id !== dayId) return day;
-          if (day.exerciseIds.includes(exerciseId)) return day;
-          return { ...day, exerciseIds: [...day.exerciseIds, exerciseId] };
-        }),
-      );
-    },
-    [setWorkoutDays],
-  );
+  const addExerciseToDay = useCallback((dayId, exerciseId) => {
+    return routinesRepository.update((prev) =>
+      prev.map((day) => (day.id === dayId ? addExerciseToRoutine(day, exerciseId) : day)),
+    );
+  }, []);
 
-  const removeExerciseFromDay = useCallback(
-    (dayId, exerciseId) => {
-      setWorkoutDays((prev) =>
-        prev.map((day) => {
-          if (day.id !== dayId) return day;
-          return { ...day, exerciseIds: day.exerciseIds.filter((id) => id !== exerciseId) };
-        }),
-      );
-    },
-    [setWorkoutDays],
-  );
+  const removeExerciseFromDay = useCallback((dayId, exerciseId) => {
+    return routinesRepository.update((prev) =>
+      prev.map((day) => (day.id === dayId ? removeExerciseFromRoutine(day, exerciseId) : day)),
+    );
+  }, []);
 
-  const reorderExercises = useCallback(
-    (dayId, fromIndex, toIndex) => {
-      setWorkoutDays((prev) =>
-        prev.map((day) => {
-          if (day.id !== dayId) return day;
-          const ids = [...day.exerciseIds];
-          const [moved] = ids.splice(fromIndex, 1);
-          ids.splice(toIndex, 0, moved);
-          return { ...day, exerciseIds: ids };
-        }),
-      );
-    },
-    [setWorkoutDays],
-  );
+  const reorderExercises = useCallback((dayId, from, to) => {
+    return routinesRepository.update((prev) =>
+      prev.map((day) => (day.id === dayId ? reorderRoutineExercises(day, from, to) : day)),
+    );
+  }, []);
 
   return {
     workoutDays,
     addWorkoutDay,
-    updateWorkoutDay,
+    updateWorkoutDay: editWorkoutDay,
     deleteWorkoutDay,
     addExerciseToDay,
     removeExerciseFromDay,

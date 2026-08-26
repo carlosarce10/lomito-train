@@ -1,4 +1,4 @@
-import { getMuscleGroupLabel, getMuscleGroupColor } from '@/muscle-groups/constants/muscleGroups';
+import { getMuscleGroupLabel, getMuscleGroupColor } from '@/domain/catalogs';
 import './MuscleGroupBadge.scss';
 
 export default function MuscleGroupBadge({ groupId }) {

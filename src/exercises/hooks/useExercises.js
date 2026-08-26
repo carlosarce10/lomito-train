@@ -1,122 +1,110 @@
-import { useState, useMemo, useCallback } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useCallback, useSyncExternalStore } from 'react';
 
-import useLocalStorage from '@shared/hooks/useLocalStorage';
-import useSearch from '@shared/hooks/useSearch';
+import { createExercise, createSet, updateExercise, updateSet } from '@/domain/model/exercise';
+import { exercisesRepository, routinesRepository } from '@/domain/storage/repositories';
+import { LIMITS } from '@/domain/validation/limits';
 
-const getSearchText = (ex) => ex.name;
-
+/**
+ * Acceso a la coleccion de ejercicios. Solo datos: los filtros de busqueda viven
+ * en useExerciseFilters, para que quien solo necesita leer no arrastre estado de
+ * interfaz que no usa.
+ *
+ * Todos los consumidores comparten el mismo store, asi que dos componentes
+ * montados a la vez no pueden divergir.
+ *
+ * @returns {object} Coleccion y operaciones. Cada operacion devuelve `{ ok }`.
+ */
 export default function useExercises() {
-  const [exercises, setExercises] = useLocalStorage('lomito-train-exercises', []);
-  const [activeFilter, setActiveFilter] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const { store } = exercisesRepository;
+  const exercises = useSyncExternalStore(store.subscribe, store.getSnapshot);
 
-  const categoryFiltered = useMemo(() => {
-    if (!activeFilter) return exercises;
-    return exercises.filter(
-      (ex) => ex.muscleGroup === activeFilter || ex.categories?.includes(activeFilter),
+  const addExercise = useCallback((datos) => {
+    const nuevo = createExercise(datos);
+    const resultado = exercisesRepository.update((prev) => [nuevo, ...prev]);
+    return resultado.ok ? { ok: true, exercise: nuevo } : resultado;
+  }, []);
+
+  const editExercise = useCallback((id, cambios) => {
+    return exercisesRepository.update((prev) =>
+      prev.map((ex) => (ex.id === id ? updateExercise(ex, cambios) : ex)),
     );
-  }, [exercises, activeFilter]);
+  }, []);
 
-  const filteredExercises = useSearch(categoryFiltered, searchTerm, getSearchText);
+  /**
+   * Borra un ejercicio y lo quita de todas las rutinas que lo referencian.
+   * Antes solo se borraba de su coleccion, y los ids huerfanos quedaban dentro de
+   * las rutinas para siempre. Ver docs/data-model.md.
+   */
+  const deleteExercise = useCallback((id) => {
+    const resultado = exercisesRepository.update((prev) => prev.filter((ex) => ex.id !== id));
+    if (!resultado.ok) return resultado;
 
-  const addExercise = useCallback(
-    (name, muscleGroup, categories = null) => {
-      const cats = categories ?? (muscleGroup ? [muscleGroup] : []);
-      const newExercise = {
-        id: uuidv4(),
-        name,
-        muscleGroup: cats[0] ?? muscleGroup ?? '',
-        categories: cats,
-        sets: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setExercises((prev) => [newExercise, ...prev]);
-      return newExercise;
-    },
-    [setExercises],
-  );
+    return routinesRepository.update((prev) =>
+      prev.map((routine) =>
+        routine.exerciseIds.includes(id)
+          ? { ...routine, exerciseIds: routine.exerciseIds.filter((x) => x !== id) }
+          : routine,
+      ),
+    );
+  }, []);
 
-  const updateExercise = useCallback(
-    (id, updates) => {
-      setExercises((prev) =>
-        prev.map((ex) =>
-          ex.id === id ? { ...ex, ...updates, updatedAt: new Date().toISOString() } : ex,
-        ),
-      );
-    },
-    [setExercises],
-  );
+  const addSet = useCallback((exerciseId) => {
+    return exercisesRepository.update((prev) =>
+      prev.map((ex) => {
+        if (ex.id !== exerciseId) return ex;
+        if (ex.sets.length >= LIMITS.setsPerExercise.max) return ex;
+        return { ...ex, sets: [...ex.sets, createSet()], updatedAt: new Date().toISOString() };
+      }),
+    );
+  }, []);
 
-  const deleteExercise = useCallback(
-    (id) => {
-      setExercises((prev) => prev.filter((ex) => ex.id !== id));
-    },
-    [setExercises],
-  );
+  /**
+   * Cambia el peso o las repeticiones de una serie.
+   * Si el valor no es valido devuelve `{ ok: false, issue }` y no guarda nada,
+   * en lugar de persistir un 0 en silencio.
+   */
+  const editSet = useCallback((exerciseId, setId, cambios) => {
+    const ejercicio = exercisesRepository.getAll().find((ex) => ex.id === exerciseId);
+    const serie = ejercicio?.sets.find((s) => s.id === setId);
+    if (!serie) return { ok: false, issue: 'notFound' };
 
-  const addSet = useCallback(
-    (exerciseId) => {
-      setExercises((prev) =>
-        prev.map((ex) => {
-          if (ex.id !== exerciseId) return ex;
-          const newSet = { id: uuidv4(), weight: 0, reps: 0 };
-          return {
-            ...ex,
-            sets: [...ex.sets, newSet],
-            updatedAt: new Date().toISOString(),
-          };
-        }),
-      );
-    },
-    [setExercises],
-  );
+    const { set, ok, issue } = updateSet(serie, cambios);
+    if (!ok) return { ok: false, issue };
 
-  const updateSet = useCallback(
-    (exerciseId, setId, updates) => {
-      setExercises((prev) =>
-        prev.map((ex) => {
-          if (ex.id !== exerciseId) return ex;
-          return {
-            ...ex,
-            sets: ex.sets.map((s) => (s.id === setId ? { ...s, ...updates } : s)),
-            updatedAt: new Date().toISOString(),
-          };
-        }),
-      );
-    },
-    [setExercises],
-  );
+    return exercisesRepository.update((prev) =>
+      prev.map((ex) =>
+        ex.id !== exerciseId
+          ? ex
+          : {
+              ...ex,
+              sets: ex.sets.map((s) => (s.id === setId ? set : s)),
+              updatedAt: new Date().toISOString(),
+            },
+      ),
+    );
+  }, []);
 
-  const deleteSet = useCallback(
-    (exerciseId, setId) => {
-      setExercises((prev) =>
-        prev.map((ex) => {
-          if (ex.id !== exerciseId) return ex;
-          return {
-            ...ex,
-            sets: ex.sets.filter((s) => s.id !== setId),
-            updatedAt: new Date().toISOString(),
-          };
-        }),
-      );
-    },
-    [setExercises],
-  );
+  const deleteSet = useCallback((exerciseId, setId) => {
+    return exercisesRepository.update((prev) =>
+      prev.map((ex) =>
+        ex.id !== exerciseId
+          ? ex
+          : {
+              ...ex,
+              sets: ex.sets.filter((s) => s.id !== setId),
+              updatedAt: new Date().toISOString(),
+            },
+      ),
+    );
+  }, []);
 
   return {
-    exercises: filteredExercises,
-    allExercises: exercises,
-    activeFilter,
-    setActiveFilter,
-    searchTerm,
-    setSearchTerm,
+    exercises,
     addExercise,
-    updateExercise,
+    updateExercise: editExercise,
     deleteExercise,
     addSet,
-    updateSet,
+    updateSet: editSet,
     deleteSet,
   };
 }

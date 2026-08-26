@@ -30,6 +30,12 @@
     }
   }
 
+  &__top-actions {
+    display: flex;
+    gap: $spacing-xs;
+  }
+
+  &__edit,
   &__delete {
     @include flex-center;
     width: 36px;

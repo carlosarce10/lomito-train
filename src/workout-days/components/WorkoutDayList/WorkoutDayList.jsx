@@ -1,3 +1,5 @@
+import { resolveRoutineExercises } from '@/domain/model/routine';
+
 import WorkoutDayCard from '../WorkoutDayCard/WorkoutDayCard';
 import './WorkoutDayList.scss';
 
@@ -14,9 +16,7 @@ export default function WorkoutDayList({ workoutDays, allExercises, onDayClick }
   return (
     <div className="workout-day-list">
       {workoutDays.map((day) => {
-        const exerciseCount = day.exerciseIds.filter((id) =>
-          allExercises.some((ex) => ex.id === id),
-        ).length;
+        const exerciseCount = resolveRoutineExercises(day, allExercises).length;
         return (
           <WorkoutDayCard
             key={day.id}

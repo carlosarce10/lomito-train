@@ -19,27 +19,39 @@ Se actualiza en el mismo commit que cierra cada fase.
 
 ## Lo que es cierto hoy
 
-La estructura real de `src/` sigue siendo la original, no la de la seccion 5 de
-CLAUDE.md:
-
 ```
 src/
   App.jsx, main.jsx, App.scss
-  exercises/       ExercisesPage + components/ + hooks/ + constants/
-  workout-days/    RoutinesPage + components/ + hooks/ + constants/
-  muscle-groups/   components/ + constants/
-  shared/          components/ + hooks/ + services/ + styles/
+  app/             bootstrap + ErrorBoundary + RecoveryScreen
+  domain/          catalogs/ model/ schemas/ validation/ storage/
+  exercises/       ExercisesPage + components/ + hooks/
+  workout-days/    RoutinesPage + components/ + hooks/
+  muscle-groups/   components/
+  shared/          components/ + hooks/ + styles/
 ```
 
-Todavia **no existen**: `src/domain/`, `src/features/`, `src/services/`, `src/i18n/`,
-`src/theme/`, `src/styles/`. Las reglas duras que dependen de ellos (1, 2, 4, 5, 6,
-9, 10, 11) describen el objetivo, no el estado actual.
+Ya existen y estan en uso: `src/app/` y `src/domain/`. Todavia **no existen**:
+`src/features/`, `src/services/`, `src/i18n/`, `src/theme/`, `src/styles/`.
 
-Excepciones activas y documentadas en `eslint.config.js`:
+Estado de las reglas duras de CLAUDE.md:
 
-- `no-restricted-properties` esta desactivada en `src/shared/hooks/useLocalStorage.js`
-  y `src/shared/services/storageUtils.js`. Ese bloque se borra en la fase 2, en el
-  mismo commit que los elimina.
+| Regla                               | Estado                             |
+| ----------------------------------- | ---------------------------------- |
+| 4 (localStorage solo en el dominio) | **Vigente**, impuesta por ESLint   |
+| 5 (ninguna clave literal)           | **Vigente**                        |
+| 6 (validar antes de escribir)       | **Vigente**                        |
+| 7 (ningun error silenciado)         | **Vigente**, `no-empty` como error |
+| 8 (migraciones verificadas)         | **Vigente**                        |
+| 9 (alias siempre)                   | **Vigente**, impuesta por ESLint   |
+| 11 (el dominio no importa React)    | **Vigente**, impuesta por ESLint   |
+| 1 (nada de texto en el JSX)         | Objetivo. Fase 6                   |
+| 2, 3 (colores y estilos en linea)   | Objetivo. Fase 4                   |
+| 10 (features aisladas)              | Objetivo. Fase 3                   |
+| 12 (nombre de bloque BEM)           | Objetivo. Fase 4                   |
+
+`no-restricted-properties` sigue desactivada en un unico archivo,
+`src/domain/storage/driver.js`, que es el contrato: es el unico modulo que puede
+tocar `localStorage`.
 
 ## Fase 0 — Limpieza y suelo firme (completada)
 
@@ -69,6 +81,44 @@ Excepciones activas y documentadas en `eslint.config.js`:
   que aplastaba la barra en iPhone, y `Layout.scss` no reservaba ese espacio, con lo
   que el ultimo elemento quedaba bajo el indicador de inicio.
 - Sustituido `word-break: break-word`, obsoleto, por `overflow-wrap: break-word`.
+
+## Fase 1 — Alias de importacion (completada)
+
+- Alias `@/` y `@shared/` declarados en `vite.config.js`, `jsconfig.json` y el
+  resolver de ESLint, que son los tres sitios que deben coincidir.
+- Reescritos los imports que salian de la carpeta del componente. `'../algo'` se
+  conserva: dentro de la feature sigue siendo local y legible.
+- `no-restricted-imports` rechaza subir dos o mas niveles.
+- En SCSS se usa `loadPaths` y no `additionalData`, que inyectaria el mismo codigo
+  en cada archivo compilado.
+
+## Fase 2 — Capa de dominio y almacenamiento (completada)
+
+Se crea `src/domain/` (sin React, impuesto por lint) con catalogos, modelo,
+esquemas, validacion y almacenamiento, mas `src/app/bootstrap`.
+
+Defectos cerrados, todos verificados en navegador:
+
+| Defecto                                             | Como se cerro                                                                                                                                    |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Los inputs guardaban 0 al escribir una coma decimal | `parseDecimal` acepta coma y punto, y `NumberField` conserva el texto crudo mientras se escribe. Verificado: se teclea `22,5` y se guarda `22.5` |
+| Un valor fuera de rango se guardaba igual           | `updateSet` devuelve `{ ok: false, issue }` y no escribe. Verificado con 99999                                                                   |
+| `runMigrations` sellaba la version sin migrar       | Registro ordenado, `CURRENT_VERSION` derivada de la lista, sellado dentro del bucle, y aborta si la version guardada es superior                 |
+| Las escrituras fallaban en silencio                 | `driver.js` devuelve `{ ok, error }`. El store revierte el snapshot si la escritura fallo, para que la pantalla no muestre lo que no se guardo   |
+| Borrar un ejercicio dejaba ids huerfanos            | `deleteExercise` borra en cascada, y el bootstrap sanea lo que dejaron versiones anteriores. Verificado                                          |
+| Dos pestanas se pisaban el array entero             | Store unico por clave con `useSyncExternalStore` y escucha de `storage`. Verificado: una pestana anade y la otra lo ve sin recargar              |
+| Un dato malformado dejaba la pantalla en blanco     | `ErrorBoundary` mas `RecoveryScreen`, que ofrece descargar el volcado crudo antes de tocar nada                                                  |
+| `equipment` se perdia al crear un ejercicio         | `createExercise` lo persiste. Verificado                                                                                                         |
+| `updateWorkoutDay` era inalcanzable                 | Conectado: hay boton de editar en el detalle de la rutina. Verificado                                                                            |
+| Los nombres admitian caracteres invisibles          | `normalizeText` los elimina y colapsa espacios. Verificado                                                                                       |
+
+Decision de diseno que salio de la propia verificacion: un elemento con una parte
+corrupta **se repara, no se descarta**. Una rutina con una referencia invalida es
+una rutina con una referencia menos, no una rutina perdida. La primera version
+rechazaba la rutina entera, que era peor que el problema original.
+
+Retirados: `useLocalStorage`, `storageUtils`, `migrations` antiguo, `useSearch` y
+las tres carpetas `constants/`.
 
 ## Deuda conocida, pendiente de fase
 

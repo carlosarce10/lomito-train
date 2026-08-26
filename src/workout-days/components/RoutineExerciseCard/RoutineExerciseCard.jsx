@@ -2,18 +2,13 @@ import { mdiChevronDown, mdiChevronUp, mdiDelete, mdiPencil, mdiPlus, mdiClose }
 import Icon from '@mdi/react';
 import { useState, useRef } from 'react';
 
+import NumberField from '@shared/components/NumberField/NumberField';
+
+import { getRecord } from '@/domain/model/records';
 import MuscleGroupBadge from '@/muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
 import './RoutineExerciseCard.scss';
 
 const SWIPE_THRESHOLD = 72;
-
-function getRecord(sets) {
-  if (!sets || sets.length === 0) return null;
-  const maxWeight = Math.max(...sets.map((s) => s.weight));
-  if (maxWeight === 0) return null;
-  const recordSet = sets.find((s) => s.weight === maxWeight);
-  return { weight: maxWeight, reps: recordSet?.reps ?? 0 };
-}
 
 export default function RoutineExerciseCard({
   exercise,
@@ -67,12 +62,9 @@ export default function RoutineExerciseCard({
     setTranslateX(0);
   };
 
-  // ── Set input change ─────────────────────────────────────────
-  const handleSetChange = (setId, field, value) => {
-    const num = value === '' ? 0 : parseFloat(value);
-    if (isNaN(num) || num < 0) return;
-    onUpdateSet(exercise.id, setId, { [field]: num });
-  };
+  // El valor llega crudo: lo valida el dominio y devuelve si lo acepto.
+  const handleSetChange = (setId, field, raw) =>
+    raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: raw });
 
   const actionOpacity = Math.min(Math.abs(translateX) / SWIPE_THRESHOLD, 1);
   const showDelete = translateX < -16;
@@ -154,25 +146,21 @@ export default function RoutineExerciseCard({
                 {exercise.sets.map((set, i) => (
                   <div key={set.id} className="routine-ex-card__sets-row">
                     <span className="routine-ex-card__sets-num">{i + 1}</span>
-                    <input
+                    <NumberField
                       className="routine-ex-card__sets-input"
-                      type="number"
                       inputMode="decimal"
-                      min="0"
-                      step="0.5"
-                      value={set.weight || ''}
+                      value={set.weight}
                       placeholder="0"
-                      onChange={(e) => handleSetChange(set.id, 'weight', e.target.value)}
+                      aria-label="Peso en kilos"
+                      onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
                     />
-                    <input
+                    <NumberField
                       className="routine-ex-card__sets-input"
-                      type="number"
                       inputMode="numeric"
-                      min="0"
-                      step="1"
-                      value={set.reps || ''}
+                      value={set.reps}
                       placeholder="0"
-                      onChange={(e) => handleSetChange(set.id, 'reps', e.target.value)}
+                      aria-label="Repeticiones"
+                      onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
                     />
                     <button
                       className="routine-ex-card__sets-del"

@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Button from '@shared/components/Button/Button';
 import Modal from '@shared/components/Modal/Modal';
+import NumberField from '@shared/components/NumberField/NumberField';
 
 import MuscleGroupBadge from '@/muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
 
@@ -32,11 +33,9 @@ export default function ExerciseDetail({
     onClose();
   };
 
-  const handleSetChange = (setId, field, value) => {
-    const numValue = value === '' ? 0 : parseFloat(value);
-    if (isNaN(numValue) || numValue < 0) return;
-    onUpdateSet(exercise.id, setId, { [field]: numValue });
-  };
+  // El valor llega crudo: lo valida el dominio y devuelve si lo acepto.
+  const handleSetChange = (setId, field, raw) =>
+    raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: raw });
 
   return (
     <div className="exercise-detail">
@@ -86,27 +85,23 @@ export default function ExerciseDetail({
                   {index + 1}
                 </span>
                 <div className="exercise-detail__sets-cell">
-                  <input
+                  <NumberField
                     className="exercise-detail__sets-input"
-                    type="number"
                     inputMode="decimal"
-                    min="0"
-                    step="0.5"
-                    value={set.weight || ''}
+                    value={set.weight}
                     placeholder="0"
-                    onChange={(e) => handleSetChange(set.id, 'weight', e.target.value)}
+                    aria-label="Peso en kilos"
+                    onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
                   />
                 </div>
                 <div className="exercise-detail__sets-cell">
-                  <input
+                  <NumberField
                     className="exercise-detail__sets-input"
-                    type="number"
                     inputMode="numeric"
-                    min="0"
-                    step="1"
-                    value={set.reps || ''}
+                    value={set.reps}
                     placeholder="0"
-                    onChange={(e) => handleSetChange(set.id, 'reps', e.target.value)}
+                    aria-label="Repeticiones"
+                    onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
                   />
                 </div>
                 <div className="exercise-detail__sets-cell exercise-detail__sets-cell--action">

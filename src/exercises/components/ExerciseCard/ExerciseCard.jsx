@@ -1,7 +1,8 @@
 import { mdiDumbbell, mdiWeightLifter, mdiRun, mdiCog, mdiHelpCircle } from '@mdi/js';
 import Icon from '@mdi/react';
 
-import { getEquipmentLabel } from '@/exercises/constants/equipment';
+import { getEquipmentLabel } from '@/domain/catalogs';
+import { getMaxWeight } from '@/domain/model/records';
 import MuscleGroupBadge from '@/muscle-groups/components/MuscleGroupBadge/MuscleGroupBadge';
 import './ExerciseCard.scss';
 
@@ -16,7 +17,7 @@ const EQUIPMENT_ICONS = {
 
 export default function ExerciseCard({ exercise, onClick }) {
   const totalSets = exercise.sets.length;
-  const maxWeight = exercise.sets.length ? Math.max(...exercise.sets.map((s) => s.weight)) : 0;
+  const maxWeight = getMaxWeight(exercise.sets);
   const equipmentIcon = exercise.equipment
     ? (EQUIPMENT_ICONS[exercise.equipment] ?? mdiHelpCircle)
     : null;

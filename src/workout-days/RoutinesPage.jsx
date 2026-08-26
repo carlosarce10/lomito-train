@@ -21,9 +21,9 @@ export default function RoutinesPage() {
     removeExerciseFromDay,
   } = useWorkoutDays();
 
-  const { allExercises, updateExercise, addSet, updateSet, deleteSet } = useExercises();
+  const { exercises, updateExercise, addSet, updateSet, deleteSet } = useExercises();
 
-  const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedDayId, setSelectedDayId] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   const handleCreate = (data) => {
@@ -31,21 +31,22 @@ export default function RoutinesPage() {
     setShowCreateForm(false);
   };
 
+  // Se guarda el id y no el objeto: resolver en cada render evita el setState
+  // durante el render que hacia falta cuando la rutina abierta se borraba.
+  const selectedDay = selectedDayId
+    ? (workoutDays.find((d) => d.id === selectedDayId) ?? null)
+    : null;
+
   if (selectedDay) {
-    const currentDay = workoutDays.find((d) => d.id === selectedDay.id);
-    if (!currentDay) {
-      setSelectedDay(null);
-      return null;
-    }
     return (
       <WorkoutDayDetail
-        day={currentDay}
-        allExercises={allExercises}
-        onBack={() => setSelectedDay(null)}
+        day={selectedDay}
+        allExercises={exercises}
+        onBack={() => setSelectedDayId(null)}
         onUpdate={updateWorkoutDay}
         onDelete={(id) => {
           deleteWorkoutDay(id);
-          setSelectedDay(null);
+          setSelectedDayId(null);
         }}
         onAddExercise={addExerciseToDay}
         onRemoveExercise={removeExerciseFromDay}
@@ -61,8 +62,8 @@ export default function RoutinesPage() {
     <div className="routines-page">
       <WorkoutDayList
         workoutDays={workoutDays}
-        allExercises={allExercises}
-        onDayClick={setSelectedDay}
+        allExercises={exercises}
+        onDayClick={(day) => setSelectedDayId(day.id)}
       />
 
       <button

@@ -135,11 +135,10 @@ export default defineConfig([
     },
   },
 
-  // Excepcion temporal: estos dos archivos son la capa de persistencia heredada y
-  // desaparecen en la fase 2, cuando src/domain/storage pase a ser el unico acceso.
-  // Este bloque se borra en el mismo commit que los elimina.
+  // El driver es el unico modulo que puede tocar localStorage. Es el punto en el
+  // que la regla deja de ser una prohibicion y pasa a ser el contrato.
   {
-    files: ['src/shared/hooks/useLocalStorage.js', 'src/shared/services/storageUtils.js'],
+    files: ['src/domain/storage/driver.js'],
     rules: { 'no-restricted-properties': 'off' },
   },
 

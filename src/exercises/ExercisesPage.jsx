@@ -9,24 +9,15 @@ import SearchBar from '../shared/components/SearchBar/SearchBar';
 import ExerciseDetail from './components/ExerciseDetail/ExerciseDetail';
 import ExerciseForm from './components/ExerciseForm/ExerciseForm';
 import ExerciseList from './components/ExerciseList/ExerciseList';
+import useExerciseFilters from './hooks/useExerciseFilters';
 import useExercises from './hooks/useExercises';
 import './ExercisesPage.scss';
 
 export default function ExercisesPage() {
-  const {
-    exercises,
-    allExercises,
-    activeFilter,
-    setActiveFilter,
-    searchTerm,
-    setSearchTerm,
-    addExercise,
-    updateExercise,
-    deleteExercise,
-    addSet,
-    updateSet,
-    deleteSet,
-  } = useExercises();
+  const { exercises, addExercise, updateExercise, deleteExercise, addSet, updateSet, deleteSet } =
+    useExercises();
+  const { filtered, activeFilter, setActiveFilter, searchTerm, setSearchTerm } =
+    useExerciseFilters(exercises);
 
   const [selectedId, setSelectedId] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -34,11 +25,11 @@ export default function ExercisesPage() {
   // Resuelve el ejercicio abierto contra la lista sin filtrar. Si se borro, cae a null
   // y la pagina vuelve al listado sola, sin necesidad de limpiar selectedId.
   const selectedExercise = selectedId
-    ? (allExercises.find((ex) => ex.id === selectedId) ?? null)
+    ? (exercises.find((ex) => ex.id === selectedId) ?? null)
     : null;
 
   const handleCreateExercise = (data) => {
-    addExercise(data.name, data.muscleGroup, data.categories);
+    addExercise(data);
     setShowCreateForm(false);
   };
 
@@ -63,7 +54,7 @@ export default function ExercisesPage() {
       <MuscleGroupFilter activeFilter={activeFilter} onFilterChange={setActiveFilter} />
 
       <ExerciseList
-        exercises={exercises}
+        exercises={filtered}
         onExerciseClick={(exercise) => setSelectedId(exercise.id)}
       />
 
