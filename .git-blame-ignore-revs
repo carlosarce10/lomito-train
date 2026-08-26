@@ -1,0 +1,5 @@
+# Commits exclusivamente de formato, sin cambios funcionales.
+# Se activa con: git config --local blame.ignoreRevsFile .git-blame-ignore-revs
+
+# style: aplicar prettier y ordenar los imports en el codigo existente
+e9714a2c0b058df99c04d09361884d2f73f10964
