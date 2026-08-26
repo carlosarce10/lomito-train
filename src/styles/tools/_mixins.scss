@@ -1,0 +1,113 @@
+@use '../settings/scale' as *;
+
+// Capa 2 de ITCSS. Ningun mixin escribe un color literal: todos van por token.
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/// Tarjeta de vidrio. Incluye el respaldo opaco: hay 23 elementos con
+/// backdrop-filter y antes ninguno tenia alternativa si el navegador no lo soporta.
+@mixin glass-card($radius: $radius-md) {
+  border: 1px solid var(--border);
+  border-radius: $radius;
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-md);
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    background: var(--surface);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+}
+
+@mixin glass-card-strong($radius: $radius-lg) {
+  border: 1px solid var(--border-strong);
+  border-radius: $radius;
+  background: var(--surface-solid-strong);
+  box-shadow: var(--shadow-lg);
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    background: var(--surface-strong);
+    backdrop-filter: blur(var(--glass-blur-strong));
+    -webkit-backdrop-filter: blur(var(--glass-blur-strong));
+  }
+}
+
+/// Campo de texto. El borde usa --border-interactive porque es la unica pista
+/// visual del limite del control, y por eso debe cumplir 3:1 (WCAG 1.4.11). El
+/// borde de vidrio anterior daba 1,10:1: no delimitaba nada.
+@mixin input-base {
+  width: 100%;
+  min-height: $touch-target;
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid var(--border-interactive);
+  border-radius: $radius-sm;
+  background: var(--surface-strong);
+  color: var(--text);
+  font-family: $font-family;
+  font-size: $font-size-base;
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-fast;
+
+  &:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+}
+
+/// Area tactil minima de 44 por 44. Se aplica a todo control que solo lleve icono.
+@mixin touch-target {
+  min-width: $touch-target;
+  min-height: $touch-target;
+}
+
+/// Amplia el area tactil a 44 por 44 SIN cambiar el tamano visible del control.
+///
+/// Existe porque el minimo de la regla 13 no puede costar el diseno: un boton de
+/// borrar de 24px dentro de una fila de tabla no puede crecer a 44 sin romper la
+/// rejilla, pero si puede tener 44 de area pulsable. El pseudo-elemento no recibe
+/// eventos propios: solo extiende la superficie del boton que lo contiene.
+@mixin touch-target-extended {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, #{$touch-target});
+    height: max(100%, #{$touch-target});
+    transform: translate(-50%, -50%);
+  }
+}

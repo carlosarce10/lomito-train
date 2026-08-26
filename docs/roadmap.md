@@ -21,16 +21,17 @@ Se actualiza en el mismo commit que cierra cada fase.
 
 ```
 src/
-  App.jsx, main.jsx, App.scss
-  app/                    bootstrap + ErrorBoundary + RecoveryScreen
+  App.jsx, main.jsx
+  app/                    bootstrap + components/ThemeToggle
   domain/                 catalogs/ model/ schemas/ validation/ storage/
   features/exercises/     index.js + pages/ + components/ + hooks/
   features/routines/      index.js + pages/ + components/ + hooks/
-  shared/                 components/ + hooks/ + styles/
+  shared/                 components/ + hooks/
+  styles/                 las siete capas de ITCSS
+  theme/                  themes + applyTheme + useTheme
 ```
 
-Ya existen y estan en uso: `src/app/`, `src/domain/` y `src/features/`. Todavia
-**no existen**: `src/services/`, `src/i18n/`, `src/theme/`, `src/styles/`.
+Todavia **no existen**: `src/services/` y `src/i18n/`.
 
 Estado de las reglas duras de CLAUDE.md:
 
@@ -158,6 +159,53 @@ Dos defectos propios que destapo la verificacion, no el build:
 2. **Recursion infinita.** El renombrado masivo dejo los callbacks del hook con el
    mismo nombre que las funciones de dominio que importaban. Se importan con
    namespace (`model.addExerciseToRoutine`) para que no pueda repetirse.
+
+## Fase 4 — ITCSS, BEMIT y tokens (completada)
+
+`src/styles/` con las siete capas. El orden de la cascada lo fija `@layer` nativo en
+`_layers.scss`. Un componente consume una sola cosa: `@use 'styles/foundation' as *`,
+que reexporta settings y tools, las dos capas que no emiten CSS.
+
+| Defecto                                                   | Resultado                                                                                             |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| El bloque `:root` se emitia 23 veces                      | Se emite 4 veces desde un unico archivo: claro, sistema-oscuro, y las dos elecciones explicitas       |
+| 166 colores literales en los componentes                  | Cero. Verificado por grep en cada commit                                                              |
+| El fondo hardcodeado en el reset, divergido de los tokens | Vive en `elements/_page.scss` y sale de tokens                                                        |
+| Bloques BEM que no coincidian con su componente           | Los 22 llevan `c-` y coinciden. Verificado cruzando las clases del JSX contra los selectores del SCSS |
+| 23 elementos con `backdrop-filter` sin respaldo           | Los mixins de vidrio traen `@supports` con superficie opaca                                           |
+| El foco era un `box-shadow` al 8% de opacidad             | Anillo solido de 2px con `--focus`, 5,17:1                                                            |
+| `--glass-bg` al 0.20 dejaba el texto secundario en 2,69:1 | Superficie al 0.62: 5,85:1. Por eso las tarjetas se ven mas opacas                                    |
+| El rojo era la marca                                      | Es solo `--danger`. El acento es azul, que es lo que ya emitian el fondo y las tres sombras           |
+
+Tema con tres estados, `data-theme` en el raiz, persistencia en
+`lomito-train-settings`, seguimiento de `prefers-color-scheme` en vivo y
+`meta[name=theme-color]` sincronizado desde el propio token. Script en linea en
+`index.html` que lo aplica antes del primer pintado. Boton en la cabecera que rota
+entre los tres estados: no espera a la pagina de ajustes de la fase 5 porque una
+funcion escrita y no conectada es deuda.
+
+Verificado en navegador: rota los tres estados, persiste, la barra del navegador
+sigue al tema, `system` cambia en vivo con el sistema, y una eleccion explicita de
+claro **gana** a un sistema en oscuro, que es lo que hace la guarda
+`:root:not([data-theme='light'])`.
+
+Tres defectos propios que destapo la verificacion:
+
+1. **Se perdio todo el espaciado.** Vite inyecta el CSS de cada `.scss` co-locado en
+   el orden en que se importa su modulo. Con `App.jsx` importado antes que
+   `styles/main.scss`, el navegador veia un `@layer components` antes de que
+   `_layers.scss` declarase el orden, y **una capa ya creada no se puede reordenar**:
+   el reset le ganaba a los componentes y `padding` quedaba en 0. El CSS se importa
+   ahora antes que cualquier componente.
+2. **Ocho sitios usaban un token de relleno como color de texto.** `--accent` sobre
+   la superficie de vidrio da 4,14:1 en oscuro y no pasa AA; `--accent-text` da
+   5,84:1. Los encontro la fase de revision adversarial.
+3. **El boton flotante quedaba por debajo de la barra inferior** (`z-index: 40`
+   contra 50). Ahora usa `$z-fab`.
+
+El minimo de 44 por 44 se resuelve con `touch-target-extended`, que amplia el area
+pulsable con un pseudo-elemento sin cambiar el tamano visible: un boton de borrar de
+24px dentro de una fila de tabla no puede crecer a 44 sin romper la rejilla.
 
 ## Deuda conocida, pendiente de fase
 

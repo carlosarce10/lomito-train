@@ -1,36 +1,43 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.routines-page {
-  @include flex-column;
-  gap: $spacing-md;
+@layer components {
+  .c-routines-page {
+    @include flex-column;
+    gap: $spacing-md;
 
-  &__fab {
-    position: fixed;
-    bottom: calc(var(--nav-height) + $spacing-md);
-    right: $spacing-xl;
-    width: 56px;
-    height: 56px;
-    border-radius: $radius-full;
-    background: $color-primary;
-    color: #fff;
-    @include flex-center;
-    box-shadow:
-      0 8px 24px rgba(220, 38, 38, 0.4),
-      0 2px 8px rgba(0, 0, 0, 0.1);
-    border: none;
-    cursor: pointer;
-    transition: all $transition-fast;
-    z-index: 40;
+    &__fab {
+      position: fixed;
+      bottom: calc(var(--nav-height) + $spacing-md);
+      right: $spacing-xl;
+      width: 56px;
+      height: 56px;
+      border-radius: $radius-full;
+      background: var(--accent);
+      color: var(--on-accent);
+      @include flex-center;
+      box-shadow: var(--shadow-lg);
+      // El relleno de acento ya pasa de 3:1 contra el degradado en los dos temas.
+      // El borde esta por el otro fondo: el boton flota sobre las tarjetas que se
+      // desplazan por debajo, y contra ellas el limite no esta garantizado.
+      border: 1px solid var(--accent-strong);
+      cursor: pointer;
+      transition:
+        background-color $transition-fast,
+        box-shadow $transition-fast,
+        transform $transition-fast;
+      // Con el area segura del indicador de inicio la barra inferior crece hacia
+      // arriba y solapa el pie del boton; a 40 quedaba por debajo de sus 50.
+      z-index: $z-fab;
 
-    &:hover {
-      background: $color-primary-dark;
-    }
+      &:hover {
+        background: var(--accent-strong);
+      }
 
-    &:active {
-      transform: scale(0.92);
-      background: $color-primary-dark;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+      &:active {
+        transform: scale(0.92);
+        background: var(--accent-strong);
+        box-shadow: var(--shadow-md);
+      }
     }
   }
 }

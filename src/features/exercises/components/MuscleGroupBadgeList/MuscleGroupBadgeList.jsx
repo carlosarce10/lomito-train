@@ -20,11 +20,11 @@ export default function MuscleGroupBadgeList({ groupIds, max = 3 }) {
   const restantes = groupIds.length - visibles.length;
 
   return (
-    <span className="muscle-group-badge-list">
+    <span className="c-muscle-group-badge-list">
       {visibles.map((id) => (
         <MuscleGroupBadge key={id} groupId={id} />
       ))}
-      {restantes > 0 && <span className="muscle-group-badge-list__more">+{restantes}</span>}
+      {restantes > 0 && <span className="c-muscle-group-badge-list__more">+{restantes}</span>}
     </span>
   );
 }

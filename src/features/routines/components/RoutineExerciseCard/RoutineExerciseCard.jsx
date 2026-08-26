@@ -71,17 +71,17 @@ export default function RoutineExerciseCard({
   const showEdit = translateX > 16;
 
   return (
-    <div className="routine-exercise-card">
+    <div className="c-routine-exercise-card">
       {/* ── Action backgrounds ── */}
       <div
-        className="routine-exercise-card__bg routine-exercise-card__bg--edit"
+        className="c-routine-exercise-card__bg routine-exercise-card__bg--edit"
         style={{ opacity: showEdit ? actionOpacity : 0 }}
       >
         <Icon path={mdiPencil} size={1} />
         <span>Editar</span>
       </div>
       <div
-        className="routine-exercise-card__bg routine-exercise-card__bg--delete"
+        className="c-routine-exercise-card__bg routine-exercise-card__bg--delete"
         style={{ opacity: showDelete ? actionOpacity : 0 }}
       >
         <Icon path={mdiDelete} size={1} />
@@ -90,7 +90,7 @@ export default function RoutineExerciseCard({
 
       {/* ── Main card content ── */}
       <div
-        className="routine-exercise-card__content"
+        className="c-routine-exercise-card__content"
         style={{
           transform: `translateX(${translateX}px)`,
           transition: isSwiping ? 'none' : 'transform 0.25s ease',
@@ -100,13 +100,13 @@ export default function RoutineExerciseCard({
         onTouchEnd={handleTouchEnd}
       >
         {/* Header row */}
-        <div className="routine-exercise-card__header">
-          <div className="routine-exercise-card__title-row">
-            <span className="routine-exercise-card__name">{exercise.name}</span>
+        <div className="c-routine-exercise-card__header">
+          <div className="c-routine-exercise-card__title-row">
+            <span className="c-routine-exercise-card__name">{exercise.name}</span>
             <MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} max={2} />
           </div>
           <button
-            className="routine-exercise-card__toggle"
+            className="c-routine-exercise-card__toggle"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? 'Ver sets' : 'Ocultar sets'}
           >
@@ -115,39 +115,39 @@ export default function RoutineExerciseCard({
         </div>
 
         {/* Record row */}
-        <div className="routine-exercise-card__record">
+        <div className="c-routine-exercise-card__record">
           {record ? (
             <>
-              <span className="routine-exercise-card__record-value">{record.weight} kg</span>
-              <span className="routine-exercise-card__record-sep">×</span>
-              <span className="routine-exercise-card__record-value">{record.reps} reps</span>
-              <span className="routine-exercise-card__record-label">récord</span>
+              <span className="c-routine-exercise-card__record-value">{record.weight} kg</span>
+              <span className="c-routine-exercise-card__record-sep">×</span>
+              <span className="c-routine-exercise-card__record-value">{record.reps} reps</span>
+              <span className="c-routine-exercise-card__record-label">récord</span>
             </>
           ) : (
-            <span className="routine-exercise-card__record-empty">Sin récord aún</span>
+            <span className="c-routine-exercise-card__record-empty">Sin récord aún</span>
           )}
         </div>
 
         {/* Collapsible sets section */}
         {!collapsed && (
-          <div className="routine-exercise-card__sets">
+          <div className="c-routine-exercise-card__sets">
             {exercise.sets.length === 0 ? (
-              <p className="routine-exercise-card__sets-empty">
+              <p className="c-routine-exercise-card__sets-empty">
                 Sin sets. Agrega uno con el botón de abajo.
               </p>
             ) : (
-              <div className="routine-exercise-card__sets-table">
-                <div className="routine-exercise-card__sets-head">
+              <div className="c-routine-exercise-card__sets-table">
+                <div className="c-routine-exercise-card__sets-head">
                   <span>#</span>
                   <span>Peso (kg)</span>
                   <span>Reps</span>
                   <span />
                 </div>
                 {exercise.sets.map((set, i) => (
-                  <div key={set.id} className="routine-exercise-card__sets-row">
-                    <span className="routine-exercise-card__sets-num">{i + 1}</span>
+                  <div key={set.id} className="c-routine-exercise-card__sets-row">
+                    <span className="c-routine-exercise-card__sets-num">{i + 1}</span>
                     <NumberField
-                      className="routine-exercise-card__sets-input"
+                      className="c-routine-exercise-card__sets-input"
                       inputMode="decimal"
                       value={set.weight}
                       placeholder="0"
@@ -155,7 +155,7 @@ export default function RoutineExerciseCard({
                       onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
                     />
                     <NumberField
-                      className="routine-exercise-card__sets-input"
+                      className="c-routine-exercise-card__sets-input"
                       inputMode="numeric"
                       value={set.reps}
                       placeholder="0"
@@ -163,7 +163,7 @@ export default function RoutineExerciseCard({
                       onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
                     />
                     <button
-                      className="routine-exercise-card__sets-del"
+                      className="c-routine-exercise-card__sets-del"
                       onClick={() => onDeleteSet(exercise.id, set.id)}
                       aria-label="Eliminar set"
                     >
@@ -174,7 +174,7 @@ export default function RoutineExerciseCard({
               </div>
             )}
             <button
-              className="routine-exercise-card__sets-add"
+              className="c-routine-exercise-card__sets-add"
               onClick={() => onAddSet(exercise.id)}
             >
               <Icon path={mdiPlus} size={0.8} />

@@ -1,65 +1,72 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.exercise-card {
-  width: 100%;
-  @include flex-column;
-  gap: $spacing-sm;
-  padding: $spacing-md $spacing-lg;
-  @include glass-card;
-  text-align: left;
-  transition: all $transition-fast;
-  cursor: pointer;
-  box-shadow:
-    $shadow-sm,
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-
-  &:active {
-    transform: scale(0.98);
-    border-color: rgba($color-primary, 0.4);
-    box-shadow:
-      $shadow-md,
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  }
-
-  &__header {
-    display: flex;
-    align-items: baseline;
-    gap: $spacing-sm;
-  }
-
-  &__equipment {
-    font-size: 1rem;
-    line-height: 1;
-  }
-
-  &__name {
-    font-size: $font-size-base;
-    font-weight: $font-weight-semibold;
-    color: $color-text-primary;
-    overflow-wrap: break-word;
-    flex: 1;
-  }
-
-  &__stats {
-    display: flex;
-    gap: $spacing-lg;
-  }
-
-  &__stat {
+@layer components {
+  .c-exercise-card {
+    width: 100%;
     @include flex-column;
-  }
+    gap: $spacing-sm;
+    padding: $spacing-md $spacing-lg;
+    @include glass-card;
+    text-align: left;
+    transition:
+      border-color $transition-fast,
+      box-shadow $transition-fast,
+      transform $transition-fast;
+    cursor: pointer;
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 var(--glass-sheen);
 
-  &__stat-value {
-    font-size: $font-size-lg;
-    font-weight: $font-weight-bold;
-    color: $color-primary;
-  }
+    &:active {
+      transform: scale(0.98);
+      // El realce al pulsar es identidad, no peligro: va en el acento.
+      border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+      box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 var(--glass-sheen);
+    }
 
-  &__stat-label {
-    font-size: $font-size-xs;
-    color: $color-text-muted;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    &__header {
+      display: flex;
+      align-items: baseline;
+      gap: $spacing-sm;
+    }
+
+    &__equipment {
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    &__name {
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      color: var(--text);
+      overflow-wrap: break-word;
+      flex: 1;
+    }
+
+    &__stats {
+      display: flex;
+      gap: $spacing-lg;
+    }
+
+    &__stat {
+      @include flex-column;
+    }
+
+    &__stat-value {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      // Texto, no relleno: sobre el vidrio --accent da 4,14:1 en oscuro y no llega
+      // a AA. --accent-text da 5,84:1.
+      color: var(--accent-text);
+    }
+
+    &__stat-label {
+      font-size: $font-size-xs;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
   }
 }

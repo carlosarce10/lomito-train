@@ -11,7 +11,9 @@
       "@app/*": ["src/app/*"],
       "@domain/*": ["src/domain/*"],
       "@features/*": ["src/features/*"],
-      "@shared/*": ["src/shared/*"]
+      "@shared/*": ["src/shared/*"],
+      "@styles/*": ["src/styles/*"],
+      "@theme/*": ["src/theme/*"]
     }
   },
   "include": ["src/**/*", "*.config.js"],

@@ -37,13 +37,13 @@ export default function ExerciseDetail({
     raw === '' ? { ok: true } : onUpdateSet(exercise.id, setId, { [field]: raw });
 
   return (
-    <div className="exercise-detail">
-      <div className="exercise-detail__top">
-        <button className="exercise-detail__back" onClick={onClose}>
+    <div className="c-exercise-detail">
+      <div className="c-exercise-detail__top">
+        <button className="c-exercise-detail__back" onClick={onClose}>
           <Icon path={mdiArrowLeft} size={0.9} />
           Volver
         </button>
-        <div className="exercise-detail__actions-top">
+        <div className="c-exercise-detail__actions-top">
           <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
             Editar
           </Button>
@@ -53,39 +53,41 @@ export default function ExerciseDetail({
         </div>
       </div>
 
-      <div className="exercise-detail__info">
-        <h2 className="exercise-detail__name">{exercise.name}</h2>
+      <div className="c-exercise-detail__info">
+        <h2 className="c-exercise-detail__name">{exercise.name}</h2>
         <MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} />
       </div>
 
-      <div className="exercise-detail__sets-section">
-        <div className="exercise-detail__sets-header">
-          <h3 className="exercise-detail__sets-title">Sets</h3>
+      <div className="c-exercise-detail__sets-section">
+        <div className="c-exercise-detail__sets-header">
+          <h3 className="c-exercise-detail__sets-title">Sets</h3>
           <Button size="sm" onClick={() => onAddSet(exercise.id)}>
             + Set
           </Button>
         </div>
 
         {exercise.sets.length === 0 ? (
-          <p className="exercise-detail__sets-empty">
+          <p className="c-exercise-detail__sets-empty">
             Agrega un set para registrar peso y repeticiones
           </p>
         ) : (
-          <div className="exercise-detail__sets-table">
-            <div className="exercise-detail__sets-row exercise-detail__sets-row--header">
-              <span className="exercise-detail__sets-cell exercise-detail__sets-cell--num">#</span>
-              <span className="exercise-detail__sets-cell">Peso (kg)</span>
-              <span className="exercise-detail__sets-cell">Reps</span>
-              <span className="exercise-detail__sets-cell exercise-detail__sets-cell--action"></span>
+          <div className="c-exercise-detail__sets-table">
+            <div className="c-exercise-detail__sets-row exercise-detail__sets-row--header">
+              <span className="c-exercise-detail__sets-cell exercise-detail__sets-cell--num">
+                #
+              </span>
+              <span className="c-exercise-detail__sets-cell">Peso (kg)</span>
+              <span className="c-exercise-detail__sets-cell">Reps</span>
+              <span className="c-exercise-detail__sets-cell exercise-detail__sets-cell--action"></span>
             </div>
             {exercise.sets.map((set, index) => (
-              <div key={set.id} className="exercise-detail__sets-row">
-                <span className="exercise-detail__sets-cell exercise-detail__sets-cell--num">
+              <div key={set.id} className="c-exercise-detail__sets-row">
+                <span className="c-exercise-detail__sets-cell exercise-detail__sets-cell--num">
                   {index + 1}
                 </span>
-                <div className="exercise-detail__sets-cell">
+                <div className="c-exercise-detail__sets-cell">
                   <NumberField
-                    className="exercise-detail__sets-input"
+                    className="c-exercise-detail__sets-input"
                     inputMode="decimal"
                     value={set.weight}
                     placeholder="0"
@@ -93,9 +95,9 @@ export default function ExerciseDetail({
                     onCommit={(raw) => handleSetChange(set.id, 'weight', raw)}
                   />
                 </div>
-                <div className="exercise-detail__sets-cell">
+                <div className="c-exercise-detail__sets-cell">
                   <NumberField
-                    className="exercise-detail__sets-input"
+                    className="c-exercise-detail__sets-input"
                     inputMode="numeric"
                     value={set.reps}
                     placeholder="0"
@@ -103,9 +105,9 @@ export default function ExerciseDetail({
                     onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
                   />
                 </div>
-                <div className="exercise-detail__sets-cell exercise-detail__sets-cell--action">
+                <div className="c-exercise-detail__sets-cell exercise-detail__sets-cell--action">
                   <button
-                    className="exercise-detail__sets-delete"
+                    className="c-exercise-detail__sets-delete"
                     onClick={() => onDeleteSet(exercise.id, set.id)}
                     aria-label="Eliminar set"
                   >
@@ -133,12 +135,12 @@ export default function ExerciseDetail({
         onClose={() => setShowDeleteConfirm(false)}
         title="Eliminar ejercicio"
       >
-        <div className="exercise-detail__confirm">
-          <p className="exercise-detail__confirm-text">
+        <div className="c-exercise-detail__confirm">
+          <p className="c-exercise-detail__confirm-text">
             ¿Seguro que quieres eliminar <strong>{exercise.name}</strong>? Esta accion no se puede
             deshacer.
           </p>
-          <div className="exercise-detail__confirm-actions">
+          <div className="c-exercise-detail__confirm-actions">
             <Button variant="ghost" onClick={() => setShowDeleteConfirm(false)}>
               Cancelar
             </Button>

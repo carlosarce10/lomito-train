@@ -1,0 +1,42 @@
+@use '../settings/scale' as *;
+
+// Capa 4 de ITCSS: etiquetas desnudas, sin una sola clase.
+
+@layer elements {
+  h1,
+  h2,
+  h3 {
+    color: var(--text);
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-size: $font-size-2xl;
+  }
+
+  h2 {
+    font-size: $font-size-xl;
+  }
+
+  h3 {
+    font-size: $font-size-lg;
+  }
+
+  ::placeholder {
+    color: var(--text-muted);
+  }
+
+  // Foco visible siempre. Un outline: none sin reemplazo con 3:1 de contraste es la
+  // regla 13 de CLAUDE.md, y el foco anterior era un box-shadow al 8% de opacidad,
+  // es decir invisible.
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--accent-subtle);
+    color: var(--text);
+  }
+}

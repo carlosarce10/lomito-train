@@ -1,0 +1,7 @@
+// Declara el orden de la cascada una sola vez y antes que nada.
+// Con @layer el orden lo fija esta linea, no el orden en que se importan los
+// archivos. Eso es lo que permite que los .scss co-locados junto a cada componente
+// se declaren en la capa components y no puedan ganarle a utilities por casualidad,
+// que es lo que pasaba antes: el orden dependia del orden de los import desde JS y
+// no era determinista entre desarrollo y build. Ver docs/styles.md.
+@layer settings, tools, generic, elements, objects, components, utilities;

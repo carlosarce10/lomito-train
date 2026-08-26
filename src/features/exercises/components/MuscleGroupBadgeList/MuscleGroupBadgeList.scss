@@ -1,16 +1,18 @@
-@use 'shared/styles/variables' as *;
+@use 'styles/foundation' as *;
 
-.muscle-group-badge-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $spacing-xs;
-  align-items: center;
+@layer components {
+  .c-muscle-group-badge-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+    align-items: center;
 
-  &__more {
-    padding: 2px $spacing-xs;
-    border-radius: $radius-full;
-    color: $color-text-secondary;
-    font-size: $font-size-xs;
-    font-weight: $font-weight-semibold;
+    &__more {
+      padding: 2px $spacing-xs;
+      border-radius: $radius-full;
+      color: var(--text-secondary);
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+    }
   }
 }

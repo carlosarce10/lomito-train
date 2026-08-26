@@ -1,0 +1,158 @@
+@use 'sass:map';
+
+// Tokens de color en dos niveles. No emite CSS: solo declara los mapas que la capa
+// generic convierte en custom properties.
+// Nivel 1, primitivos: la escala cruda. No se consumen en los componentes.
+// Nivel 2, semanticos: describen un rol. Son los unicos que se consumen, y los
+// unicos que el tema reasigna.
+// Todos los valores estan medidos: los ratios de contraste de cada par critico
+// estan en docs/styles.md, calculados sobre la superficie de vidrio compuesta en
+// su peor punto del fondo, no sobre el fondo ideal.
+
+// ── Nivel 1: primitivos ─────────────────────────────────────────────────────
+$blue-50: #eff6ff;
+$blue-100: #dbeafe;
+$blue-300: #93c5fd;
+$blue-400: #60a5fa;
+$blue-500: #3b82f6;
+$blue-600: #2563eb;
+$blue-700: #1d4ed8;
+
+$slate-950: #0b1220;
+$slate-900: #111c33;
+$slate-800: #1c2331;
+$slate-700: #232a37;
+$slate-500: #64748b;
+$slate-600: #475569;
+$slate-text: #0f172a;
+
+$red-400: #f87171;
+$red-300: #fca5a5;
+$red-600: #dc2626;
+$red-700: #b91c1c;
+
+$green-300: #6ee7b7;
+$green-400: #34d399;
+$green-700: #047857;
+$green-800: #065f46;
+
+$amber-300: #fcd34d;
+$amber-400: #fbbf24;
+$amber-700: #b45309;
+$amber-800: #92400e;
+
+// ── Nivel 2: semanticos, por tema ───────────────────────────────────────────
+$themes: (
+  light: (
+    // Fondo y superficies
+    'bg': $blue-50,
+    'bg-mid': $blue-100,
+    'surface': rgba(255, 255, 255, 0.62),
+    'surface-strong': rgba(255, 255, 255, 0.78),
+    'surface-solid': #f1f7ff,
+    'surface-solid-strong': #f7faff,
+    // Texto
+    'text': $slate-text,
+    'text-secondary': $slate-600,
+    'text-muted': #52627a,
+    // Bordes
+    'border': rgba(255, 255, 255, 0.45),
+    'border-strong': rgba(255, 255, 255, 0.65),
+    'border-interactive': $slate-500,
+    // Acento y roles
+    'accent': $blue-600,
+    'accent-strong': $blue-700,
+    'accent-text': $blue-700,
+    'accent-subtle': rgba(37, 99, 235, 0.12),
+    'on-accent': #fff,
+    // Tinta sobre un color de catalogo (grupo muscular, color de rutina). No conmuta
+    // con el tema a proposito: esos colores son dato, no tema, y los cinco son
+    // claros, asi que la unica tinta legible sobre ellos es oscura en los dos temas.
+    'on-catalog': $slate-text,
+    'danger': $red-600,
+    'danger-text': $red-700,
+    'danger-subtle': rgba(220, 38, 38, 0.1),
+    'on-danger': #fff,
+    'success': $green-700,
+    'success-text': $green-800,
+    'on-success': #fff,
+    'warning': $amber-700,
+    'warning-text': $amber-800,
+    'on-warning': #fff,
+    'focus': $blue-700,
+    // Vidrio
+    'glass-blur': 16px,
+    'glass-blur-strong': 20px,
+    // Orbes del fondo
+    'orb-1': rgba(59, 130, 246, 0.28),
+    'orb-2': rgba(147, 197, 253, 0.18),
+    'orb-3': rgba(96, 165, 250, 0.22),
+    'orb-4': rgba(37, 99, 235, 0.14),
+    // Sombras: tintadas en el azul de la marca
+    'shadow-sm': (0 2px 12px rgba(59, 130, 246, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04)),
+    'shadow-md': (0 8px 24px rgba(59, 130, 246, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04)),
+    'shadow-lg': (0 16px 48px rgba(59, 130, 246, 0.16), 0 4px 16px rgba(0, 0, 0, 0.06)),
+    'glass-sheen': rgba(255, 255, 255, 0.5),
+    'scheme': light,
+    'theme-color': #eff6ff,
+  ),
+  dark: (
+    'bg': $slate-950,
+    'bg-mid': $slate-900,
+    'surface': rgba(226, 232, 240, 0.08),
+    'surface-strong': rgba(226, 232, 240, 0.11),
+    'surface-solid': $slate-800,
+    'surface-solid-strong': $slate-700,
+    'text': #e8eef9,
+    'text-secondary': #b8c6da,
+    'text-muted': #a8b8cf,
+    'border': rgba(226, 232, 240, 0.12),
+    'border-strong': rgba(226, 232, 240, 0.18),
+    'border-interactive': #9fb0c7,
+    'accent': $blue-400,
+    'accent-strong': $blue-300,
+    'accent-text': $blue-300,
+    'accent-subtle': rgba(96, 165, 250, 0.16),
+    'on-accent': $slate-950,
+    'on-catalog': $slate-text,
+    'danger': $red-400,
+    'danger-text': $red-300,
+    'danger-subtle': rgba(248, 113, 113, 0.16),
+    'on-danger': $slate-950,
+    'success': $green-400,
+    'success-text': $green-300,
+    'on-success': $slate-950,
+    'warning': $amber-400,
+    'warning-text': $amber-300,
+    'on-warning': $slate-950,
+    'focus': $blue-300,
+    'glass-blur': 16px,
+    'glass-blur-strong': 20px,
+    // En oscuro los orbes son mas tenues: a la misma opacidad el fondo se lava.
+    'orb-1': rgba(37, 99, 235, 0.22),
+    'orb-2': rgba(59, 130, 246, 0.12),
+    'orb-3': rgba(29, 78, 216, 0.18),
+    'orb-4': rgba(96, 165, 250, 0.08),
+    // En oscuro la sombra no difumina luz: oscurece. Menos radio y mas negro.
+    'shadow-sm': (
+        0 2px 8px rgba(0, 0, 0, 0.4),
+        0 1px 2px rgba(0, 0, 0, 0.3),
+      ),
+    'shadow-md': (
+      0 6px 16px rgba(0, 0, 0, 0.45),
+      0 2px 6px rgba(0, 0, 0, 0.35),
+    ),
+    'shadow-lg': (
+      0 12px 32px rgba(0, 0, 0, 0.55),
+      0 4px 12px rgba(0, 0, 0, 0.4),
+    ),
+    'glass-sheen': rgba(255, 255, 255, 0.06),
+    'scheme': dark,
+    'theme-color': $slate-950,
+  ),
+);
+
+/// Devuelve el mapa de tokens de un tema.
+@function theme($name) {
+  @return map.get($themes, $name);
+}

@@ -1,0 +1,75 @@
+// Capa 3 de ITCSS. Normaliza el navegador y nada mas: ni un color de marca.
+
+@layer generic {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+
+  fieldset {
+    border: none;
+  }
+
+  legend {
+    padding: 0;
+  }
+
+  // Respeta a quien pide menos movimiento. No es opcional: hay animaciones de
+  // entrada en los modales y transformaciones en las tarjetas.
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

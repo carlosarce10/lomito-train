@@ -10,13 +10,15 @@ export default defineConfig({
   resolve: {
     // Vite solo sustituye cuando el id es igual a la clave o empieza por clave + '/',
     // asi que '@' no captura '@shared/...' y el orden no importa.
-    // @i18n, @theme y @styles se anaden en las fases 4 y 6: ver docs/plan.md.
+    // @i18n se anade en la fase 6: ver docs/plan.md.
     alias: {
       '@': src(''),
       '@app': src('app'),
       '@domain': src('domain'),
       '@features': src('features'),
       '@shared': src('shared'),
+      '@styles': src('styles'),
+      '@theme': src('theme'),
     },
   },
   css: {

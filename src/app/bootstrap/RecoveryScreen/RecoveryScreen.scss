@@ -1,62 +1,65 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.recovery {
-  @include flex-center;
+@layer components {
+  .c-recovery-screen {
+    @include flex-center;
 
-  min-height: 100vh;
-  padding: $spacing-lg;
+    min-height: 100vh;
+    padding: $spacing-lg;
 
-  &__panel {
-    @include glass-card-strong;
+    &__panel {
+      @include glass-card-strong;
 
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-md;
-    width: 100%;
-    max-width: 420px;
-    padding: $spacing-xl;
-  }
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-md;
+      width: 100%;
+      max-width: 420px;
+      padding: $spacing-xl;
+    }
 
-  &__title {
-    font-size: $font-size-xl;
-  }
+    &__title {
+      font-size: $font-size-xl;
+    }
 
-  &__message {
-    color: $color-text-primary;
-  }
+    &__message {
+      color: var(--text);
+    }
 
-  &__hint {
-    color: $color-text-secondary;
-    font-size: $font-size-sm;
-  }
+    &__hint {
+      color: var(--text-secondary);
+      font-size: $font-size-sm;
+    }
 
-  &__action,
-  &__retry {
-    min-height: 44px;
-    padding: $spacing-sm $spacing-lg;
-    border-radius: $radius-sm;
-    font-weight: $font-weight-semibold;
-  }
+    &__action,
+    &__retry {
+      min-height: $touch-target;
+      padding: $spacing-sm $spacing-lg;
+      border-radius: $radius-sm;
+      font-weight: $font-weight-semibold;
+    }
 
-  &__action {
-    background: $color-primary;
-    color: #fff;
-  }
+    // Descargar la copia es la accion que salva los datos, no una destruccion:
+    // por eso es el acento y no el rojo de peligro.
+    &__action {
+      background: var(--accent);
+      color: var(--on-accent);
+    }
 
-  &__retry {
-    border: 1px solid $color-glass-border;
-    color: $color-text-secondary;
-  }
+    &__retry {
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
 
-  &__detail {
-    max-height: 160px;
-    overflow: auto;
-    padding: $spacing-sm;
-    border-radius: $radius-sm;
-    background: rgba(0, 0, 0, 0.06);
-    color: $color-text-secondary;
-    font-size: $font-size-xs;
-    white-space: pre-wrap;
+    &__detail {
+      max-height: 160px;
+      overflow: auto;
+      padding: $spacing-sm;
+      border-radius: $radius-sm;
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: $font-size-xs;
+      white-space: pre-wrap;
+    }
   }
 }

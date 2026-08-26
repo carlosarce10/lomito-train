@@ -1,0 +1,55 @@
+// Capa 1 de ITCSS. No emite ni un byte de CSS: son valores de compilacion.
+// Aqui no hay ni un color: los colores son custom properties porque tienen que
+// poder cambiar en runtime al conmutar el tema. Ver docs/styles.md.
+
+// Tipografia
+$font-family:
+  'Inter',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  sans-serif;
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
+$font-size-2xl: 2rem;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Espaciado
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-2xl: 3rem;
+
+// Radios
+$radius-sm: 10px;
+$radius-md: 16px;
+$radius-lg: 20px;
+$radius-xl: 24px;
+$radius-full: 50px;
+
+// Transiciones
+$transition-fast: 150ms ease;
+$transition-base: 250ms ease;
+$transition-slow: 350ms ease;
+
+// Puntos de ruptura, en movil primero
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+
+// Capas de apilado. Estan juntas para poder razonar sobre el orden de un vistazo.
+$z-nav: 50;
+$z-fab: 60;
+$z-modal: 100;
+
+// Area tactil minima. No es una preferencia: es la regla 13 de CLAUDE.md.
+$touch-target: 44px;

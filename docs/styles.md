@@ -1,6 +1,6 @@
 # Estilos: ITCSS, BEMIT y temas
 
-Entra en la fase 4. Ver [plan.md](plan.md).
+Vigente desde la fase 4. Ver [plan.md](plan.md).
 
 ## Las siete capas
 

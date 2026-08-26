@@ -1,11 +1,25 @@
 import { MUSCLE_GROUPS } from '@domain/catalogs';
+
 import './MuscleGroupFilter.scss';
 
+/**
+ * Fila de chips para filtrar ejercicios por grupo muscular.
+ *
+ * El color de cada grupo se inyecta como custom property y el SCSS decide como se
+ * usa. Antes el JSX pintaba el chip activo con un style en linea, que ganaba a
+ * cualquier regla de tema y dejaba ese chip fuera del sistema.
+ *
+ * @param {object} props
+ * @param {string|null} props.activeFilter Id activo, o null para todos.
+ * @param {(id: string|null) => void} props.onFilterChange
+ */
 export default function MuscleGroupFilter({ activeFilter, onFilterChange }) {
   return (
-    <div className="muscle-group-filter">
+    <div className="c-muscle-group-filter o-scroll-x">
       <button
-        className={`muscle-group-filter__chip ${!activeFilter ? 'muscle-group-filter__chip--active' : ''}`}
+        type="button"
+        className={`c-muscle-group-filter__chip${!activeFilter ? ' is-active' : ''}`}
+        aria-pressed={!activeFilter}
         onClick={() => onFilterChange(null)}
       >
         Todos
@@ -13,10 +27,10 @@ export default function MuscleGroupFilter({ activeFilter, onFilterChange }) {
       {MUSCLE_GROUPS.map((group) => (
         <button
           key={group.id}
-          className={`muscle-group-filter__chip ${activeFilter === group.id ? 'muscle-group-filter__chip--active' : ''}`}
-          style={
-            activeFilter === group.id ? { backgroundColor: group.color, color: '#1A1A1A' } : {}
-          }
+          type="button"
+          className={`c-muscle-group-filter__chip${activeFilter === group.id ? ' is-active' : ''}`}
+          style={{ '--group-color': group.color }}
+          aria-pressed={activeFilter === group.id}
           onClick={() => onFilterChange(group.id)}
         >
           {group.label}

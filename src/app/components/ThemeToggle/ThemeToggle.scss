@@ -1,0 +1,11 @@
+@use 'styles/foundation' as *;
+
+@layer components {
+  .c-theme-toggle {
+    color: var(--text-secondary);
+
+    &:hover {
+      color: var(--accent-text);
+    }
+  }
+}

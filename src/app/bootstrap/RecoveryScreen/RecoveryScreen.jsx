@@ -36,20 +36,24 @@ export default function RecoveryScreen({ reason, detail }) {
   };
 
   return (
-    <div className="recovery">
-      <div className="recovery__panel">
-        <h1 className="recovery__title">No se pudo abrir Lomito Train</h1>
-        <p className="recovery__message">{MENSAJES[reason] ?? MENSAJES.render}</p>
-        <p className="recovery__hint">
+    <div className="c-recovery-screen">
+      <div className="c-recovery-screen__panel">
+        <h1 className="c-recovery-screen__title">No se pudo abrir Lomito Train</h1>
+        <p className="c-recovery-screen__message">{MENSAJES[reason] ?? MENSAJES.render}</p>
+        <p className="c-recovery-screen__hint">
           Tus datos siguen en el dispositivo. Descarga una copia antes de hacer nada mas.
         </p>
-        <button className="recovery__action" type="button" onClick={descargar}>
+        <button className="c-recovery-screen__action" type="button" onClick={descargar}>
           Descargar copia de seguridad
         </button>
-        <button className="recovery__retry" type="button" onClick={() => window.location.reload()}>
+        <button
+          className="c-recovery-screen__retry"
+          type="button"
+          onClick={() => window.location.reload()}
+        >
           Reintentar
         </button>
-        {detail && <pre className="recovery__detail">{String(detail)}</pre>}
+        {detail && <pre className="c-recovery-screen__detail">{String(detail)}</pre>}
       </div>
     </div>
   );

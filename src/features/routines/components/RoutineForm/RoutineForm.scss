@@ -1,78 +1,71 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.routine-form {
-  @include flex-column;
-  gap: $spacing-lg;
-
-  &__field {
+@layer components {
+  .c-routine-form {
     @include flex-column;
-    gap: $spacing-sm;
-  }
+    gap: $spacing-lg;
 
-  &__label {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-semibold;
-    color: $color-text-secondary;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  &__input {
-    width: 100%;
-    padding: $spacing-sm $spacing-md;
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid $color-glass-border;
-    border-radius: $radius-sm;
-    color: $color-text-primary;
-    font-size: $font-size-base;
-    font-weight: $font-weight-medium;
-    transition:
-      border-color $transition-fast,
-      box-shadow $transition-fast;
-
-    &::placeholder {
-      color: $color-text-muted;
+    &__field {
+      @include flex-column;
+      gap: $spacing-sm;
     }
 
-    &:focus {
-      outline: none;
-      border-color: rgba($color-primary, 0.5);
-      box-shadow: 0 0 0 3px rgba($color-primary, 0.08);
-      background: rgba(255, 255, 255, 0.8);
-    }
-  }
-
-  &__colors {
-    display: flex;
-    gap: $spacing-sm;
-    flex-wrap: wrap;
-  }
-
-  &__color-swatch {
-    background: var(--swatch-color);
-    width: 32px;
-    height: 32px;
-    border-radius: $radius-full;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition:
-      transform $transition-fast,
-      border-color $transition-fast;
-
-    &:active {
-      transform: scale(0.9);
+    &__label {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    &--active {
-      border-color: $color-text-primary;
-      transform: scale(1.15);
-    }
-  }
+    &__input {
+      @include input-base;
+      font-weight: $font-weight-medium;
 
-  &__actions {
-    display: flex;
-    gap: $spacing-sm;
-    justify-content: flex-end;
+      &::placeholder {
+        color: var(--text-muted);
+      }
+
+      &:focus-visible {
+        box-shadow: 0 0 0 3px var(--accent-subtle);
+      }
+    }
+
+    &__colors {
+      display: flex;
+      gap: $spacing-sm;
+      flex-wrap: wrap;
+    }
+
+    &__color-swatch {
+      @include touch-target-extended;
+
+      background: var(--swatch-color);
+      width: 32px;
+      height: 32px;
+      border-radius: $radius-full;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition:
+        transform $transition-fast,
+        border-color $transition-fast;
+
+      &:active {
+        transform: scale(0.9);
+      }
+
+      // El color del swatch es el contenido, no la decoracion: el estado activo se
+      // marca con un anillo de texto, que se lee sobre cualquiera de los colores.
+      &--active {
+        border-color: var(--text);
+        transform: scale(1.15);
+      }
+    }
+
+    &__actions {
+      display: flex;
+      gap: $spacing-sm;
+      justify-content: flex-end;
+    }
   }
 }

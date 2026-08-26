@@ -16,14 +16,14 @@ export default function RoutineForm({ onSubmit, onCancel, initialData }) {
   };
 
   return (
-    <form className="routine-form" onSubmit={handleSubmit}>
-      <div className="routine-form__field">
-        <label className="routine-form__label" htmlFor="day-name">
+    <form className="c-routine-form" onSubmit={handleSubmit}>
+      <div className="c-routine-form__field">
+        <label className="c-routine-form__label" htmlFor="day-name">
           Nombre de la rutina
         </label>
         <input
           id="day-name"
-          className="routine-form__input"
+          className="c-routine-form__input"
           type="text"
           placeholder="ej. Empuje, Piernas, Full Body…"
           value={name}
@@ -33,14 +33,14 @@ export default function RoutineForm({ onSubmit, onCancel, initialData }) {
         />
       </div>
 
-      <fieldset className="routine-form__field">
-        <legend className="routine-form__label">Color</legend>
-        <div className="routine-form__colors">
+      <fieldset className="c-routine-form__field">
+        <legend className="c-routine-form__label">Color</legend>
+        <div className="c-routine-form__colors">
           {ROUTINE_COLORS.map((color) => (
             <button
               key={color.id}
               type="button"
-              className={`routine-form__color-swatch${colorId === color.id ? ' routine-form__color-swatch--active' : ''}`}
+              className={`c-routine-form__color-swatch${colorId === color.id ? ' routine-form__color-swatch--active' : ''}`}
               style={{ '--swatch-color': color.value }}
               onClick={() => setColorId(color.id)}
               aria-pressed={colorId === color.id}
@@ -50,7 +50,7 @@ export default function RoutineForm({ onSubmit, onCancel, initialData }) {
         </div>
       </fieldset>
 
-      <div className="routine-form__actions">
+      <div className="c-routine-form__actions">
         <Button type="button" variant="ghost" onClick={onCancel}>
           Cancelar
         </Button>

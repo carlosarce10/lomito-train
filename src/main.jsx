@@ -1,3 +1,13 @@
+// El sistema de estilos se importa ANTES que cualquier componente, y el orden
+// importa de verdad: Vite inyecta el CSS de cada .scss co-locado en el orden en que
+// se importa su modulo. Si App.jsx entra primero, el navegador ve un
+// "@layer components" antes de que _layers.scss haya declarado el orden de las
+// capas, y una capa ya creada no se puede reordenar: el reset acaba ganandole a los
+// componentes y se pierde todo el espaciado. Verificado en pantalla.
+//
+ 
+import './styles/main.scss';
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 

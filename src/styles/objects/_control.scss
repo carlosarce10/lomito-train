@@ -1,0 +1,30 @@
+@use '../settings/scale' as *;
+@use '../tools/mixins' as *;
+
+// Capa 5 de ITCSS. Objetos: patrones de maquetacion sin identidad visual.
+
+// Cualquier control que solo lleve un icono. Existe para que el minimo de 44px no
+// haya que recordarlo componente a componente.
+@layer objects {
+  .o-control {
+    @include flex-center;
+    @include touch-target;
+
+    border-radius: $radius-sm;
+    color: var(--text-secondary);
+    transition: color $transition-fast;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+
+  // Fila horizontal con scroll y sin barra visible. La usan los filtros de grupo.
+  .o-scroll-x {
+    @include hide-scrollbar;
+
+    display: flex;
+    gap: $spacing-sm;
+    overflow-x: auto;
+  }
+}

@@ -4,12 +4,12 @@ import './SearchBar.scss';
 
 export default function SearchBar({ value, onChange, placeholder = 'Buscar…' }) {
   return (
-    <div className="search-bar">
-      <span className="search-bar__icon">
+    <div className="c-search-bar">
+      <span className="c-search-bar__icon">
         <Icon path={mdiMagnify} size={0.85} />
       </span>
       <input
-        className="search-bar__input"
+        className="c-search-bar__input"
         type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -20,7 +20,7 @@ export default function SearchBar({ value, onChange, placeholder = 'Buscar…' }
       />
       {value && (
         <button
-          className="search-bar__clear"
+          className="c-search-bar__clear"
           onClick={() => onChange('')}
           aria-label="Limpiar búsqueda"
           type="button"

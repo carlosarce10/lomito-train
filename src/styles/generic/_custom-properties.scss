@@ -1,0 +1,51 @@
+@use 'sass:map';
+@use '../settings/tokens' as tokens;
+
+// Capa 3 de ITCSS. Es el UNICO archivo del proyecto que emite custom properties.
+// Antes el bloque :root vivia en el parcial de settings, y como Vite compila cada
+// .scss co-locado por separado, ese bloque se emitia una vez por cada hoja que lo
+// usaba: 23 veces en el bundle. Ver docs/styles.md.
+
+/// Emite las custom properties de un tema.
+@layer generic {
+  @mixin emit($name) {
+    @each $key, $value in tokens.theme($name) {
+      --#{$key}: #{$value};
+    }
+  }
+
+  :root {
+    @include emit(light);
+
+    color-scheme: light;
+  }
+
+  // El tema del sistema, solo cuando el usuario no ha elegido explicitamente.
+  // La guarda con :not es lo que permite que el selector de tema gane en ambos
+  // sentidos: sin ella, "claro" no podria imponerse sobre un sistema en oscuro.
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      @include emit(dark);
+
+      color-scheme: dark;
+    }
+  }
+
+  // La eleccion explicita del usuario manda sobre el sistema.
+  :root[data-theme='dark'] {
+    @include emit(dark);
+
+    color-scheme: dark;
+  }
+
+  :root[data-theme='light'] {
+    @include emit(light);
+
+    color-scheme: light;
+  }
+
+  // Tokens que no dependen del tema.
+  :root {
+    --nav-height: 64px;
+  }
+}

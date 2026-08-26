@@ -24,12 +24,12 @@ export default function ExerciseCard({ exercise, onClick }) {
     : null;
 
   return (
-    <button className="exercise-card" onClick={() => onClick(exercise)}>
-      <div className="exercise-card__header">
-        <h3 className="exercise-card__name">{exercise.name}</h3>
+    <button className="c-exercise-card" onClick={() => onClick(exercise)}>
+      <div className="c-exercise-card__header">
+        <h3 className="c-exercise-card__name">{exercise.name}</h3>
         {equipmentIcon && (
           <span
-            className="exercise-card__equipment"
+            className="c-exercise-card__equipment"
             title={getEquipmentLabel(exercise.equipmentId)}
           >
             <Icon path={equipmentIcon} size={0.75} />
@@ -39,14 +39,14 @@ export default function ExerciseCard({ exercise, onClick }) {
       {/* Las etiquetas van en su propia fila: compitiendo con el nombre en la misma
           linea, un ejercicio con dos grupos truncaba el titulo en pantalla estrecha. */}
       <MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} max={3} />
-      <div className="exercise-card__stats">
-        <div className="exercise-card__stat">
-          <span className="exercise-card__stat-value">{totalSets}</span>
-          <span className="exercise-card__stat-label">Sets</span>
+      <div className="c-exercise-card__stats">
+        <div className="c-exercise-card__stat">
+          <span className="c-exercise-card__stat-value">{totalSets}</span>
+          <span className="c-exercise-card__stat-label">Sets</span>
         </div>
-        <div className="exercise-card__stat">
-          <span className="exercise-card__stat-value">{maxWeight}</span>
-          <span className="exercise-card__stat-label">Max kg</span>
+        <div className="c-exercise-card__stat">
+          <span className="c-exercise-card__stat-value">{maxWeight}</span>
+          <span className="c-exercise-card__stat-label">Max kg</span>
         </div>
       </div>
     </button>

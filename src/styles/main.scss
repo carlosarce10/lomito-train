@@ -1,0 +1,8 @@
+// Punto de entrada unico del sistema de estilos. Lo importa src/main.jsx y nadie mas.
+@use 'layers';
+@use 'generic/custom-properties';
+@use 'generic/reset';
+@use 'elements/page';
+@use 'elements/typography';
+@use 'objects/control';
+@use 'utilities/visually-hidden';

@@ -1,31 +1,32 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.exercise-list {
-  @include flex-column;
-  gap: $spacing-sm;
-
-  &__empty {
+@layer components {
+  .c-exercise-list {
     @include flex-column;
-    @include flex-center;
-    gap: $spacing-md;
-    padding: $spacing-2xl $spacing-md;
-    text-align: center;
-  }
+    gap: $spacing-sm;
 
-  &__empty-icon {
-    font-size: 3rem;
-    opacity: 0.5;
-  }
+    &__empty {
+      @include flex-column;
+      @include flex-center;
+      gap: $spacing-md;
+      padding: $spacing-2xl $spacing-md;
+      text-align: center;
+    }
 
-  &__empty-text {
-    font-size: $font-size-lg;
-    font-weight: $font-weight-semibold;
-    color: $color-text-secondary;
-  }
+    &__empty-icon {
+      font-size: 3rem;
+      opacity: 0.5;
+    }
 
-  &__empty-hint {
-    font-size: $font-size-sm;
-    color: $color-text-muted;
+    &__empty-text {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: var(--text-secondary);
+    }
+
+    &__empty-hint {
+      font-size: $font-size-sm;
+      color: var(--text-muted);
+    }
   }
 }

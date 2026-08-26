@@ -48,7 +48,7 @@ export default function ExercisesPage() {
   }
 
   return (
-    <div className="exercises-page">
+    <div className="c-exercises-page">
       <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Buscar ejercicio…" />
 
       <MuscleGroupFilter activeFilter={activeFilter} onFilterChange={setActiveFilter} />
@@ -59,7 +59,7 @@ export default function ExercisesPage() {
       />
 
       <button
-        className="exercises-page__fab"
+        className="c-exercises-page__fab"
         onClick={() => setShowCreateForm(true)}
         aria-label="Crear ejercicio"
       >

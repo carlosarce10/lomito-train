@@ -21,25 +21,25 @@ export default function ExercisePicker({ allExercises, selectedIds, onToggle, on
   });
 
   return (
-    <div className="exercise-picker">
-      <div className="exercise-picker__header">
-        <h2 className="exercise-picker__title">Agregar ejercicio</h2>
-        <button className="exercise-picker__close" onClick={onClose} aria-label="Cerrar">
+    <div className="c-exercise-picker">
+      <div className="c-exercise-picker__header">
+        <h2 className="c-exercise-picker__title">Agregar ejercicio</h2>
+        <button className="c-exercise-picker__close" onClick={onClose} aria-label="Cerrar">
           <Icon path={mdiClose} size={0.85} />
         </button>
       </div>
 
-      <div className="exercise-picker__search">
+      <div>
         <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Buscar ejercicio…" />
       </div>
 
-      <div className="exercise-picker__filter">
+      <div>
         <MuscleGroupFilter activeFilter={activeFilter} onFilterChange={setActiveFilter} />
       </div>
 
-      <div className="exercise-picker__list">
+      <div className="c-exercise-picker__list">
         {filtered.length === 0 ? (
-          <p className="exercise-picker__empty">Sin resultados</p>
+          <p className="c-exercise-picker__empty">Sin resultados</p>
         ) : (
           filtered.map((ex) => {
             const isSelected = selectedIds.includes(ex.id);
@@ -47,12 +47,15 @@ export default function ExercisePicker({ allExercises, selectedIds, onToggle, on
             return (
               <button
                 key={ex.id}
-                className={`exercise-picker__item${isSelected ? ' exercise-picker__item--selected' : ''}`}
+                className={`c-exercise-picker__item${isSelected ? ' exercise-picker__item--selected' : ''}`}
                 onClick={() => onToggle(ex.id)}
               >
-                <span className="exercise-picker__item-dot" style={{ background: color }} />
-                <span className="exercise-picker__item-name">{ex.name}</span>
-                <span className="exercise-picker__item-check">
+                <span
+                  className="c-exercise-picker__item-dot"
+                  style={{ '--exercise-color': color }}
+                />
+                <span className="c-exercise-picker__item-name">{ex.name}</span>
+                <span className="c-exercise-picker__item-check">
                   <Icon path={isSelected ? mdiCheck : mdiPlus} size={0.75} />
                 </span>
               </button>

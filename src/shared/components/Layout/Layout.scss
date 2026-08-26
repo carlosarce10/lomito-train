@@ -1,55 +1,60 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.layout {
-  min-height: 100vh;
-  @include flex-column;
-  position: relative;
+@layer components {
+  .c-layout {
+    min-height: 100vh;
+    @include flex-column;
+    position: relative;
 
-  &__header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: rgba(239, 246, 255, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-    padding: $spacing-md $spacing-lg;
-    box-shadow: 0 2px 20px rgba(59, 130, 246, 0.08);
-  }
+    // La cabecera no usa glass-card-strong porque solo lleva borde inferior: el
+    // mixin anadiria borde en los cuatro lados y radio a una barra a sangre. Si
+    // se copia el vidrio a mano hay que copiar tambien el respaldo opaco, porque
+    // --surface-strong en oscuro es un 11% de opacidad: sin blur no tapa nada.
+    &__header {
+      @include flex-between;
 
-  &__logo {
-    @include flex-center;
-    gap: $spacing-sm;
-    font-size: $font-size-xl;
-    font-weight: $font-weight-bold;
-    color: $color-primary;
-  }
+      position: sticky;
+      top: 0;
+      z-index: $z-nav;
+      background: var(--surface-solid-strong);
+      border-bottom: 1px solid var(--border);
+      padding: $spacing-md $spacing-lg;
+      box-shadow: var(--shadow-sm);
 
-  &__logo-icon {
-    display: flex;
-    align-items: center;
-    color: $color-primary;
-  }
-
-  &__content {
-    flex: 1;
-    padding: $spacing-md;
-    padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + #{$spacing-md});
-    max-width: 600px;
-    width: 100%;
-    margin: 0 auto;
-
-    @include respond-to(md) {
-      padding: $spacing-lg;
-      padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + #{$spacing-lg});
+      @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+        background: var(--surface-strong);
+        backdrop-filter: blur(var(--glass-blur-strong));
+        -webkit-backdrop-filter: blur(var(--glass-blur-strong));
+      }
     }
 
-    &--session {
-      padding-bottom: $spacing-md;
+    // Texto y icono sobre vidrio: el rol de texto, no el de relleno. --accent en
+    // oscuro da 4,14:1 y no llega a AA; --accent-text da 5,84:1.
+    &__logo {
+      @include flex-center;
+      gap: $spacing-sm;
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: var(--accent-text);
+    }
+
+    &__logo-icon {
+      display: flex;
+      align-items: center;
+      color: var(--accent-text);
+    }
+
+    &__content {
+      flex: 1;
+      padding: $spacing-md;
+      padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + #{$spacing-md});
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
 
       @include respond-to(md) {
-        padding-bottom: $spacing-lg;
+        padding: $spacing-lg;
+        padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + #{$spacing-lg});
       }
     }
   }

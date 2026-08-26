@@ -58,6 +58,8 @@ export default defineConfig([
             ['@domain', './src/domain'],
             ['@features', './src/features'],
             ['@shared', './src/shared'],
+            ['@styles', './src/styles'],
+            ['@theme', './src/theme'],
           ],
         },
         node: { extensions: ['.js', '.jsx'] },
@@ -83,6 +85,7 @@ export default defineConfig([
           pathGroups: [
             { pattern: '@domain/**', group: 'internal', position: 'before' },
             { pattern: '@shared/**', group: 'internal', position: 'before' },
+            { pattern: '@theme/**', group: 'internal', position: 'before' },
             { pattern: '@features/**', group: 'internal', position: 'after' },
             { pattern: '@app/**', group: 'internal', position: 'after' },
             { pattern: '@/**', group: 'internal', position: 'after' },

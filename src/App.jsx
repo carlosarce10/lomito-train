@@ -4,7 +4,7 @@ import Layout from '@shared/components/Layout/Layout';
 import { ExercisesPage } from '@features/exercises';
 import { RoutinesPage } from '@features/routines';
 
-import './App.scss';
+import ThemeToggle from './app/components/ThemeToggle/ThemeToggle';
 
 export default function App() {
   const [activePage, setActivePage] = useState('routines');
@@ -19,7 +19,7 @@ export default function App() {
   };
 
   return (
-    <Layout activePage={activePage} onPageChange={setActivePage}>
+    <Layout activePage={activePage} onPageChange={setActivePage} headerAction={<ThemeToggle />}>
       {renderPage()}
     </Layout>
   );

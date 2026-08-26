@@ -1,38 +1,34 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.muscle-group-filter {
-  display: flex;
-  gap: $spacing-sm;
-  overflow-x: auto;
-  padding: $spacing-sm 0;
-  @include hide-scrollbar;
+@layer components {
+  .c-muscle-group-filter {
+    padding-bottom: $spacing-xs;
 
-  &__chip {
-    flex-shrink: 0;
-    padding: $spacing-xs $spacing-md;
-    border-radius: $radius-full;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-medium;
-    color: $color-text-secondary;
-    background: $color-surface;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid $color-glass-border;
-    box-shadow: $shadow-sm;
-    transition: all $transition-fast;
-    cursor: pointer;
+    &__chip {
+      @include touch-target;
 
-    &:active {
-      transform: scale(0.95);
-    }
+      flex-shrink: 0;
+      padding: $spacing-xs $spacing-md;
+      border: 1px solid var(--border);
+      border-radius: $radius-full;
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      white-space: nowrap;
+      transition:
+        background-color $transition-fast,
+        border-color $transition-fast,
+        color $transition-fast;
 
-    &--active {
-      background: linear-gradient(135deg, $color-primary 0%, #fb923c 100%);
-      color: #fff;
-      border-color: transparent;
-      font-weight: $font-weight-semibold;
-      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+      // El chip activo se tinta con el color del grupo, que llega como dato desde
+      // el JSX. El "Todos" no tiene grupo, asi que cae al acento del tema.
+      &.is-active {
+        border-color: var(--group-color, var(--accent));
+        background: color-mix(in srgb, var(--group-color, var(--accent)) 18%, var(--surface));
+        color: var(--text);
+        font-weight: $font-weight-semibold;
+      }
     }
   }
 }

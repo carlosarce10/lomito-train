@@ -55,6 +55,8 @@ traduccion y ambitos de commit. La columna "codigo" manda.
 | Equipamiento (catalogo)                    | `equipment`   | Equipamiento   | Equipment     |
 | Mejor marca, siempre calculada             | `record`      | Marca          | Personal best |
 | Ajustes de la aplicacion                   | `settings`    | Ajustes        | Settings      |
+| Tema visual                                | `theme`       | Tema           | Theme         |
+| Idioma activo                              | `language`    | Idioma         | Language      |
 | Exportacion a PDF o Excel                  | `export`      | Exportar       | Export        |
 
 Palabras prohibidas y su sustituto:
@@ -129,17 +131,37 @@ escritura fallo**. Detalle en [docs/data-model.md](docs/data-model.md).
 
 ## 8. Estilos
 
-Metodologia ITCSS con siete capas, en este orden: settings, tools, generic,
-elements, objects, components, utilities.
+ITCSS con siete capas: settings, tools, generic, elements, objects, components,
+utilities. El orden de la cascada lo fija `@layer` nativo en `src/styles/_layers.scss`,
+no el orden de importacion.
 
-Nomenclatura BEMIT. Ejemplo: `ExerciseCard.jsx` usa `_exercise-card.scss` y su
-bloque es `.c-exercise-card`. Prefijos: `o-` objetos, `c-` componentes,
-`u-` utilidades, `is-`/`has-` estados, `js-` ganchos de JavaScript sin estilos.
+Las capas 1 a 5 y la 7 viven en `src/styles/`. La 6 se queda junto al componente y
+cada archivo se declara a si mismo dentro de `@layer components`.
+
+Un componente consume una sola cosa: `@use 'styles/foundation' as *;`, que reexporta
+settings y tools, las dos capas que no emiten CSS. Un componente nunca importa
+generic, elements, objects ni utilities.
+
+`src/styles/main.scss` es el unico punto de entrada global y lo importa `src/main.jsx`.
+
+Nomenclatura BEMIT: `ExerciseCard.jsx` usa su `_exercise-card.scss` y su bloque es
+`.c-exercise-card`. Prefijos: `o-` objetos, `c-` componentes, `u-` utilidades,
+`is-`/`has-` estados, `js-` ganchos de JavaScript sin estilos.
 
 Vocabulario cerrado de estados: `is-selected`, `is-active`, `is-open`, `is-loading`.
 
-Todo color es una custom property de rol semantico. Anadir un token significa
-anadirlo a los dos temas, claro y oscuro, o el build falla.
+Todo color es una custom property de rol semantico, declarada en los dos mapas de
+`settings/_tokens.scss` y emitida una sola vez desde `generic/_custom-properties.scss`.
+Anadir un token a un tema y no al otro deja ese token sin valor en el otro tema.
+
+Los tokens de relleno y los de texto no son intercambiables: `--accent` es un
+relleno y `--accent-text` es el texto sobre superficie. Usar el relleno como texto
+en modo oscuro da 4,14:1 y no pasa AA.
+
+El tema tiene tres estados: `light`, `dark` y `system`. Se aplica escribiendo
+`data-theme` en el elemento raiz, se persiste en `lomito-train-settings`, y un script
+en linea en `index.html` lo aplica antes del primer pintado para que no haya
+destello. Ese script es la unica excepcion a la regla 5.
 Detalle en [docs/styles.md](docs/styles.md).
 
 ## 9. Internacionalizacion

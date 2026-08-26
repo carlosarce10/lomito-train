@@ -6,7 +6,7 @@ import './RoutineList.scss';
 export default function RoutineList({ routines, allExercises, onRoutineClick }) {
   if (routines.length === 0) {
     return (
-      <div className="routine-list__empty">
+      <div className="c-routine-list__empty">
         <p>No tienes rutinas todavía.</p>
         <p>Crea tu primera rutina con el botón +</p>
       </div>
@@ -14,7 +14,7 @@ export default function RoutineList({ routines, allExercises, onRoutineClick }) 
   }
 
   return (
-    <div className="routine-list">
+    <div className="c-routine-list">
       {routines.map((routine) => {
         const exerciseCount = resolveRoutineExercises(routine, allExercises).length;
         return (

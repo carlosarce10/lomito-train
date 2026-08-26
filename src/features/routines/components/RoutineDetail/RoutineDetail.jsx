@@ -55,23 +55,23 @@ export default function RoutineDetail({
   };
 
   return (
-    <div className="routine-detail">
+    <div className="c-routine-detail">
       {/* Top bar */}
-      <div className="routine-detail__top">
-        <button className="routine-detail__back" onClick={onBack}>
+      <div className="c-routine-detail__top">
+        <button className="c-routine-detail__back" onClick={onBack}>
           <Icon path={mdiArrowLeft} size={0.9} />
           Rutinas
         </button>
-        <div className="routine-detail__top-actions">
+        <div className="c-routine-detail__top-actions">
           <button
-            className="routine-detail__edit"
+            className="c-routine-detail__edit"
             onClick={() => setIsEditingRoutine(true)}
             aria-label="Editar rutina"
           >
             <Icon path={mdiPencil} size={0.9} />
           </button>
           <button
-            className="routine-detail__delete"
+            className="c-routine-detail__delete"
             onClick={() => setShowConfirmDelete(true)}
             aria-label="Eliminar rutina"
           >
@@ -81,22 +81,22 @@ export default function RoutineDetail({
       </div>
 
       {/* Routine info */}
-      <div className="routine-detail__info">
+      <div className="c-routine-detail__info">
         <span
-          className="routine-detail__color-dot"
+          className="c-routine-detail__color-dot"
           style={{ '--routine-color': getRoutineColor(routine.colorId) }}
         />
-        <h2 className="routine-detail__name">{routine.name}</h2>
+        <h2 className="c-routine-detail__name">{routine.name}</h2>
       </div>
 
       {/* Exercises section */}
-      <div className="routine-detail__exercises-section">
-        <div className="routine-detail__exercises-header">
-          <span className="routine-detail__exercises-title">
+      <div className="c-routine-detail__exercises-section">
+        <div className="c-routine-detail__exercises-header">
+          <span className="c-routine-detail__exercises-title">
             Ejercicios ({routineExercises.length})
           </span>
           <button
-            className="routine-detail__add-btn"
+            className="c-routine-detail__add-btn"
             onClick={() => setShowPicker(true)}
             aria-label="Agregar ejercicio"
           >
@@ -106,12 +106,12 @@ export default function RoutineDetail({
         </div>
 
         {routineExercises.length === 0 ? (
-          <p className="routine-detail__empty">
+          <p className="c-routine-detail__empty">
             Sin ejercicios. Agrega algunos con el botón de arriba.
           </p>
         ) : (
-          <div className="routine-detail__exercise-list">
-            <p className="routine-detail__swipe-hint">
+          <div className="c-routine-detail__exercise-list">
+            <p className="c-routine-detail__swipe-hint">
               Desliza ← para quitar &nbsp;·&nbsp; → para editar
             </p>
             {routineExercises.map((ex) => (
@@ -164,11 +164,11 @@ export default function RoutineDetail({
           (() => {
             const ex = allExercises.find((e) => e.id === removingExerciseId);
             return (
-              <div className="routine-detail__confirm">
-                <p className="routine-detail__confirm-text">
+              <div className="c-routine-detail__confirm">
+                <p className="c-routine-detail__confirm-text">
                   ¿Quitar <strong>{ex?.name}</strong> de esta rutina?
                 </p>
-                <div className="routine-detail__confirm-actions">
+                <div className="c-routine-detail__confirm-actions">
                   <Button variant="ghost" onClick={() => setRemovingExerciseId(null)}>
                     Cancelar
                   </Button>
@@ -203,11 +203,11 @@ export default function RoutineDetail({
         onClose={() => setShowConfirmDelete(false)}
         title="Eliminar rutina"
       >
-        <div className="routine-detail__confirm">
-          <p className="routine-detail__confirm-text">
+        <div className="c-routine-detail__confirm">
+          <p className="c-routine-detail__confirm-text">
             ¿Eliminar <strong>{routine.name}</strong>? Esta acción no se puede deshacer.
           </p>
-          <div className="routine-detail__confirm-actions">
+          <div className="c-routine-detail__confirm-actions">
             <Button variant="ghost" onClick={() => setShowConfirmDelete(false)}>
               Cancelar
             </Button>

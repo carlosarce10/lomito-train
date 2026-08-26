@@ -26,14 +26,14 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
   };
 
   return (
-    <form className="exercise-form" onSubmit={handleSubmit}>
-      <div className="exercise-form__field">
-        <label className="exercise-form__label" htmlFor="exercise-name">
+    <form className="c-exercise-form" onSubmit={handleSubmit}>
+      <div className="c-exercise-form__field">
+        <label className="c-exercise-form__label" htmlFor="exercise-name">
           Nombre del ejercicio
         </label>
         <input
           id="exercise-name"
-          className="exercise-form__input"
+          className="c-exercise-form__input"
           type="text"
           placeholder="Ej: Press de banca"
           value={name}
@@ -43,27 +43,27 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
         />
       </div>
 
-      <fieldset className="exercise-form__field">
-        <legend className="exercise-form__label">
+      <fieldset className="c-exercise-form__field">
+        <legend className="c-exercise-form__label">
           Grupos musculares
           {muscleGroupIds.length > 0 && (
-            <span className="exercise-form__label-count"> ({muscleGroupIds.length})</span>
+            <span className="c-exercise-form__label-count"> ({muscleGroupIds.length})</span>
           )}
         </legend>
-        <div className="exercise-form__group-options">
+        <div className="c-exercise-form__group-options">
           {MUSCLE_GROUPS.map((group) => {
             const selected = muscleGroupIds.includes(group.id);
             return (
               <button
                 key={group.id}
                 type="button"
-                className={`exercise-form__group-option${selected ? ' exercise-form__group-option--selected' : ''}`}
+                className={`c-exercise-form__group-option${selected ? ' exercise-form__group-option--selected' : ''}`}
                 style={selected ? { backgroundColor: group.color, borderColor: group.color } : {}}
                 aria-pressed={selected}
                 onClick={() => toggleMuscleGroup(group.id)}
               >
                 {selected && (
-                  <Icon path={mdiCheck} size={0.65} className="exercise-form__group-check" />
+                  <Icon path={mdiCheck} size={0.65} className="c-exercise-form__group-check" />
                 )}
                 {group.label}
               </button>
@@ -72,17 +72,17 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
         </div>
       </fieldset>
 
-      <fieldset className="exercise-form__field">
-        <legend className="exercise-form__label">
+      <fieldset className="c-exercise-form__field">
+        <legend className="c-exercise-form__label">
           Equipamiento
-          <span className="exercise-form__label-count"> (opcional)</span>
+          <span className="c-exercise-form__label-count"> (opcional)</span>
         </legend>
-        <div className="exercise-form__equipment-options">
+        <div className="c-exercise-form__equipment-options">
           {EQUIPMENT_TYPES.map((eq) => (
             <button
               key={eq.id}
               type="button"
-              className={`exercise-form__equipment-option${equipmentId === eq.id ? ' exercise-form__equipment-option--selected' : ''}`}
+              className={`c-exercise-form__equipment-option${equipmentId === eq.id ? ' exercise-form__equipment-option--selected' : ''}`}
               aria-pressed={equipmentId === eq.id}
               onClick={() => setEquipmentId((prev) => (prev === eq.id ? null : eq.id))}
             >
@@ -92,7 +92,7 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
         </div>
       </fieldset>
 
-      <div className="exercise-form__actions">
+      <div className="c-exercise-form__actions">
         {onCancel && (
           <Button variant="ghost" onClick={onCancel}>
             Cancelar

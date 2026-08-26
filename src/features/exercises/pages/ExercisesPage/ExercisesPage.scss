@@ -1,37 +1,41 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.exercises-page {
-  @include flex-column;
-  gap: $spacing-md;
-  padding-bottom: 80px; // space for FAB
+@layer components {
+  .c-exercises-page {
+    @include flex-column;
+    gap: $spacing-md;
+    padding-bottom: 80px; // hueco para el boton flotante
 
-  &__fab {
-    position: fixed;
-    bottom: calc(var(--nav-height) + $spacing-md);
-    right: $spacing-xl;
-    width: 56px;
-    height: 56px;
-    border-radius: $radius-full;
-    background: $color-primary;
-    color: #fff;
-    @include flex-center;
-    box-shadow:
-      0 8px 24px rgba(220, 38, 38, 0.4),
-      0 2px 8px rgba(0, 0, 0, 0.1);
-    border: none;
-    cursor: pointer;
-    transition: all $transition-fast;
-    z-index: 40;
+    &__fab {
+      position: fixed;
+      bottom: calc(var(--nav-height) + $spacing-md);
+      right: $spacing-xl;
+      width: 56px;
+      height: 56px;
+      border-radius: $radius-full;
+      background: var(--accent);
+      color: var(--on-accent);
+      @include flex-center;
+      box-shadow: var(--shadow-md);
+      // Flota sobre el fondo desnudo: sin borde el contraste del propio boton cae
+      // a 2,50:1, por debajo del 3:1 que exige WCAG 1.4.11.
+      border: 1px solid var(--accent-strong);
+      cursor: pointer;
+      transition:
+        background-color $transition-fast,
+        box-shadow $transition-fast,
+        transform $transition-fast;
+      z-index: $z-fab;
 
-    &:hover {
-      background: $color-primary-dark;
-    }
+      &:hover {
+        background: var(--accent-strong);
+      }
 
-    &:active {
-      transform: scale(0.92);
-      background: $color-primary-dark;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+      &:active {
+        transform: scale(0.92);
+        background: var(--accent-strong);
+        box-shadow: var(--shadow-sm);
+      }
     }
   }
 }

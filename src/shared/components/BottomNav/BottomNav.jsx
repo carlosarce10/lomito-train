@@ -9,18 +9,18 @@ const TABS = [
 
 export default function BottomNav({ activePage, onPageChange }) {
   return (
-    <nav className="bottom-nav">
+    <nav className="c-bottom-nav">
       {TABS.map((tab) => (
         <button
           key={tab.id}
-          className={`bottom-nav__tab${activePage === tab.id ? ' bottom-nav__tab--active' : ''}`}
+          className={`c-bottom-nav__tab${activePage === tab.id ? ' bottom-nav__tab--active' : ''}`}
           onClick={() => onPageChange(tab.id)}
           aria-current={activePage === tab.id ? 'page' : undefined}
         >
-          <span className="bottom-nav__icon">
+          <span className="c-bottom-nav__icon">
             <Icon path={tab.icon} size={1} />
           </span>
-          <span className="bottom-nav__label">{tab.label}</span>
+          <span className="c-bottom-nav__label">{tab.label}</span>
         </button>
       ))}
     </nav>

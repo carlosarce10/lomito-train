@@ -35,12 +35,17 @@ export default function Modal({ isOpen, onClose, title, closeLabel = 'Cerrar', c
   if (!isOpen) return null;
 
   return (
-    <div className="modal">
+    <div className="c-modal">
       {/* Boton real, no un div con onClick: asi el cierre por fondo es accesible. */}
-      <button type="button" className="modal__backdrop" aria-label={closeLabel} onClick={onClose} />
+      <button
+        type="button"
+        className="c-modal__backdrop"
+        aria-label={closeLabel}
+        onClick={onClose}
+      />
       <div
         ref={containerRef}
-        className="modal__content"
+        className="c-modal__content"
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
@@ -48,16 +53,16 @@ export default function Modal({ isOpen, onClose, title, closeLabel = 'Cerrar', c
         tabIndex={-1}
       >
         {title && (
-          <div className="modal__header">
-            <h2 className="modal__title" id={titleId}>
+          <div className="c-modal__header">
+            <h2 className="c-modal__title" id={titleId}>
               {title}
             </h2>
-            <button className="modal__close" onClick={onClose} aria-label={closeLabel}>
+            <button className="c-modal__close" onClick={onClose} aria-label={closeLabel}>
               <Icon path={mdiClose} size={0.85} />
             </button>
           </div>
         )}
-        <div className="modal__body">{children}</div>
+        <div className="c-modal__body">{children}</div>
       </div>
     </div>
   );

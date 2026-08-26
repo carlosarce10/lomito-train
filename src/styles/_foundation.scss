@@ -1,0 +1,7 @@
+// Lo que un componente puede consumir: settings y tools, las dos capas de ITCSS
+// que no emiten ni un byte de CSS. Un componente nunca importa generic, elements,
+// objects ni utilities.
+// Uso: @use 'styles/foundation' as *;
+@forward 'settings/scale';
+@forward 'tools/media';
+@forward 'tools/mixins';

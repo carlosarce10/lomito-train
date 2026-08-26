@@ -59,7 +59,7 @@ export default function RoutinesPage() {
   }
 
   return (
-    <div className="routines-page">
+    <div className="c-routines-page">
       <RoutineList
         routines={routines}
         allExercises={exercises}
@@ -67,7 +67,7 @@ export default function RoutinesPage() {
       />
 
       <button
-        className="routines-page__fab"
+        className="c-routines-page__fab"
         onClick={() => setShowCreateForm(true)}
         aria-label="Crear rutina"
       >

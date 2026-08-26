@@ -5,15 +5,15 @@ export default function Button({
   variant = 'primary',
   size = 'md',
   onClick,
-  type = 'button',
+  type = 'c-button',
   disabled = false,
   className = '',
 }) {
   const classes = [
-    'button',
-    `button--${variant}`,
-    `button--${size}`,
-    disabled ? 'button--disabled' : '',
+    'c-button',
+    `c-button--${variant}`,
+    `c-button--${size}`,
+    disabled ? 'c-button--disabled' : '',
     className,
   ]
     .filter(Boolean)

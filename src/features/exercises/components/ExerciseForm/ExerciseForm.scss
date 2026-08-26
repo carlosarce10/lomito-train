@@ -1,111 +1,125 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.exercise-form {
-  @include flex-column;
-  gap: $spacing-lg;
-
-  &__field {
+@layer components {
+  .c-exercise-form {
     @include flex-column;
-    gap: $spacing-sm;
-  }
+    gap: $spacing-lg;
 
-  &__label {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-semibold;
-    color: $color-text-secondary;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  &__input {
-    @include input-base;
-    padding: $spacing-md;
-  }
-
-  &__group-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-sm;
-  }
-
-  &__group-option {
-    padding: $spacing-sm $spacing-md;
-    border-radius: $radius-full;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-medium;
-    color: $color-text-secondary;
-    background: $color-surface;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid $color-glass-border;
-    cursor: pointer;
-    transition: all $transition-fast;
-    box-shadow: $shadow-sm;
-
-    &:active {
-      transform: scale(0.95);
+    &__field {
+      @include flex-column;
+      gap: $spacing-sm;
     }
 
-    &--selected {
+    &__label {
+      font-size: $font-size-sm;
       font-weight: $font-weight-semibold;
-      color: #1a1a1a;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-  }
-
-  &__label-count {
-    font-weight: $font-weight-regular;
-    color: $color-text-muted;
-    text-transform: none;
-    letter-spacing: 0;
-  }
-
-  &__group-check {
-    font-size: $font-size-xs;
-  }
-
-  &__equipment-options {
-    display: flex;
-    gap: $spacing-sm;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    @include hide-scrollbar;
-  }
-
-  &__equipment-option {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-    padding: $spacing-xs $spacing-sm;
-    border-radius: $radius-full;
-    font-size: $font-size-xs;
-    font-weight: $font-weight-medium;
-    color: $color-text-secondary;
-    background: $color-surface;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid $color-glass-border;
-    cursor: pointer;
-    transition: all $transition-fast;
-
-    &:active {
-      transform: scale(0.95);
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    &--selected {
-      background: $color-primary-light;
-      border-color: rgba($color-primary, 0.3);
-      color: $color-primary;
-      font-weight: $font-weight-semibold;
+    &__input {
+      @include input-base;
+      padding: $spacing-md;
     }
-  }
 
-  &__actions {
-    display: flex;
-    gap: $spacing-sm;
-    justify-content: flex-end;
-    padding-top: $spacing-sm;
+    &__group-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+    }
+
+    &__group-option {
+      padding: $spacing-sm $spacing-md;
+      border-radius: $radius-full;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: var(--text-secondary);
+      background: var(--surface);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition:
+        transform $transition-fast,
+        background-color $transition-fast,
+        border-color $transition-fast,
+        color $transition-fast,
+        box-shadow $transition-fast;
+      box-shadow: var(--shadow-sm);
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      // El relleno lo inyecta el color del grupo muscular, no un token de acento.
+      // La tinta es --on-catalog y no --text: los cinco colores del catalogo son
+      // claros en los dos temas, y --text en oscuro es casi blanco (1,94:1 sobre el
+      // naranja del grupo). --on-catalog no conmuta por esa razon.
+      &--selected {
+        font-weight: $font-weight-semibold;
+        color: var(--on-catalog);
+        box-shadow: var(--shadow-md);
+      }
+    }
+
+    &__label-count {
+      font-weight: $font-weight-regular;
+      color: var(--text-muted);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    &__group-check {
+      font-size: $font-size-xs;
+    }
+
+    &__equipment-options {
+      display: flex;
+      gap: $spacing-sm;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      @include hide-scrollbar;
+    }
+
+    &__equipment-option {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-full;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-medium;
+      color: var(--text-secondary);
+      background: var(--surface);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition:
+        transform $transition-fast,
+        background-color $transition-fast,
+        border-color $transition-fast,
+        color $transition-fast;
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &--selected {
+        background: var(--accent-subtle);
+        border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+        color: var(--accent-text);
+        font-weight: $font-weight-semibold;
+      }
+    }
+
+    &__actions {
+      display: flex;
+      gap: $spacing-sm;
+      justify-content: flex-end;
+      padding-top: $spacing-sm;
+    }
   }
 }

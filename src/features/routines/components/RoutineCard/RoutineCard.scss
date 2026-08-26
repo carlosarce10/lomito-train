@@ -1,62 +1,64 @@
-@use 'shared/styles/variables' as *;
-@use 'shared/styles/mixins' as *;
+@use 'styles/foundation' as *;
 
-.routine-card {
-  display: flex;
-  align-items: center;
-  gap: $spacing-md;
-  width: 100%;
-  padding: $spacing-md;
-  background: $color-surface;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: $radius-md;
-  box-shadow:
-    $shadow-sm,
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  text-align: left;
-  transition: all $transition-fast;
+@layer components {
+  .c-routine-card {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    width: 100%;
+    padding: $spacing-md;
+    cursor: pointer;
+    text-align: left;
+    transition:
+      transform $transition-fast,
+      box-shadow $transition-fast;
+    @include glass-card;
 
-  &:active {
-    transform: scale(0.98);
-    box-shadow: $shadow-sm;
-  }
+    // El vidrio del mixin trae --shadow-md; esta tarjeta se apoya menos y suma el
+    // brillo superior, asi que reescribe la sombra sin repetir el resto del bloque.
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 var(--glass-sheen);
 
-  &__dot {
-    width: 12px;
-    height: 12px;
-    border-radius: $radius-full;
-    background: var(--routine-color, $color-primary);
-    flex-shrink: 0;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--routine-color, $color-primary) 20%, transparent);
-  }
+    &:active {
+      transform: scale(0.98);
+      box-shadow: var(--shadow-sm);
+    }
 
-  &__body {
-    flex: 1;
-    @include flex-column;
-    gap: 2px;
-    min-width: 0;
-  }
+    &__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: $radius-full;
+      background: var(--routine-color, var(--accent));
+      flex-shrink: 0;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--routine-color, var(--accent)) 20%, transparent);
+    }
 
-  &__name {
-    font-size: $font-size-base;
-    font-weight: $font-weight-semibold;
-    color: $color-text-primary;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+    &__body {
+      flex: 1;
+      @include flex-column;
+      gap: 2px;
+      min-width: 0;
+    }
 
-  &__count {
-    font-size: $font-size-xs;
-    color: $color-text-muted;
-  }
+    &__name {
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-  &__arrow {
-    font-size: $font-size-lg;
-    color: $color-text-muted;
-    flex-shrink: 0;
+    &__count {
+      font-size: $font-size-xs;
+      color: var(--text-muted);
+    }
+
+    &__arrow {
+      font-size: $font-size-lg;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
   }
 }
