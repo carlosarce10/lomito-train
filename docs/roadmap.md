@@ -22,16 +22,15 @@ Se actualiza en el mismo commit que cierra cada fase.
 ```
 src/
   App.jsx, main.jsx, App.scss
-  app/             bootstrap + ErrorBoundary + RecoveryScreen
-  domain/          catalogs/ model/ schemas/ validation/ storage/
-  exercises/       ExercisesPage + components/ + hooks/
-  workout-days/    RoutinesPage + components/ + hooks/
-  muscle-groups/   components/
-  shared/          components/ + hooks/ + styles/
+  app/                    bootstrap + ErrorBoundary + RecoveryScreen
+  domain/                 catalogs/ model/ schemas/ validation/ storage/
+  features/exercises/     index.js + pages/ + components/ + hooks/
+  features/routines/      index.js + pages/ + components/ + hooks/
+  shared/                 components/ + hooks/ + styles/
 ```
 
-Ya existen y estan en uso: `src/app/` y `src/domain/`. Todavia **no existen**:
-`src/features/`, `src/services/`, `src/i18n/`, `src/theme/`, `src/styles/`.
+Ya existen y estan en uso: `src/app/`, `src/domain/` y `src/features/`. Todavia
+**no existen**: `src/services/`, `src/i18n/`, `src/theme/`, `src/styles/`.
 
 Estado de las reglas duras de CLAUDE.md:
 
@@ -119,6 +118,46 @@ rechazaba la rutina entera, que era peor que el problema original.
 
 Retirados: `useLocalStorage`, `storageUtils`, `migrations` antiguo, `useSearch` y
 las tres carpetas `constants/`.
+
+## Fase 3 — Renombrado a routines y migracion v3 (completada)
+
+El mismo concepto se llamaba de cuatro formas: la carpeta decia `workout-days`, el
+archivo `RoutinesPage.jsx`, el bloque CSS `.routines-page`, el hook
+`useWorkoutDays` y la clave `lomito-train-workout-days`.
+
+Estructura: `src/features/{exercises,routines}` con `index.js` como unica API
+publica. `muscle-groups` se disuelve: su catalogo ya estaba en el dominio y sus dos
+componentes pasan a la feature `exercises`. `routines` depende de `exercises`, que
+es la unica direccion permitida entre features, y lo impone ESLint.
+
+Migracion v2 a v3, verificada en navegador con datos v2 reales:
+
+| Cambio                                          | Resultado verificado                                                         |
+| ----------------------------------------------- | ---------------------------------------------------------------------------- |
+| `muscleGroup` + `categories` a `muscleGroupIds` | `['push','upperbody']` conservados; los campos viejos desaparecen del objeto |
+| `equipment` a `equipmentId`                     | `'barbell'`, y `null` donde antes habia cadena vacia                         |
+| `color` hexadecimal a `colorId`                 | `#34d399` a `mint`; un `#ff00ff` fuera de paleta cae al color por defecto    |
+| `updatedAt` en rutinas y donde faltaba          | Rellenado desde `createdAt`                                                  |
+| Clave de rutinas renombrada                     | `-workout-days` borrada solo despues de verificar que `-routines` se lee     |
+| Claves del modulo de sesiones                   | Borradas                                                                     |
+
+Ademas, la tarjeta de ejercicio pinta **todos** los grupos musculares, no solo el
+primero. El usuario seleccionaba tres, veia el contador "(3)" y luego una sola
+etiqueta. Las etiquetas van en su propia fila: en la misma linea que el nombre, un
+ejercicio con dos grupos truncaba el titulo en pantalla estrecha.
+
+Dos defectos propios que destapo la verificacion, no el build:
+
+1. **Perdida total de datos.** Los repositorios se crean al importar el modulo, es
+   decir antes de que corran las migraciones, asi que decodificaban datos v2 contra
+   esquemas v3 y devolvian una lista vacia. El paso de consolidacion del arranque
+   escribia despues esa lista vacia encima de los datos ya migrados. Corregido con
+   una relectura explicita tras migrar, y con la regla de que la consolidacion
+   **nunca escribe si eso reduce el numero de elementos**: que la validacion rechace
+   algo es motivo para avisar, jamas para borrarlo del disco.
+2. **Recursion infinita.** El renombrado masivo dejo los callbacks del hook con el
+   mismo nombre que las funciones de dominio que importaban. Se importan con
+   namespace (`model.addExerciseToRoutine`) para que no pueda repetirse.
 
 ## Deuda conocida, pendiente de fase
 

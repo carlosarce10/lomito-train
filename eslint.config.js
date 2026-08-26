@@ -54,6 +54,9 @@ export default defineConfig([
           extensions: ['.js', '.jsx'],
           map: [
             ['@', './src'],
+            ['@app', './src/app'],
+            ['@domain', './src/domain'],
+            ['@features', './src/features'],
             ['@shared', './src/shared'],
           ],
         },
@@ -78,9 +81,13 @@ export default defineConfig([
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           pathGroups: [
+            { pattern: '@domain/**', group: 'internal', position: 'before' },
             { pattern: '@shared/**', group: 'internal', position: 'before' },
+            { pattern: '@features/**', group: 'internal', position: 'after' },
+            { pattern: '@app/**', group: 'internal', position: 'after' },
             { pattern: '@/**', group: 'internal', position: 'after' },
           ],
+          distinctGroup: false,
           pathGroupsExcludedImportTypes: ['builtin', 'external'],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
@@ -109,9 +116,55 @@ export default defineConfig([
         {
           patterns: [
             {
-              group: ['../../*', '../../../*', '../../../../*'],
-              message: 'Usa un alias (@/ o @shared/) en lugar de subir dos o mas niveles.',
+              group: ['../../../*', '../../../../*'],
+              message: 'Usa un alias: tres niveles arriba siempre sale de la carpeta.',
             },
+          ],
+        },
+      ],
+    },
+  },
+
+  // Una feature solo se toca por su API publica. Importar su interior desde fuera
+  // convierte cualquier renombrado interno en un cambio que rompe a otros.
+  {
+    files: ['src/**/*.{js,jsx}'],
+    ignores: ['src/features/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@features/*/*'],
+              message: 'Importa solo la API publica de la feature: @features/<nombre>.',
+            },
+            {
+              group: ['../../../*', '../../../../*'],
+              message: 'Usa un alias: tres niveles arriba siempre sale de la feature.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // El dominio no conoce a nadie del proyecto salvo a si mismo.
+  {
+    files: ['src/domain/**/*.js'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@features/*', '@shared/*', '@app/*'],
+              message: 'src/domain no depende de ninguna otra capa.',
+            },
+          ],
+          paths: [
+            { name: 'react', message: 'src/domain no puede importar React.' },
+            { name: 'react-dom', message: 'src/domain no puede importar React.' },
           ],
         },
       ],

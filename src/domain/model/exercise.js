@@ -10,23 +10,16 @@ const ahora = () => new Date().toISOString();
 /**
  * Crea un ejercicio ya normalizado y acotado al catalogo.
  *
- * Corrige un defecto del codigo anterior: `equipment` se perdia al crear y solo
- * se persistia al editar, de modo que en la misma coleccion convivian dos formas
- * distintas del mismo objeto.
- *
- * @param {{ name: string, categories?: string[], muscleGroup?: string, equipment?: string }} datos
+ * @param {{ name: string, muscleGroupIds?: string[], equipmentId?: string|null }} datos
  * @returns {object} Ejercicio listo para guardar.
  */
-export function createExercise({ name, categories, muscleGroup, equipment } = {}) {
-  const grupos = normalizeGroups(categories, muscleGroup);
+export function createExercise({ name, muscleGroupIds, equipmentId } = {}) {
   const marca = ahora();
-
   return {
     id: uuid(),
     name: normalizeText(name),
-    muscleGroup: grupos[0] ?? '',
-    categories: grupos,
-    equipment: isEquipmentId(equipment) ? equipment : '',
+    muscleGroupIds: normalizeGroups(muscleGroupIds),
+    equipmentId: isEquipmentId(equipmentId) ? equipmentId : null,
     sets: [],
     createdAt: marca,
     updatedAt: marca,
@@ -43,18 +36,18 @@ export function createExercise({ name, categories, muscleGroup, equipment } = {}
 export function updateExercise(exercise, cambios) {
   const siguiente = { ...exercise, updatedAt: ahora() };
 
-  if ('name' in cambios) siguiente.name = normalizeText(cambios.name);
-
-  if ('categories' in cambios || 'muscleGroup' in cambios) {
-    const grupos = normalizeGroups(cambios.categories, cambios.muscleGroup);
-    if (grupos.length > 0) {
-      siguiente.categories = grupos;
-      siguiente.muscleGroup = grupos[0];
-    }
+  if ('name' in cambios) {
+    const nombre = normalizeText(cambios.name);
+    if (nombre.length >= LIMITS.name.min) siguiente.name = nombre;
   }
 
-  if ('equipment' in cambios) {
-    siguiente.equipment = isEquipmentId(cambios.equipment) ? cambios.equipment : '';
+  if ('muscleGroupIds' in cambios) {
+    const grupos = normalizeGroups(cambios.muscleGroupIds);
+    if (grupos.length >= LIMITS.muscleGroupsPerExercise.min) siguiente.muscleGroupIds = grupos;
+  }
+
+  if ('equipmentId' in cambios) {
+    siguiente.equipmentId = isEquipmentId(cambios.equipmentId) ? cambios.equipmentId : null;
   }
 
   return siguiente;
@@ -100,10 +93,12 @@ export function updateSet(set, cambios) {
   return { set: siguiente, ok: true };
 }
 
-/** Funde categories y el escalar muscleGroup en una lista valida y sin duplicados. */
-function normalizeGroups(categories, muscleGroup) {
-  const candidatos = Array.isArray(categories) && categories.length ? categories : [muscleGroup];
-  return [...new Set(candidatos.filter(isMuscleGroupId))].slice(
+/** Grupo muscular principal: el primero. Es derivado y no se persiste. */
+export const getPrimaryMuscleGroup = (exercise) => exercise.muscleGroupIds[0] ?? null;
+
+/** Deja una lista de grupos valida, sin duplicados y acotada. */
+function normalizeGroups(ids) {
+  return [...new Set((Array.isArray(ids) ? ids : []).filter(isMuscleGroupId))].slice(
     0,
     LIMITS.muscleGroupsPerExercise.max,
   );

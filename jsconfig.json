@@ -8,6 +8,9 @@
     "checkJs": false,
     "paths": {
       "@/*": ["src/*"],
+      "@app/*": ["src/app/*"],
+      "@domain/*": ["src/domain/*"],
+      "@features/*": ["src/features/*"],
       "@shared/*": ["src/shared/*"]
     }
   },

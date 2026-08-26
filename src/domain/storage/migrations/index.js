@@ -2,12 +2,16 @@ import * as driver from '../driver';
 import { KEYS } from '../keys';
 
 import { up as v1ToV2 } from './v1-to-v2';
+import { up as v2ToV3 } from './v2-to-v3';
 
 /**
  * Registro ordenado de migraciones. Anadir una entrada aqui es lo unico que hace
  * falta: CURRENT_VERSION se deriva de la lista, asi que no pueden desincronizarse.
  */
-const MIGRATIONS = [{ version: 2, up: v1ToV2 }];
+const MIGRATIONS = [
+  { version: 2, up: v1ToV2 },
+  { version: 3, up: v2ToV3 },
+];
 
 /** Version de esquema que espera este build. */
 export const CURRENT_VERSION = MIGRATIONS.at(-1).version;

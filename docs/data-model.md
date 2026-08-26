@@ -1,6 +1,6 @@
 # Modelo de datos y almacenamiento
 
-Entra en las fases 2 y 3. Ver [plan.md](plan.md).
+Vigente desde la fase 3. Ver [plan.md](plan.md).
 
 ## Claves
 
@@ -54,7 +54,7 @@ una migracion.
 4. `weight` y `reps` dentro de rango; `reps` siempre entero.
 5. `equipmentId` y `colorId` siempre existen en su catalogo.
 
-## Migracion v2 a v3
+## Migracion v2 a v3 (aplicada)
 
 | Cambio                       | Detalle                                                                        |
 | ---------------------------- | ------------------------------------------------------------------------------ |

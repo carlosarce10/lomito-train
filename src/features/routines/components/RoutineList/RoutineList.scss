@@ -1,0 +1,19 @@
+@use 'shared/styles/variables' as *;
+@use 'shared/styles/mixins' as *;
+
+.routine-list {
+  @include flex-column;
+  gap: $spacing-sm;
+
+  &__empty {
+    text-align: center;
+    padding: $spacing-xl $spacing-lg;
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
+    line-height: 1.8;
+
+    p {
+      margin: 0;
+    }
+  }
+}

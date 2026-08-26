@@ -1,0 +1,65 @@
+@use 'shared/styles/variables' as *;
+@use 'shared/styles/mixins' as *;
+
+.exercise-card {
+  width: 100%;
+  @include flex-column;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  @include glass-card;
+  text-align: left;
+  transition: all $transition-fast;
+  cursor: pointer;
+  box-shadow:
+    $shadow-sm,
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  &:active {
+    transform: scale(0.98);
+    border-color: rgba($color-primary, 0.4);
+    box-shadow:
+      $shadow-md,
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  &__header {
+    display: flex;
+    align-items: baseline;
+    gap: $spacing-sm;
+  }
+
+  &__equipment {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  &__name {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    overflow-wrap: break-word;
+    flex: 1;
+  }
+
+  &__stats {
+    display: flex;
+    gap: $spacing-lg;
+  }
+
+  &__stat {
+    @include flex-column;
+  }
+
+  &__stat-value {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+  }
+
+  &__stat-label {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}

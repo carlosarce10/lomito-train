@@ -9,22 +9,16 @@ export const setSchema = {
   reps: r.number({ min: LIMITS.reps.min, max: LIMITS.reps.max, integer: true }),
 };
 
-/**
- * Forma de un ejercicio del catalogo del usuario.
- *
- * `muscleGroup` sigue siendo el escalar derivado de `categories[0]`. Ambos campos
- * se funden en `muscleGroupIds` en la fase 3, con su migracion. Ver docs/plan.md.
- */
+/** Forma de un ejercicio del catalogo del usuario. */
 export const exerciseSchema = {
   id: r.id(),
   name: r.text(LIMITS.name),
-  muscleGroup: r.oneOf(MUSCLE_GROUP_IDS),
-  categories: r.listOf({
+  muscleGroupIds: r.listOf({
     valores: MUSCLE_GROUP_IDS,
     min: LIMITS.muscleGroupsPerExercise.min,
     max: LIMITS.muscleGroupsPerExercise.max,
   }),
-  equipment: r.optional(r.oneOf(['', ...EQUIPMENT_IDS])),
+  equipmentId: r.optional(r.oneOf(EQUIPMENT_IDS)),
   sets: { __each: setSchema },
   createdAt: r.isoDate(),
   updatedAt: r.isoDate(),

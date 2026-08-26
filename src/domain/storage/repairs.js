@@ -1,4 +1,9 @@
-import { isEquipmentId, isMuscleGroupId, isRoutineColor, DEFAULT_ROUTINE_COLOR } from '../catalogs';
+import {
+  DEFAULT_ROUTINE_COLOR_ID,
+  isEquipmentId,
+  isMuscleGroupId,
+  isRoutineColorId,
+} from '../catalogs';
 import { LIMITS } from '../validation/limits';
 
 const esId = (value) => typeof value === 'string' && /^[0-9a-f-]{36}$/i.test(value);
@@ -10,17 +15,14 @@ const esId = (value) => typeof value === 'string' && /^[0-9a-f-]{36}$/i.test(val
  * @returns {object} Ejercicio saneado.
  */
 export function repairExercise(raw) {
-  const grupos = [
-    ...new Set(
-      (Array.isArray(raw.categories) ? raw.categories : [raw.muscleGroup]).filter(isMuscleGroupId),
-    ),
-  ].slice(0, LIMITS.muscleGroupsPerExercise.max);
-
   return {
     ...raw,
-    categories: grupos,
-    muscleGroup: grupos[0] ?? raw.muscleGroup,
-    equipment: isEquipmentId(raw.equipment) ? raw.equipment : '',
+    muscleGroupIds: [
+      ...new Set(
+        (Array.isArray(raw.muscleGroupIds) ? raw.muscleGroupIds : []).filter(isMuscleGroupId),
+      ),
+    ].slice(0, LIMITS.muscleGroupsPerExercise.max),
+    equipmentId: isEquipmentId(raw.equipmentId) ? raw.equipmentId : null,
     // Una serie con forma imposible se descarta; el ejercicio se conserva.
     sets: (Array.isArray(raw.sets) ? raw.sets : []).filter(
       (set) =>
@@ -44,7 +46,8 @@ export function repairRoutine(raw) {
   const ids = Array.isArray(raw.exerciseIds) ? raw.exerciseIds : [];
   return {
     ...raw,
-    color: isRoutineColor(raw.color) ? raw.color : DEFAULT_ROUTINE_COLOR,
+    colorId: isRoutineColorId(raw.colorId) ? raw.colorId : DEFAULT_ROUTINE_COLOR_ID,
     exerciseIds: [...new Set(ids.filter(esId))].slice(0, LIMITS.exercisesPerRoutine.max),
+    updatedAt: raw.updatedAt ?? raw.createdAt,
   };
 }

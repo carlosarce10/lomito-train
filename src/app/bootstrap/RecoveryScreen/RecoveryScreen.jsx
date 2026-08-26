@@ -1,4 +1,4 @@
-import { dumpRaw } from '@/domain/storage/driver';
+import { dumpRaw } from '@domain/storage/driver';
 
 import './RecoveryScreen.scss';
 

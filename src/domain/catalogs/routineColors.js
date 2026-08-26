@@ -1,8 +1,9 @@
 /**
  * Colores que puede tener una rutina.
  *
- * Hasta la fase 3 se persiste el hexadecimal, no el id, para no cambiar la forma
- * de los datos fuera de su migracion. `isRoutineColor` valida contra esta lista.
+ * Lo que se persiste es el `id`, nunca el hexadecimal: un hex guardado no puede
+ * adaptarse al tema oscuro. El `value` es presentacion y lo sustituye un token de
+ * tema en la fase 4. Ver docs/data-model.md.
  */
 export const ROUTINE_COLORS = [
   { id: 'lavender', value: '#818cf8' },
@@ -13,13 +14,27 @@ export const ROUTINE_COLORS = [
   { id: 'pink', value: '#f472b6' },
 ];
 
-const VALUES = new Set(ROUTINE_COLORS.map((color) => color.value));
+const BY_ID = new Map(ROUTINE_COLORS.map((color) => [color.id, color]));
+const BY_VALUE = new Map(ROUTINE_COLORS.map((color) => [color.value.toLowerCase(), color]));
 
-/** Valores hexadecimales admitidos, en orden de declaracion. */
-export const ROUTINE_COLOR_VALUES = ROUTINE_COLORS.map((color) => color.value);
+/** Ids validos, en orden de declaracion. */
+export const ROUTINE_COLOR_IDS = ROUTINE_COLORS.map((color) => color.id);
 
-/** Color por defecto de una rutina nueva. */
-export const DEFAULT_ROUTINE_COLOR = ROUTINE_COLORS[0].value;
+/** Id del color por defecto de una rutina nueva. */
+export const DEFAULT_ROUTINE_COLOR_ID = ROUTINE_COLORS[0].id;
 
-/** Indica si un hexadecimal pertenece a la paleta de rutinas. */
-export const isRoutineColor = (value) => VALUES.has(value);
+/** Indica si un id pertenece a la paleta. */
+export const isRoutineColorId = (id) => BY_ID.has(id);
+
+/** Hexadecimal de un id, o el del color por defecto si no esta en la paleta. */
+export const getRoutineColor = (id) => (BY_ID.get(id) ?? ROUTINE_COLORS[0]).value;
+
+/**
+ * Traduce un hexadecimal guardado por una version anterior a su id.
+ * Solo la usa la migracion v2 a v3.
+ *
+ * @param {unknown} value Hexadecimal, en cualquier caja.
+ * @returns {string | null} El id, o null si no esta en la paleta.
+ */
+export const routineColorIdFromValue = (value) =>
+  typeof value === 'string' ? (BY_VALUE.get(value.toLowerCase())?.id ?? null) : null;

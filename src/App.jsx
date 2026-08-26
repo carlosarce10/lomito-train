@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import ExercisesPage from './exercises/ExercisesPage';
-import Layout from './shared/components/Layout/Layout';
-import RoutinesPage from './workout-days/RoutinesPage';
+import Layout from '@shared/components/Layout/Layout';
+import { ExercisesPage } from '@features/exercises';
+import { RoutinesPage } from '@features/routines';
+
 import './App.scss';
 
 export default function App() {

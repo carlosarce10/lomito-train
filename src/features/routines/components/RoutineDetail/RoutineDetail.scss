@@ -1,0 +1,151 @@
+@use 'shared/styles/variables' as *;
+@use 'shared/styles/mixins' as *;
+
+.routine-detail {
+  @include flex-column;
+  gap: $spacing-lg;
+
+  &__top {
+    @include flex-between;
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    border-radius: $radius-full;
+    padding: $spacing-xs $spacing-md;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:active {
+      background: rgba(37, 99, 235, 0.15);
+    }
+  }
+
+  &__top-actions {
+    display: flex;
+    gap: $spacing-xs;
+  }
+
+  &__edit,
+  &__delete {
+    @include flex-center;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    background: $color-danger-light;
+    border: 1px solid rgba($color-danger, 0.15);
+    color: $color-danger;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:active {
+      background: rgba($color-danger, 0.2);
+    }
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__color-dot {
+    background: var(--routine-color);
+    width: 14px;
+    height: 14px;
+    border-radius: $radius-full;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+  }
+
+  &__exercises-section {
+    @include flex-column;
+    gap: $spacing-md;
+  }
+
+  &__exercises-header {
+    @include flex-between;
+    align-items: center;
+  }
+
+  &__exercises-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  &__add-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    border-radius: $radius-full;
+    padding: $spacing-xs $spacing-md;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:active {
+      background: rgba(37, 99, 235, 0.15);
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: $spacing-xl;
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  &__exercise-list {
+    @include flex-column;
+    gap: $spacing-sm;
+  }
+
+  &__swipe-hint {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    text-align: center;
+    margin: 0;
+    padding: 0 $spacing-xs;
+  }
+
+  &__confirm {
+    @include flex-column;
+    gap: $spacing-lg;
+  }
+
+  &__confirm-text {
+    color: $color-text-secondary;
+    line-height: 1.6;
+
+    strong {
+      color: $color-text-primary;
+    }
+  }
+
+  &__confirm-actions {
+    display: flex;
+    gap: $spacing-sm;
+    justify-content: flex-end;
+  }
+}
