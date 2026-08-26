@@ -1,0 +1,23 @@
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "jsxSingleQuote": false,
+  "quoteProps": "as-needed",
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "always",
+  "singleAttributePerLine": false,
+  "endOfLine": "lf",
+  "overrides": [
+    { "files": "*.scss", "options": { "printWidth": 100 } },
+    {
+      "files": ["*.md", "*.json"],
+      "options": { "printWidth": 80, "proseWrap": "preserve" }
+    },
+    { "files": "*.html", "options": { "printWidth": 120 } }
+  ]
+}

@@ -1,20 +1,43 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from '@eslint/js';
+import globals from 'globals';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import importX from 'eslint-plugin-import-x';
+import unusedImports from 'eslint-plugin-unused-imports';
+import prettier from 'eslint-config-prettier/flat';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'dist-ssr', 'coverage', 'public']),
+
+  // Archivos de configuracion del repositorio: entorno Node, sin reglas de React.
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['*.config.js', '.lintstagedrc.js', 'commitlint.config.js'],
+    extends: [js.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: globals.node,
+    },
+  },
+
+  // Codigo de aplicacion.
+  {
+    files: ['src/**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
+      react.configs.flat.recommended,
+      react.configs.flat['jsx-runtime'],
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
+      jsxA11y.flatConfigs.recommended,
+      importX.flatConfigs.recommended,
     ],
+    plugins: { 'unused-imports': unusedImports },
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 'latest',
       globals: globals.browser,
       parserOptions: {
         ecmaVersion: 'latest',
@@ -22,8 +45,74 @@ export default defineConfig([
         sourceType: 'module',
       },
     },
+    settings: {
+      react: { version: 'detect' },
+      'import-x/resolver': { node: { extensions: ['.js', '.jsx'] } },
+    },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // Sin TypeScript, la validacion de props la hace @domain/validation en runtime.
+      'react/prop-types': 'off',
+
+      // Imports muertos: se marcan como error y se autoarreglan con --fix.
+      'no-unused-vars': 'off',
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': [
+        'error',
+        { vars: 'all', varsIgnorePattern: '^[A-Z_]', args: 'after-used', argsIgnorePattern: '^_' },
+      ],
+
+      // Orden de imports: un unico criterio, sin discusion en revision.
+      'import-x/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true },
+        },
+      ],
+      'import-x/no-duplicates': 'error',
+      'import-x/no-cycle': ['error', { maxDepth: Infinity }],
+
+      // Ninguna clave de almacenamiento ni acceso directo fuera de la capa de dominio.
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'window',
+          property: 'localStorage',
+          message: 'Accede al almacenamiento solo desde src/domain/storage.',
+        },
+      ],
+
+      // Un catch vacio oculta una perdida de datos: prohibido.
+      'no-empty': ['error', { allowEmptyCatch: false }],
     },
   },
-])
+
+  // La capa de dominio y los servicios son puros: no conocen React ni el DOM.
+  {
+    files: ['src/domain/**/*.js', 'src/services/**/*.js'],
+    rules: {
+      'import-x/no-restricted-paths': 'off',
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            { name: 'react', message: 'src/domain y src/services no pueden importar React.' },
+            { name: 'react-dom', message: 'src/domain y src/services no pueden importar React.' },
+          ],
+        },
+      ],
+    },
+  },
+
+  // Excepcion temporal: estos dos archivos son la capa de persistencia heredada y
+  // desaparecen en la fase 2, cuando src/domain/storage pase a ser el unico acceso.
+  // Este bloque se borra en el mismo commit que los elimina.
+  {
+    files: ['src/shared/hooks/useLocalStorage.js', 'src/shared/services/storageUtils.js'],
+    rules: { 'no-restricted-properties': 'off' },
+  },
+
+  // Debe ir el ultimo: apaga las reglas de ESLint que chocan con Prettier.
+  prettier,
+]);

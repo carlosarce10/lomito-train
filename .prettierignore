@@ -1,0 +1,20 @@
+# Artefactos de build
+dist
+dist-ssr
+coverage
+
+# Dependencias
+node_modules
+
+# Lockfiles
+package-lock.json
+
+# Assets estaticos servidos tal cual
+public
+
+# Sistema
+.DS_Store
+*.local
+
+# Historico de formateo
+.git-blame-ignore-revs

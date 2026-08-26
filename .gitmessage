@@ -1,0 +1,27 @@
+
+# <tipo>(<ambito>): <descripcion en espanol, imperativo, minuscula, sin punto final>
+#
+# Cuerpo: el POR QUE del cambio, no el como. Lineas de 100 caracteres como maximo.
+#
+# Pie: BREAKING CHANGE: <que rompe> cuando cambia el esquema persistido.
+#      Co-Authored-By: Nombre <correo>  cuando el cambio se escribio con asistencia.
+#
+# --- Tipos -------------------------------------------------------------------
+# feat      funcionalidad nueva visible para el usuario
+# fix       correccion de un defecto
+# refactor  cambio interno sin alterar el comportamiento
+# style     solo formato: espacios, comas, saltos. Nunca logica
+# perf      mejora de rendimiento
+# docs      documentacion
+# test      pruebas
+# build     dependencias, empaquetado, configuracion de build
+# ci        integracion continua
+# chore     tareas de mantenimiento sin efecto en src/
+# revert    revierte un commit anterior
+#
+# --- Ambitos -----------------------------------------------------------------
+# exercises routines settings
+# app domain storage catalog validation shared styles theme i18n export a11y
+# config deps docs release
+#
+# Maximo 72 caracteres en la primera linea. Sin emojis.
