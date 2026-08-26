@@ -23,13 +23,13 @@
 
     &--edit {
       background: #2563eb;
-      color: #ffffff;
+      color: #fff;
       justify-content: flex-start;
     }
 
     &--delete {
       background: $color-primary;
-      color: #ffffff;
+      color: #fff;
       justify-content: flex-end;
     }
   }
@@ -44,7 +44,7 @@
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.40);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: $radius-md;
     box-shadow: $shadow-sm;
   }
@@ -69,7 +69,7 @@
     font-size: $font-size-base;
     font-weight: $font-weight-semibold;
     color: $color-text-primary;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   &__toggle {
@@ -81,13 +81,13 @@
     flex-shrink: 0;
     border-radius: $radius-full;
     color: $color-text-muted;
-    background: rgba(255, 255, 255, 0.50);
-    border: 1px solid rgba(255, 255, 255, 0.40);
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     cursor: pointer;
     transition: all $transition-fast;
 
     &:active {
-      background: rgba(255, 255, 255, 0.80);
+      background: rgba(255, 255, 255, 0.8);
       color: $color-text-secondary;
     }
   }
@@ -167,7 +167,7 @@
     gap: $spacing-xs;
     align-items: center;
     padding: $spacing-xs;
-    background: rgba(255, 255, 255, 0.40);
+    background: rgba(255, 255, 255, 0.4);
     border-radius: $radius-sm;
   }
 
@@ -184,16 +184,16 @@
     font-size: $font-size-sm;
     font-weight: $font-weight-medium;
     color: $color-text-primary;
-    background: rgba(255, 255, 255, 0.60);
-    border: 1px solid rgba(255, 255, 255, 0.50);
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: $radius-sm;
     text-align: center;
     outline: none;
     transition: border-color $transition-fast;
 
     &:focus {
-      border-color: rgba(37, 99, 235, 0.40);
-      background: rgba(255, 255, 255, 0.90);
+      border-color: rgba(37, 99, 235, 0.4);
+      background: rgba(255, 255, 255, 0.9);
     }
 
     // Hide number arrows
@@ -218,7 +218,7 @@
     transition: all $transition-fast;
 
     &:active {
-      background: rgba($color-primary, 0.10);
+      background: rgba($color-primary, 0.1);
       color: $color-primary;
     }
   }
