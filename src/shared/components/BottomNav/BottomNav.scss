@@ -43,7 +43,7 @@
       }
 
       // La etiqueta es texto pequeno sobre vidrio: token de texto, no de relleno.
-      &--active {
+      &.is-active {
         color: var(--accent-text);
 
         .c-bottom-nav__label {

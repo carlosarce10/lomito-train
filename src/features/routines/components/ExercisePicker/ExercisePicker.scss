@@ -78,7 +78,7 @@
       }
 
       // Seleccionado es estado de identidad, no de peligro: acento.
-      &--selected {
+      &.is-selected {
         background: var(--accent-subtle);
         border-color: color-mix(in srgb, var(--accent) 25%, transparent);
       }

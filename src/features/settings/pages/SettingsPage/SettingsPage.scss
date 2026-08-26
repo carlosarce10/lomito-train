@@ -1,0 +1,19 @@
+@use 'styles/foundation' as *;
+
+@layer components {
+  .c-settings-page {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+
+    &__title {
+      font-size: $font-size-xl;
+    }
+
+    &__section {
+      @include glass-card;
+
+      padding: $spacing-md;
+    }
+  }
+}

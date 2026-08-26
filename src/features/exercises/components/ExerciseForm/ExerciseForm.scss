@@ -56,7 +56,7 @@
       // La tinta es --on-catalog y no --text: los cinco colores del catalogo son
       // claros en los dos temas, y --text en oscuro es casi blanco (1,94:1 sobre el
       // naranja del grupo). --on-catalog no conmuta por esa razon.
-      &--selected {
+      &.is-selected {
         font-weight: $font-weight-semibold;
         color: var(--on-catalog);
         box-shadow: var(--shadow-md);
@@ -107,7 +107,7 @@
         transform: scale(0.95);
       }
 
-      &--selected {
+      &.is-selected {
         background: var(--accent-subtle);
         border-color: color-mix(in srgb, var(--accent) 30%, transparent);
         color: var(--accent-text);

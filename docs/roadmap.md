@@ -26,6 +26,7 @@ src/
   domain/                 catalogs/ model/ schemas/ validation/ storage/
   features/exercises/     index.js + pages/ + components/ + hooks/
   features/routines/      index.js + pages/ + components/ + hooks/
+  features/settings/      index.js + pages/ + components/
   shared/                 components/ + hooks/
   styles/                 las siete capas de ITCSS
   theme/                  themes + applyTheme + useTheme
@@ -206,6 +207,44 @@ Tres defectos propios que destapo la verificacion:
 El minimo de 44 por 44 se resuelve con `touch-target-extended`, que amplia el area
 pulsable con un pseudo-elemento sin cambiar el tamano visible: un boton de borrar de
 24px dentro de una fila de tabla no puede crecer a 44 sin romper la rejilla.
+
+## Fase 5 — Enrutado y pagina de ajustes (completada)
+
+`createHashRouter` y no historial: la aplicacion se sirve como estatico, y un
+hosting sin reescrituras devolveria 404 al recargar en `/routines/<id>`.
+
+Rutas: `/routines`, `/routines/:routineId`, `/exercises`, `/exercises/:exerciseId`
+y `/settings`. Los dos `useState` de seleccion desaparecen. Verificado en navegador:
+
+| Comprobacion                | Resultado                                       |
+| --------------------------- | ----------------------------------------------- |
+| La raiz redirige            | a `#/routines`                                  |
+| El boton atras del movil    | vuelve al listado, ya no sale de la aplicacion  |
+| Enlace directo a un detalle | abre ese detalle                                |
+| Refrescar en un detalle     | se queda donde estaba                           |
+| Un id que no existe         | redirige al listado, no deja pantalla en blanco |
+| La pestana activa           | se pinta con `--accent-text`                    |
+
+`shared` deja de conocer las rutas: `Layout` y `BottomNav` reciben las pestanas como
+dato, y quien las declara es `AppShell`, que es la capa que si conoce la aplicacion.
+`App.jsx` desaparece: su trabajo lo hacen `routes.jsx` y `AppShell`.
+
+Coste medido: react-router anade unos 30 kB gzip al bundle.
+
+Dos defectos de la fase anterior que salieron aqui al leer el codigo:
+
+1. **Diez modificadores BEM se quedaron sin prefijo** en el renombrado de la fase 4,
+   porque aparecian tras un espacio dentro de una plantilla y no tras un punto ni
+   una comilla. Los diez estaban sin estilos y ni el lint ni el build se quejaron.
+2. **El vocabulario de estados no se aplicaba.** El SCSS declaraba `&--active` y el
+   JSX emitia `is-active`, asi que la pestana activa no tenia estilo. Ahora los
+   estados usan el vocabulario cerrado de CLAUDE.md.
+
+Por eso existe `npm run lint:classes` (`scripts/check-classes.mjs`), que cruza las
+clases del JSX contra los selectores del SCSS resolviendo el `&` de Sass, y falla si
+encuentra una clase sin prefijo, una clase sin regla, un estado fuera del vocabulario
+cerrado o un bloque cuyo nombre no coincide con su componente. La regla 12 se
+incumplio dos veces: lo que se incumple dos veces se automatiza.
 
 ## Deuda conocida, pendiente de fase
 

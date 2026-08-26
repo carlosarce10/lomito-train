@@ -72,17 +72,17 @@ export default function ExerciseDetail({
           </p>
         ) : (
           <div className="c-exercise-detail__sets-table">
-            <div className="c-exercise-detail__sets-row exercise-detail__sets-row--header">
-              <span className="c-exercise-detail__sets-cell exercise-detail__sets-cell--num">
+            <div className="c-exercise-detail__sets-row c-exercise-detail__sets-row--header">
+              <span className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--num">
                 #
               </span>
               <span className="c-exercise-detail__sets-cell">Peso (kg)</span>
               <span className="c-exercise-detail__sets-cell">Reps</span>
-              <span className="c-exercise-detail__sets-cell exercise-detail__sets-cell--action"></span>
+              <span className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--action"></span>
             </div>
             {exercise.sets.map((set, index) => (
               <div key={set.id} className="c-exercise-detail__sets-row">
-                <span className="c-exercise-detail__sets-cell exercise-detail__sets-cell--num">
+                <span className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--num">
                   {index + 1}
                 </span>
                 <div className="c-exercise-detail__sets-cell">
@@ -105,7 +105,7 @@ export default function ExerciseDetail({
                     onCommit={(raw) => handleSetChange(set.id, 'reps', raw)}
                   />
                 </div>
-                <div className="c-exercise-detail__sets-cell exercise-detail__sets-cell--action">
+                <div className="c-exercise-detail__sets-cell c-exercise-detail__sets-cell--action">
                   <button
                     className="c-exercise-detail__sets-delete"
                     onClick={() => onDeleteSet(exercise.id, set.id)}

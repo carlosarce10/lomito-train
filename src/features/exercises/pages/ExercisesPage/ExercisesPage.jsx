@@ -1,51 +1,32 @@
 import { mdiPlus } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import Modal from '@shared/components/Modal/Modal';
 import SearchBar from '@shared/components/SearchBar/SearchBar';
 
-import ExerciseDetail from '../../components/ExerciseDetail/ExerciseDetail';
 import ExerciseForm from '../../components/ExerciseForm/ExerciseForm';
 import ExerciseList from '../../components/ExerciseList/ExerciseList';
 import MuscleGroupFilter from '../../components/MuscleGroupFilter/MuscleGroupFilter';
 import useExerciseFilters from '../../hooks/useExerciseFilters';
 import useExercises from '../../hooks/useExercises';
+
 import './ExercisesPage.scss';
 
+/** Listado de ejercicios del catalogo, con busqueda y filtro por grupo muscular. */
 export default function ExercisesPage() {
-  const { exercises, addExercise, updateExercise, deleteExercise, addSet, updateSet, deleteSet } =
-    useExercises();
+  const navegar = useNavigate();
+  const { exercises, addExercise } = useExercises();
   const { filtered, activeFilter, setActiveFilter, searchTerm, setSearchTerm } =
     useExerciseFilters(exercises);
-
-  const [selectedId, setSelectedId] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  // Resuelve el ejercicio abierto contra la lista sin filtrar. Si se borro, cae a null
-  // y la pagina vuelve al listado sola, sin necesidad de limpiar selectedId.
-  const selectedExercise = selectedId
-    ? (exercises.find((ex) => ex.id === selectedId) ?? null)
-    : null;
-
-  const handleCreateExercise = (data) => {
-    addExercise(data);
+  const handleCreate = (datos) => {
+    const resultado = addExercise(datos);
     setShowCreateForm(false);
+    if (resultado.ok) navegar(`/exercises/${resultado.exercise.id}`);
   };
-
-  if (selectedExercise) {
-    return (
-      <ExerciseDetail
-        exercise={selectedExercise}
-        onClose={() => setSelectedId(null)}
-        onUpdate={updateExercise}
-        onDelete={deleteExercise}
-        onAddSet={addSet}
-        onUpdateSet={updateSet}
-        onDeleteSet={deleteSet}
-      />
-    );
-  }
 
   return (
     <div className="c-exercises-page">
@@ -55,10 +36,11 @@ export default function ExercisesPage() {
 
       <ExerciseList
         exercises={filtered}
-        onExerciseClick={(exercise) => setSelectedId(exercise.id)}
+        onExerciseClick={(exercise) => navegar(`/exercises/${exercise.id}`)}
       />
 
       <button
+        type="button"
         className="c-exercises-page__fab"
         onClick={() => setShowCreateForm(true)}
         aria-label="Crear ejercicio"
@@ -71,7 +53,7 @@ export default function ExercisesPage() {
         onClose={() => setShowCreateForm(false)}
         title="Nuevo ejercicio"
       >
-        <ExerciseForm onSubmit={handleCreateExercise} onCancel={() => setShowCreateForm(false)} />
+        <ExerciseForm onSubmit={handleCreate} onCancel={() => setShowCreateForm(false)} />
       </Modal>
     </div>
   );

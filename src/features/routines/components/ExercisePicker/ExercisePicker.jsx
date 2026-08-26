@@ -47,7 +47,7 @@ export default function ExercisePicker({ allExercises, selectedIds, onToggle, on
             return (
               <button
                 key={ex.id}
-                className={`c-exercise-picker__item${isSelected ? ' exercise-picker__item--selected' : ''}`}
+                className={`c-exercise-picker__item${isSelected ? ' c-exercise-picker__item is-selected' : ''}`}
                 onClick={() => onToggle(ex.id)}
               >
                 <span

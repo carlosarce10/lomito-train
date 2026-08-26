@@ -57,7 +57,7 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
               <button
                 key={group.id}
                 type="button"
-                className={`c-exercise-form__group-option${selected ? ' exercise-form__group-option--selected' : ''}`}
+                className={`c-exercise-form__group-option${selected ? ' c-exercise-form__group-option is-selected' : ''}`}
                 style={selected ? { backgroundColor: group.color, borderColor: group.color } : {}}
                 aria-pressed={selected}
                 onClick={() => toggleMuscleGroup(group.id)}
@@ -82,7 +82,7 @@ export default function ExerciseForm({ onSubmit, initialData = null, onCancel })
             <button
               key={eq.id}
               type="button"
-              className={`c-exercise-form__equipment-option${equipmentId === eq.id ? ' exercise-form__equipment-option--selected' : ''}`}
+              className={`c-exercise-form__equipment-option${equipmentId === eq.id ? ' c-exercise-form__equipment-option is-selected' : ''}`}
               aria-pressed={equipmentId === eq.id}
               onClick={() => setEquipmentId((prev) => (prev === eq.id ? null : eq.id))}
             >

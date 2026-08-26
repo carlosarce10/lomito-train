@@ -56,7 +56,7 @@
 
       // El color del swatch es el contenido, no la decoracion: el estado activo se
       // marca con un anillo de texto, que se lee sobre cualquiera de los colores.
-      &--active {
+      &.is-active {
         border-color: var(--text);
         transform: scale(1.15);
       }

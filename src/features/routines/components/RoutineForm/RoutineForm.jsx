@@ -40,7 +40,7 @@ export default function RoutineForm({ onSubmit, onCancel, initialData }) {
             <button
               key={color.id}
               type="button"
-              className={`c-routine-form__color-swatch${colorId === color.id ? ' routine-form__color-swatch--active' : ''}`}
+              className={`c-routine-form__color-swatch${colorId === color.id ? ' c-routine-form__color-swatch is-active' : ''}`}
               style={{ '--swatch-color': color.value }}
               onClick={() => setColorId(color.id)}
               aria-pressed={colorId === color.id}

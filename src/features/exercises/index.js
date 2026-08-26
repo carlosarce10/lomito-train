@@ -2,6 +2,7 @@
  * API publica de la feature exercises. Ninguna otra capa importa su interior.
  */
 export { default as ExercisesPage } from './pages/ExercisesPage/ExercisesPage';
+export { default as ExerciseDetailPage } from './pages/ExerciseDetailPage/ExerciseDetailPage';
 export { default as useExercises } from './hooks/useExercises';
 export { default as useExerciseFilters } from './hooks/useExerciseFilters';
 export { default as ExerciseForm } from './components/ExerciseForm/ExerciseForm';

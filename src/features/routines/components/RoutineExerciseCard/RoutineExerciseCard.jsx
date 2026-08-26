@@ -74,14 +74,14 @@ export default function RoutineExerciseCard({
     <div className="c-routine-exercise-card">
       {/* ── Action backgrounds ── */}
       <div
-        className="c-routine-exercise-card__bg routine-exercise-card__bg--edit"
+        className="c-routine-exercise-card__bg c-routine-exercise-card__bg--edit"
         style={{ opacity: showEdit ? actionOpacity : 0 }}
       >
         <Icon path={mdiPencil} size={1} />
         <span>Editar</span>
       </div>
       <div
-        className="c-routine-exercise-card__bg routine-exercise-card__bg--delete"
+        className="c-routine-exercise-card__bg c-routine-exercise-card__bg--delete"
         style={{ opacity: showDelete ? actionOpacity : 0 }}
       >
         <Icon path={mdiDelete} size={1} />

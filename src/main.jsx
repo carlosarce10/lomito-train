@@ -1,22 +1,27 @@
 // El sistema de estilos se importa ANTES que cualquier componente, y el orden
 // importa de verdad: Vite inyecta el CSS de cada .scss co-locado en el orden en que
-// se importa su modulo. Si App.jsx entra primero, el navegador ve un
+// se importa su modulo. Si un componente entra primero, el navegador ve un
 // "@layer components" antes de que _layers.scss haya declarado el orden de las
 // capas, y una capa ya creada no se puede reordenar: el reset acaba ganandole a los
 // componentes y se pierde todo el espaciado. Verificado en pantalla.
 //
- 
+
 import './styles/main.scss';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { createHashRouter, RouterProvider } from 'react-router';
 
 import { bootstrap } from './app/bootstrap/bootstrap';
 import ErrorBoundary from './app/bootstrap/ErrorBoundary/ErrorBoundary';
 import RecoveryScreen from './app/bootstrap/RecoveryScreen/RecoveryScreen';
-import App from './App.jsx';
+import { routes } from './app/routes';
 
 const arranque = bootstrap();
+
+// Enrutado por hash y no por historial: la aplicacion se sirve como estatico y un
+// hosting sin reescrituras devolveria 404 al recargar en /routines/<id>.
+const router = createHashRouter(routes);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -24,7 +29,7 @@ createRoot(document.getElementById('root')).render(
       <ErrorBoundary
         fallback={(error) => <RecoveryScreen reason="render" detail={error.message} />}
       >
-        <App />
+        <RouterProvider router={router} />
       </ErrorBoundary>
     ) : (
       <RecoveryScreen reason={arranque.reason} detail={arranque.migration?.error?.message} />

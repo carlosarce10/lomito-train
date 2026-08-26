@@ -1,27 +1,31 @@
-import { mdiDumbbell, mdiCalendarCheck } from '@mdi/js';
 import Icon from '@mdi/react';
+import { NavLink } from 'react-router';
+
 import './BottomNav.scss';
 
-const TABS = [
-  { id: 'routines', label: 'Rutinas', icon: mdiCalendarCheck },
-  { id: 'exercises', label: 'Ejercicios', icon: mdiDumbbell },
-];
-
-export default function BottomNav({ activePage, onPageChange }) {
+/**
+ * Barra de navegacion inferior.
+ *
+ * Recibe las pestanas como dato en lugar de declararlas dentro: shared no conoce
+ * las rutas ni las features de la aplicacion.
+ *
+ * @param {object} props
+ * @param {Array<{ to: string, label: string, icon: string }>} props.tabs
+ */
+export default function BottomNav({ tabs }) {
   return (
     <nav className="c-bottom-nav">
-      {TABS.map((tab) => (
-        <button
-          key={tab.id}
-          className={`c-bottom-nav__tab${activePage === tab.id ? ' bottom-nav__tab--active' : ''}`}
-          onClick={() => onPageChange(tab.id)}
-          aria-current={activePage === tab.id ? 'page' : undefined}
+      {tabs.map((tab) => (
+        <NavLink
+          key={tab.to}
+          to={tab.to}
+          className={({ isActive }) => `c-bottom-nav__tab${isActive ? ' is-active' : ''}`}
         >
           <span className="c-bottom-nav__icon">
             <Icon path={tab.icon} size={1} />
           </span>
           <span className="c-bottom-nav__label">{tab.label}</span>
-        </button>
+        </NavLink>
       ))}
     </nav>
   );

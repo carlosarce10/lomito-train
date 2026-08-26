@@ -3,4 +3,5 @@
  * dependencia permitida entre features.
  */
 export { default as RoutinesPage } from './pages/RoutinesPage/RoutinesPage';
+export { default as RoutineDetailPage } from './pages/RoutineDetailPage/RoutineDetailPage';
 export { default as useRoutines } from './hooks/useRoutines';
