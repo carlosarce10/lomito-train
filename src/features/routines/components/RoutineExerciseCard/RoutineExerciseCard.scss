@@ -263,6 +263,7 @@
     &__sets-actions {
       display: flex;
       gap: $spacing-sm;
+      justify-content: flex-end;
       margin-bottom: $spacing-xs;
     }
 
