@@ -1,11 +1,37 @@
 import { useCallback, useState } from 'react';
 
-import { buildBackup, importBackup } from '@domain/storage/backup';
+import { buildBackup, importBackup, importExercises } from '@domain/storage/backup';
 import { CURRENT_VERSION } from '@domain/storage/migrations';
 import { exercisesRepository, routinesRepository } from '@domain/storage/repositories';
 import { isoDay, saveBlob } from '@services/file/downloadFile';
 import useToast from '@shared/components/ToastProvider/useToast';
+import { buildImportDictionary } from '@i18n/importDictionary';
 import useTranslation from '@i18n/useTranslation';
+
+/**
+ * Decide el formato de un archivo de importacion.
+ *
+ * La extension manda cuando existe, pero no basta: un archivo renombrado o una
+ * descarga temporal sin extension no deben caer en la rama equivocada. El respaldo
+ * es la firma del contenido, que no miente: un xlsx es un zip y empieza por PK, y
+ * un JSON empieza por una llave.
+ *
+ * @param {File} file Archivo elegido por el usuario.
+ * @returns {Promise<'xlsx'|'csv'|'json'>}
+ */
+async function detectarFormato(file) {
+  const extension = file.name.split('.').pop()?.toLowerCase();
+  if (extension === 'xlsx') return 'xlsx';
+  if (extension === 'csv') return 'csv';
+  if (extension === 'json') return 'json';
+
+  const cabecera = new Uint8Array(await file.slice(0, 4).arrayBuffer());
+  if (cabecera[0] === 0x50 && cabecera[1] === 0x4b) return 'xlsx';
+
+  const inicio = (await file.slice(0, 256).text()).replace(/^\uFEFF/, '').trimStart();
+  if (inicio.startsWith('{')) return 'json';
+  return 'csv';
+}
 
 /**
  * Exportacion e importacion de datos.
@@ -136,16 +162,39 @@ export default function useDataExport() {
   );
 
   /**
-   * Aplica una copia de seguridad desde un archivo elegido por el usuario.
+   * Importa un archivo del usuario: la copia JSON, el libro de Excel o el CSV de
+   * series, decidido por la extension. Los tres acaban en el mismo camino validado
+   * del dominio; lo que cambia es como se reconstruyen los datos.
+   *
    * Vuelve a cargar la pagina al terminar: los stores ya tienen su instantanea en
    * memoria y releerla a mano dejaria la interfaz mostrando datos viejos.
    */
-  const importarCopia = useCallback(
+  const importarArchivo = useCallback(
     async (file) => {
       setTrabajando('import');
       try {
-        const texto = await file.text();
-        const resultado = importBackup(JSON.parse(texto));
+        const formato = await detectarFormato(file);
+        let resultado;
+
+        if (formato === 'xlsx') {
+          // El libro trae etiquetas traducidas y relaciones por nombre: el
+          // importador las reconstruye y el resultado entra por el mismo camino
+          // validado que la copia JSON.
+          const { importWorkbook } = await import('@services/excel/importWorkbook');
+          const leido = await importWorkbook(file, buildImportDictionary());
+          resultado = leido.ok
+            ? importBackup(buildBackup(CURRENT_VERSION, leido.exercises, leido.routines))
+            : leido;
+        } else if (formato === 'csv') {
+          // El CSV solo transporta series: sustituye los ejercicios y conserva las
+          // rutinas, podando las referencias que queden huerfanas.
+          const { importCsv } = await import('@services/excel/importCsv');
+          const leido = importCsv(await file.text(), buildImportDictionary());
+          resultado = leido.ok ? importExercises(leido.exercises) : leido;
+        } else {
+          resultado = importBackup(JSON.parse(await file.text()));
+        }
+
         if (!resultado.ok) {
           toast.error(t('export.importFailed'));
           return resultado;
@@ -161,7 +210,11 @@ export default function useDataExport() {
         );
         window.setTimeout(() => window.location.reload(), 900);
         return resultado;
-      } catch {
+      } catch (error) {
+        // El aviso resume; el detalle va a la consola. Un catch que traga el error
+        // sin registrarlo deja el fallo sin diagnostico posible, que es justo lo
+        // que la regla 7 quiere evitar.
+        console.error('No se pudo importar el archivo', error);
         toast.error(t('export.importFailed'));
         return { ok: false, reason: 'corrupt' };
       } finally {
@@ -176,6 +229,6 @@ export default function useDataExport() {
     exportarExcel,
     exportarCsv,
     exportarCopia,
-    importarCopia,
+    importarArchivo,
   };
 }

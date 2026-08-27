@@ -19,8 +19,8 @@
     "csvHint": "One sheet per download, no network needed",
     "backup": "Backup",
     "backupHint": "A JSON file to move your data to another device",
-    "import": "Import backup",
-    "importHint": "Replaces what you have now with the contents of the file",
+    "import": "Import data",
+    "importHint": "JSON, Excel or CSV. Replaces what you have now with the contents of the file",
     "importConfirmTitle": "Import backup",
     "importConfirmText": "This will replace your {{exercises}} exercises and {{routines}} routines with the contents of the file. This cannot be undone.",
     "pdf": "Routine as PDF",
@@ -55,11 +55,7 @@
       "weight": "Weight (kg)",
       "reps": "Reps",
       "key": "Key",
-      "value": "Value",
-      "targetWeight": "Target weight",
-      "targetReps": "Target reps",
-      "actualWeight": "Actual weight",
-      "actualReps": "Actual reps"
+      "value": "Value"
     }
   },
   "unit": {

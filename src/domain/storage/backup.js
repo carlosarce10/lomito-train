@@ -75,3 +75,37 @@ export function importBackup(crudo) {
     descartados: ejercicios.rejected.length + rutinas.rejected.length,
   };
 }
+
+/**
+ * Sustituye solo los ejercicios, conservando las rutinas.
+ *
+ * Es el camino del CSV, que no transporta rutinas: borrarlas porque el archivo no
+ * las trae seria destruir datos que el usuario no pidio tocar. Las referencias de
+ * las rutinas a ejercicios que ya no existen se podan aqui mismo.
+ *
+ * @param {unknown} exercisesRaw Ejercicios crudos ya reconstruidos por el importador.
+ * @returns {{ ok: true, exercises: number, routines: number, descartados: number }
+ *         | { ok: false, reason: string }}
+ */
+export function importExercises(exercisesRaw) {
+  if (!Array.isArray(exercisesRaw)) return { ok: false, reason: 'corrupt' };
+
+  const ejercicios = partition(exerciseSchema, exercisesRaw.map(repairExercise));
+
+  const escritura = driver.write(KEYS.exercises, ejercicios.valid);
+  if (!escritura.ok) return { ok: false, reason: escritura.reason };
+
+  const rutinasActuales = driver.read(KEYS.routines);
+  const rutinas = Array.isArray(rutinasActuales.value) ? rutinasActuales.value : [];
+  const { routines } = pruneOrphanExerciseIds(rutinas, ejercicios.valid);
+
+  const escrituraRutinas = driver.write(KEYS.routines, routines);
+  if (!escrituraRutinas.ok) return { ok: false, reason: escrituraRutinas.reason };
+
+  return {
+    ok: true,
+    exercises: ejercicios.valid.length,
+    routines: routines.length,
+    descartados: ejercicios.rejected.length,
+  };
+}

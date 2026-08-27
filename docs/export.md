@@ -118,6 +118,29 @@ lomito-train_rutina_empuje_2026-08-25.pdf
 lomito-train_datos_2026-08-25.xlsx
 ```
 
+## Importacion
+
+Se importan los tres formatos que se exportan: la copia JSON, el libro de Excel y el
+CSV de series. El formato se decide por la extension, con la firma del contenido
+como respaldo: un archivo renombrado o una descarga sin extension no deben caer en
+la rama equivocada, y un xlsx siempre empieza por PK porque es un zip.
+
+Los tres caminos acaban en el mismo punto validado del dominio. Lo que cambia es la
+reconstruccion:
+
+- El JSON ya tiene la forma del esquema: se valida y se aplica.
+- El Excel guarda etiquetas traducidas y enlaza las hojas por nombre, asi que el
+  importador usa el diccionario inverso de i18n, que indexa las etiquetas de todos
+  los idiomas a la vez: da igual en que idioma se exporto y en cual esta la
+  aplicacion ahora. Las series recuperan id nuevo, porque el libro no los guarda.
+- El CSV solo transporta series: sustituye los ejercicios y conserva las rutinas,
+  podando las referencias que queden huerfanas. El dialecto se detecta del propio
+  archivo contando separadores en la cabecera, y el apostrofo anti-formulas se
+  retira al leer, como quedo prometido cuando se escribio el exportador.
+
+Importar sustituye datos y por eso pide confirmacion antes, con el conteo de lo que
+se va a reemplazar.
+
 ## Respaldo completo
 
 `backup.js` exporta e importa un JSON validado contra su esquema, con la version

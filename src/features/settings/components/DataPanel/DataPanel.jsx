@@ -18,7 +18,8 @@ import './DataPanel.scss';
  */
 export default function DataPanel() {
   const { t, tn } = useTranslation('settings');
-  const { trabajando, exportarExcel, exportarCsv, exportarCopia, importarCopia } = useDataExport();
+  const { trabajando, exportarExcel, exportarCsv, exportarCopia, importarArchivo } =
+    useDataExport();
   const inputRef = useRef(null);
   const [ficheroPendiente, setFicheroPendiente] = useState(null);
 
@@ -39,7 +40,7 @@ export default function DataPanel() {
   const confirmarImportacion = async () => {
     const file = ficheroPendiente;
     setFicheroPendiente(null);
-    if (file) await importarCopia(file);
+    if (file) await importarArchivo(file);
   };
 
   return (
@@ -87,7 +88,7 @@ export default function DataPanel() {
         ref={inputRef}
         className="u-visually-hidden"
         type="file"
-        accept="application/json,.json"
+        accept=".json,.xlsx,.csv,application/json,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         tabIndex={-1}
         aria-hidden="true"
         onChange={alElegirFichero}

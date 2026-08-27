@@ -302,15 +302,19 @@ export default function RoutineExerciseCard({
                 type="button"
                 className="c-routine-exercise-card__sets-action"
                 onClick={onEdit}
+                aria-label={tn('common', 'action.edit')}
+                title={tn('common', 'action.edit')}
               >
-                {tn('common', 'action.edit')}
+                <Icon path={mdiPencil} size={0.8} />
               </button>
               <button
                 type="button"
                 className="c-routine-exercise-card__sets-action c-routine-exercise-card__sets-action--danger"
                 onClick={onRemove}
+                aria-label={tn('routines', 'detail.removeTitle')}
+                title={tn('routines', 'detail.removeTitle')}
               >
-                {tn('routines', 'detail.removeTitle')}
+                <Icon path={mdiDelete} size={0.8} />
               </button>
             </div>
 

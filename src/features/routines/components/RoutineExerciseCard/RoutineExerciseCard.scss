@@ -73,27 +73,6 @@
       overflow-wrap: anywhere;
     }
 
-    &__toggle {
-      @include flex-center;
-      @include touch-target-extended;
-
-      flex-shrink: 0;
-      width: 30px;
-      height: 30px;
-      border: 1px solid var(--border);
-      border-radius: $radius-full;
-      background: var(--surface);
-      color: var(--text-secondary);
-      transition:
-        background-color $transition-fast,
-        color $transition-fast;
-
-      &:hover {
-        background: var(--accent-subtle);
-        color: var(--accent-text);
-      }
-    }
-
     &__meta-row {
       display: flex;
       flex-wrap: wrap;
@@ -255,32 +234,42 @@
       }
     }
 
+    // El chevron y las acciones del area de sets comparten el mismo tratamiento
+    // circular que el resto de controles de icono de la aplicacion.
+    &__toggle,
+    &__sets-action {
+      @include flex-center;
+      @include touch-target-extended;
+
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: $radius-full;
+      background: var(--surface);
+      color: var(--text-secondary);
+      transition:
+        background-color $transition-fast,
+        border-color $transition-fast,
+        color $transition-fast;
+
+      &:hover {
+        border-color: var(--accent);
+        background: var(--accent-subtle);
+        color: var(--accent-text);
+      }
+    }
+
     &__sets-actions {
       display: flex;
       gap: $spacing-sm;
       margin-bottom: $spacing-xs;
     }
 
-    &__sets-action {
-      @include touch-target-extended;
-
-      padding: $spacing-xs $spacing-sm;
-      border-radius: $radius-sm;
-      color: var(--accent-text);
-      font-size: $font-size-sm;
-      font-weight: $font-weight-semibold;
-
-      &:hover {
-        background: var(--accent-subtle);
-      }
-    }
-
-    &__sets-action--danger {
+    &__sets-action--danger:hover {
+      border-color: var(--danger);
+      background: var(--danger-subtle);
       color: var(--danger-text);
-
-      &:hover {
-        background: var(--danger-subtle);
-      }
     }
 
     // Mismo tratamiento que el boton de agregar serie del detalle de ejercicio:

@@ -19,8 +19,8 @@
     "csvHint": "Una hoja por descarga, sin depender de la red",
     "backup": "Copia de seguridad",
     "backupHint": "Archivo JSON para llevar tus datos a otro dispositivo",
-    "import": "Importar copia",
-    "importHint": "Sustituye lo que hay ahora por el contenido del archivo",
+    "import": "Importar datos",
+    "importHint": "JSON, Excel o CSV. Sustituye lo que hay ahora por el contenido del archivo",
     "importConfirmTitle": "Importar copia de seguridad",
     "importConfirmText": "Se sustituirán tus {{exercises}} ejercicios y {{routines}} rutinas por el contenido del archivo. Esta acción no se puede deshacer.",
     "pdf": "Rutina en PDF",
@@ -55,11 +55,7 @@
       "weight": "Peso (kg)",
       "reps": "Repeticiones",
       "key": "Clave",
-      "value": "Valor",
-      "targetWeight": "Peso objetivo",
-      "targetReps": "Reps objetivo",
-      "actualWeight": "Peso real",
-      "actualReps": "Reps reales"
+      "value": "Valor"
     }
   },
   "unit": {
