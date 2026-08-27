@@ -1,3 +1,8 @@
+// uuid y no crypto.randomUUID: randomUUID solo existe en contextos seguros, y el
+// uso real de esta aplicacion es el movil contra la IP de la red local por http,
+// donde no lo hay. La libreria usa getRandomValues, que existe en los dos.
+import { v4 as uuid } from 'uuid';
+
 import { sanitizeCell } from '../file/sanitize';
 
 import { loadExcelEngine } from './workbook';
@@ -34,7 +39,7 @@ export async function importWorkbook(file, dictionary) {
   if (!hojas.exercises) return { ok: false, reason: 'notLomitoTrain' };
 
   const ejercicios = leerHoja(hojas.exercises, dictionary).map((fila) => ({
-    id: uuidValido(fila.id) ? fila.id : crypto.randomUUID(),
+    id: uuidValido(fila.id) ? fila.id : uuid(),
     name: sanitizeCell(fila.name),
     muscleGroupIds: separarEtiquetas(fila.muscleGroups)
       .map((etiqueta) => dictionary.muscleGroupId(etiqueta))
@@ -54,7 +59,7 @@ export async function importWorkbook(file, dictionary) {
       const ejercicio = porNombre.get(claveNombre(fila.exercise));
       if (!ejercicio) continue;
       ejercicio.sets.push({
-        id: crypto.randomUUID(),
+        id: uuid(),
         weight: numero(fila.weight) ?? 0,
         reps: numero(fila.reps) ?? 0,
       });
@@ -62,7 +67,7 @@ export async function importWorkbook(file, dictionary) {
   }
 
   const rutinas = (hojas.routines ? leerHoja(hojas.routines, dictionary) : []).map((fila) => ({
-    id: uuidValido(fila.id) ? fila.id : crypto.randomUUID(),
+    id: uuidValido(fila.id) ? fila.id : uuid(),
     name: sanitizeCell(fila.name),
     colorId: dictionary.colorId(fila.color) ?? '',
     exerciseIds: [],

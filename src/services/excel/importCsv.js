@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid';
+
 import { parseCsv, parseCsvNumber } from '../file/parseCsv';
 import { sanitizeCell } from '../file/sanitize';
 
@@ -33,7 +35,7 @@ export function importCsv(texto, dictionary) {
 
     if (!ejercicios.has(nombre)) {
       ejercicios.set(nombre, {
-        id: crypto.randomUUID(),
+        id: uuid(),
         name: nombre,
         muscleGroupIds: String(dato.muscleGroups ?? '')
           .split(/[,/|]/)
@@ -50,7 +52,7 @@ export function importCsv(texto, dictionary) {
     const reps = parseCsvNumber(dato.reps, decimal);
     if (peso !== null || reps !== null) {
       ejercicios.get(nombre).sets.push({
-        id: crypto.randomUUID(),
+        id: uuid(),
         weight: peso ?? 0,
         reps: reps ?? 0,
       });
