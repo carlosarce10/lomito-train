@@ -6,6 +6,10 @@ import { defineConfig } from 'vite';
 const src = (path) => fileURLToPath(new URL(`./src/${path}`, import.meta.url));
 
 export default defineConfig({
+  // Rutas relativas en el build: con enrutado por hash, index.html es siempre la
+  // entrada, asi que el dist funciona igual en la raiz del dominio que en una
+  // subcarpeta, sin tener que saber donde se va a publicar.
+  base: './',
   plugins: [react()],
   resolve: {
     // Vite solo sustituye cuando el id es igual a la clave o empieza por clave + '/',
