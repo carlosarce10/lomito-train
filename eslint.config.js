@@ -100,6 +100,9 @@ export default defineConfig([
           alphabetize: { order: 'asc', caseInsensitive: true },
         },
       ],
+      // Los modulos virtuales de Vite (el registro del service worker) no existen en
+      // disco y el resolver no puede encontrarlos.
+      'import-x/no-unresolved': ['error', { ignore: ['^virtual:'] }],
       'import-x/no-duplicates': 'error',
       'import-x/no-cycle': ['error', { maxDepth: Infinity }],
 

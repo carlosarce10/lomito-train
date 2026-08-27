@@ -12,6 +12,12 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
+    <!-- iOS no lee el manifest para el nombre del icono ni, antes de 16.4, para el modo
+         de pantalla: se lo dicen las etiquetas apple-*. Sin apple-mobile-web-app-title
+         usaria el <title> de la pestana. Detalle en docs/pwa.md. -->
+    <meta name="application-name" content="Lomito Train" />
+    <meta name="apple-mobile-web-app-title" content="Lomito Train" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

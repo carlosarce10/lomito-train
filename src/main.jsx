@@ -12,6 +12,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createHashRouter, RouterProvider } from 'react-router';
 
+import { registerServiceWorker } from '@services/pwa/serviceWorker';
 import ToastProvider from '@shared/components/ToastProvider/ToastProvider';
 
 import { bootstrap } from './app/bootstrap/bootstrap';
@@ -19,6 +20,11 @@ import ErrorBoundary from './app/bootstrap/ErrorBoundary/ErrorBoundary';
 import RecoveryScreen from './app/bootstrap/RecoveryScreen/RecoveryScreen';
 import { routes } from './app/routes';
 import I18nProvider from './i18n/I18nProvider/I18nProvider';
+
+// Se registra antes de decidir si la aplicacion arranca: aunque los datos esten
+// corruptos y se muestre la pantalla de rescate, la siguiente apertura sin red
+// tiene que poder llegar hasta ella.
+registerServiceWorker();
 
 const arranque = bootstrap();
 

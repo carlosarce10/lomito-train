@@ -368,6 +368,14 @@ Hallazgos confirmados por la auditoria que siguen vivos en el codigo:
   habia perdido volvio de serie: espacio levanta, las flechas mueven y espacio
   suelta, con anuncios traducidos para el lector de pantalla. Editar y quitar
   conservan sus botones de texto dentro del area expandida de la tarjeta.
+- **La aplicacion abre sin conexion.** Service worker generado por `vite-plugin-pwa`
+  con precache del build entero, incluidos los chunks de PDF y Excel, y actualizacion
+  bajo demanda: la version nueva espera a que el usuario pulse Actualizar, porque con
+  `autoUpdate` el siguiente `import()` diferido pediria un chunk que ya no existe. El
+  icono maskable llevaba un marco negro porque el maestro tiene las esquinas negras;
+  `npm run icons` recorta el interior y rellena con el color medido del fondo.
+  `short_name` pasa a "Lomito Train". Ajustes explica como instalar en iOS, donde no
+  existe dialogo de instalacion. Ver [pwa.md](pwa.md).
 
 ## Como se lee este archivo
 

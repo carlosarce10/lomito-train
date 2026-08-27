@@ -47,5 +47,11 @@
   "error": {
     "duplicateName": "Something with that name already exists",
     "writeFailed": "Could not save. The browser may be out of space."
+  },
+  "pwa": {
+    "offlineReady": "Lomito Train now works offline",
+    "updateAvailable": "A new version of Lomito Train is ready",
+    "update": "Update",
+    "later": "Later"
   }
 }

@@ -47,5 +47,11 @@
   "error": {
     "duplicateName": "Ya existe algo con ese nombre",
     "writeFailed": "No se pudo guardar. Puede que no quede espacio en el navegador."
+  },
+  "pwa": {
+    "offlineReady": "Lomito Train ya funciona sin conexión",
+    "updateAvailable": "Hay una versión nueva de Lomito Train",
+    "update": "Actualizar",
+    "later": "Más tarde"
   }
 }

@@ -6,6 +6,7 @@ import Layout from '@shared/components/Layout/Layout';
 import useTranslation from '@i18n/useTranslation';
 
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
+import UpdateBanner from '../components/UpdateBanner/UpdateBanner';
 
 // Las pestanas viven aqui y no en shared: la barra de navegacion no tiene por que
 // conocer las rutas de la aplicacion. Guardan el id y no la etiqueta, porque a este
@@ -49,6 +50,7 @@ export default function AppShell() {
   return (
     <Layout tabs={tabs} headerAction={<ThemeToggle />}>
       <ScrollReset />
+      <UpdateBanner />
       <Outlet />
     </Layout>
   );

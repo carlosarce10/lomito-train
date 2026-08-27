@@ -44,6 +44,7 @@ export default {
         'i18n',
         'export',
         'a11y',
+        'pwa',
         // Repositorio
         'config',
         'deps',

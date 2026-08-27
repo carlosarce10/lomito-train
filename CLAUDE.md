@@ -14,30 +14,32 @@ existe.
 
 ## 2. Comandos
 
-| Comando            | Que hace                                                                |
-| ------------------ | ----------------------------------------------------------------------- |
-| `npm run dev`      | Servidor de desarrollo en el puerto 5173, accesible desde la red local  |
-| `npm run build`    | Build de produccion en `dist/`                                          |
-| `npm run preview`  | Sirve el build de produccion                                            |
-| `npm run lint`     | ESLint sobre todo el repositorio                                        |
-| `npm run lint:css` | Stylelint sobre `src/**/*.scss`                                         |
-| `npm run format`   | Prettier en modo escritura                                              |
-| `npm run check`    | Formato, ESLint, Stylelint y build. **Puerta unica antes de commitear** |
+| Comando            | Que hace                                                                    |
+| ------------------ | --------------------------------------------------------------------------- |
+| `npm run dev`      | Servidor de desarrollo en el puerto 5173, accesible desde la red local      |
+| `npm run build`    | Build de produccion en `dist/`                                              |
+| `npm run preview`  | Sirve el build de produccion                                                |
+| `npm run lint`     | ESLint sobre todo el repositorio                                            |
+| `npm run lint:css` | Stylelint sobre `src/**/*.scss`                                             |
+| `npm run format`   | Prettier en modo escritura                                                  |
+| `npm run check`    | Formato, ESLint, Stylelint y build. **Puerta unica antes de commitear**     |
+| `npm run icons`    | Regenera los iconos de `public/` y la marca de la cabecera desde el maestro |
 
 `npm run check` tiene que pasar en verde antes de cada commit. El hook de pre-commit
 solo revisa los archivos preparados; `check` revisa el proyecto entero.
 
 ## 3. Stack y decisiones tecnicas
 
-React con Vite, Sass, iconos Material Design (`@mdi/js` + `@mdi/react`), `uuid`.
-Las versiones exactas estan en `package.json` y no se copian aqui.
+React con Vite, Sass, iconos Material Design (`@mdi/js` + `@mdi/react`), `uuid`, y
+`vite-plugin-pwa` para generar el service worker. Las versiones exactas estan en
+`package.json` y no se copian aqui.
 
 | Decision                        | Motivo                                                                                      |
 | ------------------------------- | ------------------------------------------------------------------------------------------- |
 | Sin TypeScript                  | La seguridad de tipos viene de validacion en tiempo de ejecucion en `src/domain/validation` |
 | Sass con `@use`                 | `@import` esta obsoleto en Sass. Nunca se usa                                               |
 | localStorage como unico almacen | No hay servidor. Por eso exportar es obligatorio, no opcional                               |
-| PWA instalable                  | El uso real es en el gimnasio, con mala cobertura                                           |
+| PWA instalable y sin conexion   | El uso real es en el gimnasio, con mala cobertura. Detalle en [docs/pwa.md](docs/pwa.md)    |
 
 ## 4. Vocabulario canonico
 
@@ -58,6 +60,9 @@ traduccion y ambitos de commit. La columna "codigo" manda.
 | Tema visual                                | `theme`       | Tema           | Theme         |
 | Idioma activo                              | `language`    | Idioma         | Language      |
 | Exportacion a PDF o Excel                  | `export`      | Exportar       | Export        |
+| Instalacion en el dispositivo              | `install`     | Instalar       | Install       |
+| Version nueva esperando a activarse        | `update`      | Actualizar     | Update        |
+| Funcionamiento sin red                     | `offline`     | Sin conexion   | Offline       |
 
 Palabras prohibidas y su sustituto:
 
@@ -73,21 +78,23 @@ primera linea de codigo.
 
 ## 5. Donde va cada cosa
 
-| Voy a anadir                                  | Va en                                                |
-| --------------------------------------------- | ---------------------------------------------------- |
-| Una pantalla                                  | `src/features/<feature>/pages/`                      |
-| Un componente que conoce el dominio           | `src/features/<feature>/components/`                 |
-| Un componente generico (boton, modal, campo)  | `src/shared/components/`                             |
-| Una regla de negocio o un invariante          | `src/domain/model/`                                  |
-| Una lista fija de valores                     | `src/domain/catalogs/`                               |
-| Una clave de localStorage                     | `src/domain/storage/keys.js` y en ningun otro sitio  |
-| Un cambio de forma de los datos               | `src/domain/schemas/` mas su migracion               |
-| Texto visible                                 | `src/i18n/locales/{es,en}/<namespace>.json`          |
-| Un color, un radio, una sombra, un espaciado  | `src/styles/settings/`                               |
-| Un adaptador a una libreria externa           | `src/services/`                                      |
-| Un icono de la aplicacion, favicon o manifest | `public/`, por URL fija                              |
-| Una imagen que consume un componente          | `src/assets/`, importada para que Vite le ponga hash |
-| El archivo original de un asset               | `assets/` en la raiz. Nunca en `src/`                |
+| Voy a anadir                                    | Va en                                                      |
+| ----------------------------------------------- | ---------------------------------------------------------- |
+| Una pantalla                                    | `src/features/<feature>/pages/`                            |
+| Un componente que conoce el dominio             | `src/features/<feature>/components/`                       |
+| Un componente generico (boton, modal, campo)    | `src/shared/components/`                                   |
+| Una regla de negocio o un invariante            | `src/domain/model/`                                        |
+| Una lista fija de valores                       | `src/domain/catalogs/`                                     |
+| Una clave de localStorage                       | `src/domain/storage/keys.js` y en ningun otro sitio        |
+| Un cambio de forma de los datos                 | `src/domain/schemas/` mas su migracion                     |
+| Texto visible                                   | `src/i18n/locales/{es,en}/<namespace>.json`                |
+| Un color, un radio, una sombra, un espaciado    | `src/styles/settings/`                                     |
+| Un adaptador a una libreria externa             | `src/services/`                                            |
+| Un icono de la aplicacion, favicon o manifest   | `public/`, por URL fija                                    |
+| Una imagen que consume un componente            | `src/assets/`, importada para que Vite le ponga hash       |
+| El archivo original de un asset                 | `assets/` en la raiz. Nunca en `src/`                      |
+| La configuracion del service worker             | `vite.config.js`, en el plugin `VitePWA`                   |
+| El registro del service worker o la instalacion | `src/services/pwa/`. Detalle en [docs/pwa.md](docs/pwa.md) |
 
 Anatomia obligatoria de una feature: `index.js` como unica API publica, mas
 `pages/`, `components/` y `hooks/`. Un hook de datos y un hook de UI nunca se

@@ -1,0 +1,36 @@
+@use 'styles/foundation' as *;
+
+@layer components {
+  .c-update-banner {
+    @include glass-card($radius-md);
+    @include flex-between;
+
+    gap: $spacing-md;
+    margin-bottom: $spacing-md;
+    padding: $spacing-sm $spacing-sm $spacing-sm $spacing-md;
+    // El borde lleva el acento porque es lo unico que distingue este aviso de una
+    // tarjeta mas: pide una accion, no informa.
+    border-color: var(--accent);
+
+    &__text {
+      color: var(--text);
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+    }
+
+    &__actions {
+      display: flex;
+      flex-shrink: 0;
+      gap: $spacing-xs;
+      align-items: center;
+    }
+
+    &__update {
+      min-height: $touch-target;
+    }
+
+    &__dismiss {
+      color: var(--text-secondary);
+    }
+  }
+}

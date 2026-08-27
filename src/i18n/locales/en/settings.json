@@ -63,5 +63,13 @@
     "kg": "Kilograms (kg)",
     "lb": "Pounds (lb)",
     "hint": "Your data is always stored in kilograms. Changing the unit only changes how it is shown."
+  },
+  "install": {
+    "title": "Install on this device",
+    "hint": "With its own icon, full screen and offline. The data is the same as in the browser.",
+    "button": "Install",
+    "ios": "In Safari, tap Share and then Add to Home Screen.",
+    "manual": "Look for Install app in your browser menu.",
+    "failed": "The install dialog could not be opened"
   }
 }

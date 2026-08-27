@@ -63,5 +63,13 @@
     "kg": "Kilos (kg)",
     "lb": "Libras (lb)",
     "hint": "Tus datos se guardan siempre en kilos. Cambiar la unidad solo cambia cómo se muestran."
+  },
+  "install": {
+    "title": "Instalar en este dispositivo",
+    "hint": "Con su propio icono, a pantalla completa y sin conexión. Los datos son los mismos que en el navegador.",
+    "button": "Instalar",
+    "ios": "En Safari, pulsa Compartir y después Añadir a pantalla de inicio.",
+    "manual": "Busca la opción Instalar aplicación en el menú de tu navegador.",
+    "failed": "No se pudo abrir el diálogo de instalación"
   }
 }
