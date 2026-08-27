@@ -258,8 +258,7 @@
     &__sets-actions {
       display: flex;
       gap: $spacing-sm;
-      justify-content: flex-end;
-      margin-top: $spacing-sm;
+      margin-bottom: $spacing-xs;
     }
 
     &__sets-action {

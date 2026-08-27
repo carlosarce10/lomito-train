@@ -19,7 +19,7 @@ const TOLERANCIA = 8;
  *
  * @param {number} count Cuantos elementos hay.
  * @param {(desde: number, hasta: number) => void} onReorder
- * @returns {{ dragIndex: number|null, overIndex: number|null,
+ * @returns {{ dragIndex: number|null, overIndex: number|null, dragOffset: number,
  *             getHandlers: (index: number) => object }}
  */
 export default function useLongPressReorder(count, onReorder) {
@@ -35,6 +35,14 @@ export default function useLongPressReorder(count, onReorder) {
   // dos veces y la lista acababa en un orden que nadie pidio. Verificado.
   const arrastrando = useRef(false);
   const indices = useRef({ desde: null, hasta: null });
+  // Centros verticales de todas las tarjetas, capturados al activar el arrastre.
+  // El destino no puede calcularse contra las cajas en vivo: la tarjeta arrastrada
+  // se traslada con el dedo, asi que su propia caja siempre contendria el puntero y
+  // el destino seria siempre ella misma.
+  const centros = useRef(new Map());
+  // Desplazamiento vertical de la tarjeta activa respecto al punto de pulsacion.
+  // Es lo que hace que la tarjeta siga al dedo en lugar de quedarse quieta.
+  const [dragOffset, setDragOffset] = useState(0);
 
   const limpiarTemporizador = useCallback(() => {
     if (temporizador.current) {
@@ -64,6 +72,7 @@ export default function useLongPressReorder(count, onReorder) {
     indices.current = { desde: null, hasta: null };
     setDragIndex(null);
     setOverIndex(null);
+    setDragOffset(0);
     if (desde !== null && hasta !== null && desde !== hasta) onReorder(desde, hasta);
   }, [limpiarTemporizador, onReorder]);
 
@@ -86,8 +95,15 @@ export default function useLongPressReorder(count, onReorder) {
         temporizador.current = window.setTimeout(() => {
           arrastrando.current = true;
           indices.current = { desde: index, hasta: index };
+          centros.current = new Map(
+            [...contenedores.current].map(([i, nodo]) => {
+              const caja = nodo.getBoundingClientRect();
+              return [i, caja.top + caja.height / 2];
+            }),
+          );
           setDragIndex(index);
           setOverIndex(index);
+          setDragOffset(0);
           // Capturar el puntero retiene el movimiento en esta tarjeta aunque el
           // dedo la abandone; sin esto el arrastre se corta al salir de ella.
           try {
@@ -106,15 +122,24 @@ export default function useLongPressReorder(count, onReorder) {
           if (dx > TOLERANCIA || dy > TOLERANCIA) limpiarTemporizador();
           return;
         }
-        // Con el puntero capturado, todos los movimientos llegan aqui: se busca
-        // sobre que tarjeta esta el dedo por sus cajas.
-        for (const [i, nodo] of contenedores.current) {
-          const caja = nodo.getBoundingClientRect();
-          if (evento.clientY >= caja.top && evento.clientY <= caja.bottom) {
-            indices.current.hasta = i;
-            setOverIndex(i);
-            break;
+        setDragOffset(evento.clientY - inicio.current.y);
+
+        // Con el puntero capturado, todos los movimientos llegan aqui. El destino
+        // es la tarjeta cuyo centro capturado queda mas cerca del dedo: es estable
+        // aunque la tarjeta activa se este moviendo, y no deja huecos muertos entre
+        // tarjetas.
+        let mejor = indices.current.hasta;
+        let distancia = Infinity;
+        for (const [i, centro] of centros.current) {
+          const d = Math.abs(evento.clientY - centro);
+          if (d < distancia) {
+            distancia = d;
+            mejor = i;
           }
+        }
+        if (mejor !== indices.current.hasta) {
+          indices.current.hasta = mejor;
+          setOverIndex(mejor);
         }
       },
       onPointerUp: terminar,
@@ -123,5 +148,5 @@ export default function useLongPressReorder(count, onReorder) {
     [limpiarTemporizador, terminar],
   );
 
-  return { dragIndex, overIndex, getHandlers, total: count };
+  return { dragIndex, overIndex, dragOffset, getHandlers, total: count };
 }

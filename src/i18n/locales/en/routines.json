@@ -14,7 +14,6 @@
     "createAction": "Create routine",
     "editAction": "Edit routine",
     "deleteAction": "Delete routine",
-    "exercisesTitle": "Exercises ({{count}})",
     "addExercise": "Add exercise",
     "empty": "No exercises yet. Add some with the button above.",
     "deleteTitle": "Delete routine",

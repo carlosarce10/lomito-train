@@ -293,6 +293,27 @@ export default function RoutineExerciseCard({
         {/* Collapsible sets section */}
         {!collapsed && (
           <div className="c-routine-exercise-card__sets">
+            {/* Editar y quitar viven aqui y no en la cabecera: el gesto de deslizar
+                es la via principal, y esta es la alternativa para teclado y lector
+                de pantalla sin llenar la tarjeta de iconos. Van arriba, bajo la
+                fila de la marca, donde la mano ya esta al abrir el area. Ver docs/validation.md. */}
+            <div className="c-routine-exercise-card__sets-actions">
+              <button
+                type="button"
+                className="c-routine-exercise-card__sets-action"
+                onClick={onEdit}
+              >
+                {tn('common', 'action.edit')}
+              </button>
+              <button
+                type="button"
+                className="c-routine-exercise-card__sets-action c-routine-exercise-card__sets-action--danger"
+                onClick={onRemove}
+              >
+                {tn('routines', 'detail.removeTitle')}
+              </button>
+            </div>
+
             {exercise.sets.length === 0 ? (
               <p className="c-routine-exercise-card__sets-empty">
                 {tn('exercises', 'detail.setsEmpty')}
@@ -373,25 +394,6 @@ export default function RoutineExerciseCard({
                 })}
               </div>
             )}
-            {/* Editar y quitar viven aqui y no en la cabecera: el gesto de deslizar
-                es la via principal, y esta es la alternativa para teclado y lector
-                de pantalla sin llenar la tarjeta de iconos. Ver docs/validation.md. */}
-            <div className="c-routine-exercise-card__sets-actions">
-              <button
-                type="button"
-                className="c-routine-exercise-card__sets-action"
-                onClick={onEdit}
-              >
-                {tn('common', 'action.edit')}
-              </button>
-              <button
-                type="button"
-                className="c-routine-exercise-card__sets-action c-routine-exercise-card__sets-action--danger"
-                onClick={onRemove}
-              >
-                {tn('routines', 'detail.removeTitle')}
-              </button>
-            </div>
 
             <button
               ref={addSetButton}

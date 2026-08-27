@@ -14,7 +14,6 @@
     "createAction": "Crear rutina",
     "editAction": "Editar rutina",
     "deleteAction": "Eliminar rutina",
-    "exercisesTitle": "Ejercicios ({{count}})",
     "addExercise": "Agregar ejercicio",
     "empty": "Sin ejercicios. Agrega algunos con el botón de arriba.",
     "deleteTitle": "Eliminar rutina",

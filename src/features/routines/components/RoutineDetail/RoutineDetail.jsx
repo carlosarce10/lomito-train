@@ -59,7 +59,7 @@ export default function RoutineDetail({
   onUpdateSet,
   onDeleteSet,
 }) {
-  const { t, tn, formatDate, formatRelative } = useTranslation('routines');
+  const { t, tn, formatDate } = useTranslation('routines');
   const [showPicker, setShowPicker] = useState(false);
   const [isEditingRoutine, setIsEditingRoutine] = useState(false);
   const [exportando, setExportando] = useState(false);
@@ -73,7 +73,7 @@ export default function RoutineDetail({
 
   // Linea de resumen bajo el nombre: cuantos ejercicios, cuantas series y cuando se
   // toco por ultima vez. Antes solo habia un punto de color, que no decia nada.
-  const { dragIndex, overIndex, getHandlers } = useLongPressReorder(
+  const { dragIndex, overIndex, dragOffset, getHandlers } = useLongPressReorder(
     routineExercises.length,
     (desde, hasta) => onReorderExercises?.(routine.id, desde, hasta),
   );
@@ -82,10 +82,7 @@ export default function RoutineDetail({
   const resumen = [
     tn('exercises', 'count', { count: routineExercises.length }),
     tn('exercises', 'setCount', { count: totalSeries }),
-    formatRelative(routine.updatedAt),
-  ]
-    .filter(Boolean)
-    .join(' · ');
+  ].join(' · ');
 
   /**
    * Genera el PDF de esta rutina. El motor se importa aqui y no arriba para que sus
@@ -187,10 +184,9 @@ export default function RoutineDetail({
 
       {/* Exercises section */}
       <div className="c-routine-detail__exercises-section">
+        {/* Sin titulo de seccion: el conteo ya esta en la linea de resumen de la
+            cabecera y repetirlo aqui era ruido. Solo queda la accion. */}
         <div className="c-routine-detail__exercises-header">
-          <span className="c-routine-detail__exercises-title">
-            {t('detail.exercisesTitle', { count: routineExercises.length })}
-          </span>
           <button
             className="c-routine-detail__add-btn"
             onClick={() => setShowPicker(true)}
@@ -218,6 +214,7 @@ export default function RoutineDetail({
                 ]
                   .filter(Boolean)
                   .join(' ')}
+                style={dragIndex === indice ? { '--drag-offset': `${dragOffset}px` } : undefined}
                 role="listitem"
                 {...getHandlers(indice)}
               >
