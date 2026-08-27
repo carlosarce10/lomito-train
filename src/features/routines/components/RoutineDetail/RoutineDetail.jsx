@@ -8,8 +8,9 @@ import Button from '@shared/components/Button/Button';
 import DetailAction from '@shared/components/DetailHeader/DetailAction';
 import DetailHeader from '@shared/components/DetailHeader/DetailHeader';
 import Modal from '@shared/components/Modal/Modal';
+import SortableItem from '@shared/components/SortableList/SortableItem';
+import SortableList from '@shared/components/SortableList/SortableList';
 import useToast from '@shared/components/ToastProvider/useToast';
-import useLongPressReorder from '@shared/hooks/useLongPressReorder';
 import useUnit from '@shared/hooks/useUnit';
 import useTranslation from '@i18n/useTranslation';
 import { ExerciseForm } from '@features/exercises';
@@ -73,10 +74,38 @@ export default function RoutineDetail({
 
   // Linea de resumen bajo el nombre: cuantos ejercicios, cuantas series y cuando se
   // toco por ultima vez. Antes solo habia un punto de color, que no decia nada.
-  const { dragIndex, overIndex, dragOffset, getHandlers } = useLongPressReorder(
-    routineExercises.length,
-    (desde, hasta) => onReorderExercises?.(routine.id, desde, hasta),
-  );
+  // Ids en el orden visible. El reordenado se traduce a indices sobre la lista
+  // guardada por si ambas divergen, por ejemplo con un ejercicio borrado desde
+  // otra pestana a mitad de sesion.
+  const idsVisibles = routineExercises.map((ex) => ex.id);
+  const reordenar = (desde, hasta) => {
+    const desdeGuardado = routine.exerciseIds.indexOf(idsVisibles[desde]);
+    const hastaGuardado = routine.exerciseIds.indexOf(idsVisibles[hasta]);
+    if (desdeGuardado !== -1 && hastaGuardado !== -1) {
+      onReorderExercises?.(routine.id, desdeGuardado, hastaGuardado);
+    }
+  };
+
+  const nombreDe = (id) => routineExercises.find((ex) => ex.id === id)?.name ?? '';
+  const posicionDe = (id) => idsVisibles.indexOf(id) + 1;
+
+  // Lo que el lector de pantalla anuncia durante el arrastre. Se construye aqui y
+  // no en SortableList porque shared no conoce el idioma.
+  const accesibilidadArrastre = {
+    screenReaderInstructions: { draggable: t('detail.dragInstructions') },
+    announcements: {
+      onDragStart: ({ active }) => t('detail.dragStart', { name: nombreDe(active.id) }),
+      onDragOver: ({ active, over }) =>
+        over
+          ? t('detail.dragOver', { name: nombreDe(active.id), position: posicionDe(over.id) })
+          : undefined,
+      onDragEnd: ({ active, over }) =>
+        over
+          ? t('detail.dragEnd', { name: nombreDe(active.id), position: posicionDe(over.id) })
+          : t('detail.dragCancel'),
+      onDragCancel: () => t('detail.dragCancel'),
+    },
+  };
 
   const totalSeries = routineExercises.reduce((suma, ex) => suma + ex.sets.length, 0);
   const resumen = [
@@ -156,6 +185,17 @@ export default function RoutineDetail({
         title={routine.name}
         accent={getRoutineColor(routine.colorId)}
         meta={resumen}
+        titleAction={
+          <button
+            type="button"
+            className="c-routine-detail__add-btn"
+            onClick={() => setShowPicker(true)}
+            aria-label={t('detail.addExercise')}
+          >
+            <Icon path={mdiPlus} size={0.85} />
+            {tn('common', 'action.add')}
+          </button>
+        }
         actions={
           <>
             {/* Exportar esta desactivado con la rutina vacia: un PDF sin ejercicios
@@ -184,50 +224,29 @@ export default function RoutineDetail({
 
       {/* Exercises section */}
       <div className="c-routine-detail__exercises-section">
-        {/* Sin titulo de seccion: el conteo ya esta en la linea de resumen de la
-            cabecera y repetirlo aqui era ruido. Solo queda la accion. */}
-        <div className="c-routine-detail__exercises-header">
-          <button
-            className="c-routine-detail__add-btn"
-            onClick={() => setShowPicker(true)}
-            aria-label={t('detail.addExercise')}
-          >
-            <Icon path={mdiPlus} size={0.85} />
-            {tn('common', 'action.add')}
-          </button>
-        </div>
-
         {routineExercises.length === 0 ? (
           <p className="c-routine-detail__empty">{t('detail.empty')}</p>
         ) : (
-          <div className="c-routine-detail__exercise-list" role="list">
+          <div className="c-routine-detail__exercise-list">
             <p className="c-routine-detail__swipe-hint">{t('detail.sortHint')}</p>
-            {routineExercises.map((ex, indice) => (
-              <div
-                key={ex.id}
-                className={[
-                  'c-routine-detail__sortable',
-                  dragIndex === indice ? 'is-active' : '',
-                  dragIndex !== null && overIndex === indice && dragIndex !== indice
-                    ? 'is-selected'
-                    : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-                style={dragIndex === indice ? { '--drag-offset': `${dragOffset}px` } : undefined}
-                role="listitem"
-                {...getHandlers(indice)}
-              >
-                <RoutineExerciseCard
-                  exercise={ex}
-                  onRemove={() => setRemovingExerciseId(ex.id)}
-                  onEdit={() => setEditingExercise(ex)}
-                  onAddSet={onAddSet}
-                  onUpdateSet={onUpdateSet}
-                  onDeleteSet={onDeleteSet}
-                />
-              </div>
-            ))}
+            <SortableList
+              ids={idsVisibles}
+              onReorder={reordenar}
+              accessibility={accesibilidadArrastre}
+            >
+              {routineExercises.map((ex) => (
+                <SortableItem key={ex.id} id={ex.id} className="c-routine-detail__sortable">
+                  <RoutineExerciseCard
+                    exercise={ex}
+                    onRemove={() => setRemovingExerciseId(ex.id)}
+                    onEdit={() => setEditingExercise(ex)}
+                    onAddSet={onAddSet}
+                    onUpdateSet={onUpdateSet}
+                    onDeleteSet={onDeleteSet}
+                  />
+                </SortableItem>
+              ))}
+            </SortableList>
           </div>
         )}
       </div>

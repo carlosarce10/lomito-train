@@ -363,11 +363,11 @@ Hallazgos confirmados por la auditoria que siguen vivos en el codigo:
 
 ## Decisiones de producto posteriores
 
-- **Reordenar ejercicios es un gesto sin via de teclado.** Se probo una manija
-  enfocable con Alt y flechas y el propietario la retiro: la aplicacion se usa al
-  cien por cien en el movil y cada icono de mas cuesta. Editar y quitar si conservan
-  su alternativa accesible, como botones de texto dentro del area expandida de la
-  tarjeta. Si algun dia el teclado importa, la manija esta en el historial.
+- **Reordenar ejercicios se hace con dnd-kit.** El gesto artesanal anterior se
+  sustituyo por la libreria a peticion del propietario, y la via de teclado que se
+  habia perdido volvio de serie: espacio levanta, las flechas mueven y espacio
+  suelta, con anuncios traducidos para el lector de pantalla. Editar y quitar
+  conservan sus botones de texto dentro del area expandida de la tarjeta.
 
 ## Como se lee este archivo
 

@@ -20,7 +20,12 @@
     "deleteConfirm": "Delete {{name}}? This cannot be undone.",
     "removeTitle": "Remove exercise",
     "removeConfirm": "Remove {{name}} from this routine?",
-    "sortHint": "Press and hold to drag · swipe to edit or remove"
+    "sortHint": "Press and hold to drag · swipe to edit or remove",
+    "dragInstructions": "Press space to pick up the exercise, move it with the arrow keys, and press space to drop it. Escape cancels.",
+    "dragStart": "{{name}} picked up",
+    "dragOver": "{{name}} over position {{position}}",
+    "dragEnd": "{{name}} dropped at position {{position}}",
+    "dragCancel": "Reordering cancelled"
   },
   "toast": {
     "created": "Routine created",

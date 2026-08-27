@@ -46,6 +46,13 @@
       min-width: 0;
     }
 
+    &__title-action {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      margin-left: auto;
+    }
+
     // La barra dice de que es el color, cosa que un punto suelto bajo el nombre no
     // hacia: parecia un adorno sin relacion con la rutina.
     &__accent {

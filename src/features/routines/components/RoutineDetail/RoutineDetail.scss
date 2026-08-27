@@ -28,13 +28,6 @@
       gap: $spacing-md;
     }
 
-    // Solo contiene la accion de agregar: el titulo de la seccion se retiro porque
-    // el conteo ya vive en la linea de resumen de la cabecera.
-    &__exercises-header {
-      display: flex;
-      justify-content: flex-end;
-    }
-
     &__add-btn {
       display: flex;
       align-items: center;
@@ -63,36 +56,22 @@
       line-height: 1.6;
     }
 
-    // Envoltorio que recibe el arrastre. touch-action pan-y deja pasar el scroll
-    // vertical mientras el gesto no se ha convertido en arrastre.
+    // Envoltorio que recibe el arrastre. La libreria mueve el elemento con un
+    // transform en linea; aqui solo vive la elevacion, con la propiedad scale, que
+    // convive con ese transform sin pisarlo.
     &__sortable {
       touch-action: pan-y;
-
-      // translate y scale como propiedades separadas a proposito: la escala y la
-      // sombra de la elevacion se animan, pero el desplazamiento NO, porque tiene
-      // que seguir al dedo sin retraso. Con transform unico no se pueden separar.
       transition:
-        opacity $transition-fast,
         scale $transition-fast,
         box-shadow $transition-fast;
 
-      // La tarjeta levantada: sigue al dedo, crece y proyecta sombra. Antes solo
-      // bajaba la opacidad, y no se distinguia si el arrastre habia empezado.
       &.is-active {
         position: relative;
         z-index: 1;
-        translate: 0 var(--drag-offset, 0);
-        scale: 1.03;
-        opacity: 0.95;
-        box-shadow: var(--shadow-lg);
         border-radius: $radius-md;
+        box-shadow: var(--shadow-lg);
         cursor: grabbing;
-      }
-
-      // La tarjeta sobre la que se soltaria: una linea, no un hueco, para que la
-      // lista no salte mientras el dedo se mueve.
-      &.is-selected {
-        box-shadow: inset 0 3px 0 0 var(--accent);
+        scale: 1.03;
       }
     }
 

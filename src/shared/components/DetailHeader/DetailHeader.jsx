@@ -21,10 +21,20 @@ import './DetailHeader.scss';
  * @param {string} [props.accent] Color que identifica la pantalla. Pinta una barra
  *   junto al titulo en lugar de un punto suelto debajo, que no decia de que era.
  * @param {import('react').ReactNode} [props.meta] Linea de resumen bajo el titulo.
+ * @param {import('react').ReactNode} [props.titleAction] Accion a la altura del titulo.
  * @param {import('react').ReactNode} [props.badges] Etiquetas bajo el titulo.
  * @param {import('react').ReactNode} [props.actions] Botones de accion, siempre iconos.
  */
-export default function DetailHeader({ backLabel, onBack, title, accent, meta, badges, actions }) {
+export default function DetailHeader({
+  backLabel,
+  onBack,
+  title,
+  accent,
+  meta,
+  titleAction,
+  badges,
+  actions,
+}) {
   return (
     <header className="c-detail-header">
       <div className="c-detail-header__bar">
@@ -43,6 +53,7 @@ export default function DetailHeader({ backLabel, onBack, title, accent, meta, b
           <span className="c-detail-header__accent" style={{ '--detail-accent': accent }} />
         )}
         <h2 className="c-detail-header__title">{title}</h2>
+        {titleAction && <div className="c-detail-header__title-action">{titleAction}</div>}
       </div>
       {meta && <p className="c-detail-header__meta">{meta}</p>}
       {badges && <div className="c-detail-header__badges">{badges}</div>}
