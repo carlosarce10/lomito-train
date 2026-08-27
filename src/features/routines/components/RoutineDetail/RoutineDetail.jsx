@@ -1,6 +1,6 @@
-import { mdiDelete, mdiDragHorizontalVariant, mdiFilePdfBox, mdiPencil, mdiPlus } from '@mdi/js';
+import { mdiDelete, mdiFilePdfBox, mdiPencil, mdiPlus } from '@mdi/js';
 import Icon from '@mdi/react';
-import { useId, useState } from 'react';
+import { useState } from 'react';
 
 import { getRoutineColor } from '@domain/catalogs';
 import { resolveRoutineExercises } from '@domain/model/routine';
@@ -63,7 +63,6 @@ export default function RoutineDetail({
   const [showPicker, setShowPicker] = useState(false);
   const [isEditingRoutine, setIsEditingRoutine] = useState(false);
   const [exportando, setExportando] = useState(false);
-  const idSortHint = useId();
   const toast = useToast();
   const { unit, toDisplay } = useUnit();
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -78,19 +77,6 @@ export default function RoutineDetail({
     routineExercises.length,
     (desde, hasta) => onReorderExercises?.(routine.id, desde, hasta),
   );
-
-  /**
-   * Mover con el teclado desde la manija. Arrastrar no es accesible por si solo, y
-   * un div con rol de elemento de lista no puede recibir el foco ni manejadores,
-   * asi que la via por teclado necesita un control de verdad.
-   */
-  const alPulsarTecla = (evento, indice) => {
-    const destino =
-      evento.key === 'ArrowUp' ? indice - 1 : evento.key === 'ArrowDown' ? indice + 1 : null;
-    if (destino === null || destino < 0 || destino >= routineExercises.length) return;
-    evento.preventDefault();
-    onReorderExercises?.(routine.id, indice, destino);
-  };
 
   const totalSeries = routineExercises.reduce((suma, ex) => suma + ex.sets.length, 0);
   const resumen = [
@@ -219,9 +205,7 @@ export default function RoutineDetail({
           <p className="c-routine-detail__empty">{t('detail.empty')}</p>
         ) : (
           <div className="c-routine-detail__exercise-list" role="list">
-            <p className="c-routine-detail__swipe-hint" id={idSortHint}>
-              {t('detail.sortHint')}
-            </p>
+            <p className="c-routine-detail__swipe-hint">{t('detail.sortHint')}</p>
             {routineExercises.map((ex, indice) => (
               <div
                 key={ex.id}
@@ -244,18 +228,6 @@ export default function RoutineDetail({
                   onAddSet={onAddSet}
                   onUpdateSet={onUpdateSet}
                   onDeleteSet={onDeleteSet}
-                  dragHandle={
-                    <button
-                      type="button"
-                      className="c-routine-exercise-card__grip"
-                      aria-label={t('detail.moveAction', { name: ex.name })}
-                      aria-roledescription={t('detail.sortableItem')}
-                      aria-describedby={idSortHint}
-                      onKeyDown={(evento) => alPulsarTecla(evento, indice)}
-                    >
-                      <Icon path={mdiDragHorizontalVariant} size={0.9} />
-                    </button>
-                  }
                 />
               </div>
             ))}

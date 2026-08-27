@@ -21,9 +21,7 @@
     "deleteConfirm": "¿Eliminar {{name}}? Esta acción no se puede deshacer.",
     "removeTitle": "Quitar ejercicio",
     "removeConfirm": "¿Quitar {{name}} de esta rutina?",
-    "sortableItem": "elemento reordenable",
-    "sortHint": "Manten pulsado para arrastrar, o usa Alt con las flechas para mover",
-    "moveAction": "Mover {{name}}"
+    "sortHint": "Manten pulsado para arrastrar · desliza para editar o quitar"
   },
   "toast": {
     "created": "Rutina creada",

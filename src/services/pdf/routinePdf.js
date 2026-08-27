@@ -31,7 +31,8 @@ export async function loadPdfEngine() {
  * @param {{ name: string }} params.routine Rutina a exportar.
  * @param {Array<{ name: string, muscleGroups: string[], equipment: string, sets: Array }>}
  *   params.exercises Ejercicios ya resueltos y traducidos.
- * @param {object} params.labels Textos ya traducidos que necesita el documento.
+ * @param {{ appName: string, date: string, weight: string, reps: string,
+ *          noSets: string }} params.labels Textos ya traducidos.
  * @returns {Promise<{ ok: boolean, error?: Error }>}
  */
 export async function exportRoutinePdf({ routine, exercises, labels }) {
@@ -73,8 +74,8 @@ export async function exportRoutinePdf({ routine, exercises, labels }) {
       autoTable(doc, {
         startY: cursorY,
         head: [
-          [{ content: sanitizeCell(ejercicio.name), colSpan: 5, styles: { halign: 'left' } }],
-          ['#', labels.targetWeight, labels.targetReps, labels.actualWeight, labels.actualReps],
+          [{ content: sanitizeCell(ejercicio.name), colSpan: 3, styles: { halign: 'left' } }],
+          ['#', labels.weight, labels.reps],
         ],
         body: filas,
         theme: 'grid',

@@ -26,7 +26,6 @@
   },
   "detail": {
     "createAction": "Create exercise",
-    "editAction": "Edit exercise",
     "setsTitle": "Sets",
     "addSet": "Add set",
     "deleteSet": "Delete set",

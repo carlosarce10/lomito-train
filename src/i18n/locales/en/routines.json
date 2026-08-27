@@ -21,9 +21,7 @@
     "deleteConfirm": "Delete {{name}}? This cannot be undone.",
     "removeTitle": "Remove exercise",
     "removeConfirm": "Remove {{name}} from this routine?",
-    "sortableItem": "sortable item",
-    "sortHint": "Press and hold to drag, or use Alt with the arrow keys to move",
-    "moveAction": "Move {{name}}"
+    "sortHint": "Press and hold to drag · swipe to edit or remove"
   },
   "toast": {
     "created": "Routine created",

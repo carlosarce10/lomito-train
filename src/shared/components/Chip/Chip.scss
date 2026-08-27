@@ -6,9 +6,14 @@
     gap: $spacing-sm;
     align-items: center;
     padding: $spacing-xs $spacing-sm;
-    border: 1px solid var(--border);
+
+    // Fondo y borde derivados del texto del tema, no de las superficies de vidrio:
+    // dentro de un modal claro, un chip de vidrio blanco sobre panel blanco
+    // desaparecia y solo se veia el texto. Derivarlos de --text da un gris tenue en
+    // claro y un claro tenue en oscuro con una sola regla.
+    border: 1px solid color-mix(in srgb, var(--text) 18%, transparent);
     border-radius: $radius-sm;
-    background: var(--surface);
+    background: color-mix(in srgb, var(--text) 6%, transparent);
     color: var(--text-secondary);
     font-size: $font-size-xs;
     font-weight: $font-weight-semibold;

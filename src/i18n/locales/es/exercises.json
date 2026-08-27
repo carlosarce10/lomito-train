@@ -26,7 +26,6 @@
   },
   "detail": {
     "createAction": "Crear ejercicio",
-    "editAction": "Editar ejercicio",
     "setsTitle": "Series",
     "addSet": "Agregar serie",
     "deleteSet": "Eliminar serie",

@@ -361,6 +361,14 @@ Hallazgos confirmados por la auditoria que siguen vivos en el codigo:
 | El swipe no maneja `touchcancel`: un toque posterior dispara Eliminar         | 7                  |
 | `preventDefault` en `onTouchMove` no tiene efecto: React lo registra pasivo   | 7                  |
 
+## Decisiones de producto posteriores
+
+- **Reordenar ejercicios es un gesto sin via de teclado.** Se probo una manija
+  enfocable con Alt y flechas y el propietario la retiro: la aplicacion se usa al
+  cien por cien en el movil y cada icono de mas cuesta. Editar y quitar si conservan
+  su alternativa accesible, como botones de texto dentro del area expandida de la
+  tarjeta. Si algun dia el teclado importa, la manija esta en el historial.
+
 ## Como se lee este archivo
 
 Las ocho fases del plan estan cerradas, asi que las diecisiete reglas duras de

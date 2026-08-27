@@ -73,25 +73,6 @@
       overflow-wrap: anywhere;
     }
 
-    &__meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: $spacing-sm;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    &__actions {
-      display: flex;
-      flex-shrink: 0;
-      gap: $spacing-xs;
-    }
-
-    // Se usa touch-target-extended y no touch-target: el minimo de 44px se consigue
-    // con un pseudo-elemento, para que el control siga midiendo 30px a la vista y no
-    // desplace los chips de su fila.
-    &__grip,
-    &__action,
     &__toggle {
       @include flex-center;
       @include touch-target-extended;
@@ -105,23 +86,20 @@
       color: var(--text-secondary);
       transition:
         background-color $transition-fast,
-        border-color $transition-fast,
         color $transition-fast;
 
       &:hover {
-        border-color: var(--accent);
         background: var(--accent-subtle);
         color: var(--accent-text);
       }
     }
 
-    // La manija se distingue del resto: no ejecuta nada, cambia el modo.
-    &__grip {
-      cursor: grab;
-
-      &:active {
-        cursor: grabbing;
-      }
+    &__meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+      align-items: center;
+      justify-content: space-between;
     }
 
     &__action--danger:hover {
@@ -131,6 +109,13 @@
     }
 
     // ── Record ───────────────────────────────────────────────────
+    &__record-chip {
+      margin-left: auto;
+      border-color: var(--accent);
+      background: var(--accent-subtle);
+      color: var(--accent-text);
+    }
+
     &__record {
       display: flex;
       align-items: baseline;
@@ -267,6 +252,35 @@
       &:active {
         background: var(--danger-subtle);
         color: var(--danger-text);
+      }
+    }
+
+    &__sets-actions {
+      display: flex;
+      gap: $spacing-sm;
+      justify-content: flex-end;
+      margin-top: $spacing-sm;
+    }
+
+    &__sets-action {
+      @include touch-target-extended;
+
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-sm;
+      color: var(--accent-text);
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+
+      &:hover {
+        background: var(--accent-subtle);
+      }
+    }
+
+    &__sets-action--danger {
+      color: var(--danger-text);
+
+      &:hover {
+        background: var(--danger-subtle);
       }
     }
 

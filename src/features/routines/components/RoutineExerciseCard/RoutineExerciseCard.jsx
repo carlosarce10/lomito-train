@@ -1,10 +1,11 @@
-import { mdiChevronDown, mdiChevronUp, mdiDelete, mdiPencil, mdiPlus, mdiClose } from '@mdi/js';
+import { mdiChevronDown, mdiChevronUp, mdiClose, mdiDelete, mdiPencil, mdiPlus } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useId, useState, useRef } from 'react';
 
 import { getRecord } from '@domain/model/records';
 import { LIMITS } from '@domain/validation/limits';
 import { parseDecimal } from '@domain/validation/parseDecimal';
+import Chip from '@shared/components/Chip/Chip';
 import NumberField from '@shared/components/NumberField/NumberField';
 import useUnit from '@shared/hooks/useUnit';
 import useTranslation from '@i18n/useTranslation';
@@ -29,7 +30,6 @@ export default function RoutineExerciseCard({
   onAddSet,
   onUpdateSet,
   onDeleteSet,
-  dragHandle,
 }) {
   const { tn, formatNumber } = useTranslation('routines');
   const { unit, toDisplay, toStorage } = useUnit();
@@ -263,33 +263,8 @@ export default function RoutineExerciseCard({
             </button>
           </div>
 
-          {/* Los chips y las acciones comparten fila. Con cuatro botones junto al
-              nombre, el nombre se partia en dos lineas en un movil.
-
-              Editar y quitar existen como boton y no solo como gesto: una accion que
-              solo se puede deslizar no la ejecuta quien navega con teclado o con
-              lector de pantalla. Ver docs/validation.md. */}
           <div className="c-routine-exercise-card__meta-row">
             <MuscleGroupBadgeList groupIds={exercise.muscleGroupIds} max={2} />
-            <div className="c-routine-exercise-card__actions">
-              {dragHandle}
-              <button
-                type="button"
-                className="c-routine-exercise-card__action"
-                onClick={onEdit}
-                aria-label={tn('exercises', 'detail.editAction')}
-              >
-                <Icon path={mdiPencil} size={0.8} />
-              </button>
-              <button
-                type="button"
-                className="c-routine-exercise-card__action c-routine-exercise-card__action--danger"
-                onClick={onRemove}
-                aria-label={tn('routines', 'detail.removeTitle')}
-              >
-                <Icon path={mdiDelete} size={0.8} />
-              </button>
-            </div>
           </div>
         </div>
 
@@ -304,9 +279,9 @@ export default function RoutineExerciseCard({
               <span className="c-routine-exercise-card__record-value">
                 {formatNumber(record.reps, 'reps')} {tn('common', 'unit.reps')}
               </span>
-              <span className="c-routine-exercise-card__record-label">
+              <Chip className="c-routine-exercise-card__record-chip">
                 {tn('exercises', 'record.label')}
-              </span>
+              </Chip>
             </>
           ) : (
             <span className="c-routine-exercise-card__record-empty">
@@ -398,6 +373,26 @@ export default function RoutineExerciseCard({
                 })}
               </div>
             )}
+            {/* Editar y quitar viven aqui y no en la cabecera: el gesto de deslizar
+                es la via principal, y esta es la alternativa para teclado y lector
+                de pantalla sin llenar la tarjeta de iconos. Ver docs/validation.md. */}
+            <div className="c-routine-exercise-card__sets-actions">
+              <button
+                type="button"
+                className="c-routine-exercise-card__sets-action"
+                onClick={onEdit}
+              >
+                {tn('common', 'action.edit')}
+              </button>
+              <button
+                type="button"
+                className="c-routine-exercise-card__sets-action c-routine-exercise-card__sets-action--danger"
+                onClick={onRemove}
+              >
+                {tn('routines', 'detail.removeTitle')}
+              </button>
+            </div>
+
             <button
               ref={addSetButton}
               className="c-routine-exercise-card__sets-add"
