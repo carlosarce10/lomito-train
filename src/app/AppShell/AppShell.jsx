@@ -1,5 +1,6 @@
 import { mdiCalendarCheck, mdiCog, mdiDumbbell } from '@mdi/js';
-import { Outlet } from 'react-router';
+import { useEffect } from 'react';
+import { Outlet, useLocation, useNavigationType } from 'react-router';
 
 import Layout from '@shared/components/Layout/Layout';
 import useTranslation from '@i18n/useTranslation';
@@ -16,6 +17,28 @@ const TABS = [
 ];
 
 /**
+ * Sube el scroll al llegar a una vista nueva.
+ *
+ * Sin esto se llegaba a una pantalla con el scroll a mitad de la anterior. Se hace a
+ * mano y no con el ScrollRestoration de react-router porque ese quedo inerte aqui,
+ * verificado: no tomo el control del historial ni llamo a scrollTo ni una vez.
+ *
+ * Solo actua en navegaciones nuevas. En atras y adelante no toca nada, porque la
+ * restauracion nativa del navegador ya devuelve la posicion que se tenia, y pisarla
+ * con un scrollTo dejaria el boton atras siempre arriba.
+ */
+function ScrollReset() {
+  const { pathname } = useLocation();
+  const tipo = useNavigationType();
+
+  useEffect(() => {
+    if (tipo !== 'POP') window.scrollTo(0, 0);
+  }, [pathname, tipo]);
+
+  return null;
+}
+
+/**
  * Envoltura comun de todas las rutas: cabecera, contenido y barra de navegacion.
  * El contenido lo pone el enrutador en el Outlet.
  */
@@ -25,6 +48,7 @@ export default function AppShell() {
 
   return (
     <Layout tabs={tabs} headerAction={<ThemeToggle />}>
+      <ScrollReset />
       <Outlet />
     </Layout>
   );
