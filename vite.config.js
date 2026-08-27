@@ -33,9 +33,10 @@ export default defineConfig({
       registerType: 'prompt',
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
-        // Los dos iconos grandes solo los pide el sistema al instalar la aplicacion.
-        // Guardarlos en la cache costaria 300 kB que nadie leeria sin conexion.
-        globIgnores: ['**/icon-512.png', '**/icon-maskable-512.png'],
+        // Los dos iconos grandes solo los pide el sistema al instalar la aplicacion, y
+        // la imagen social solo los rastreadores de enlaces. Guardarlos en la cache
+        // costaria medio mega que nadie leeria sin conexion.
+        globIgnores: ['**/icon-512.png', '**/icon-maskable-512.png', '**/og-image.png'],
         runtimeCaching: [
           {
             // La hoja de estilos de Google Fonts cambia con el navegador: se sirve

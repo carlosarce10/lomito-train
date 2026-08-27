@@ -4,7 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#eff6ff" />
-    <meta name="description" content="Registro de entrenamiento de fuerza que funciona sin cuenta y sin conexion." />
+    <meta name="description" content="Registro de entrenamiento de fuerza que funciona sin cuenta y sin conexión." />
+
+    <!-- Vista previa del enlace en WhatsApp, Telegram, Slack o X. La imagen tiene que
+         ser una URL absoluta, asi que la base publica sale de VITE_SITE_URL en .env y
+         Vite la sustituye al construir. Ningun comentario de este archivo puede
+         contener una etiqueta HTML escrita: los rastreadores no parsean, buscan. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lomito Train" />
+    <meta property="og:title" content="Lomito Train" />
+    <meta
+      property="og:description"
+      content="Registro de entrenamiento de fuerza que funciona sin cuenta y sin conexión."
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%/" />
+    <meta property="og:image" content="%VITE_SITE_URL%/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Logotipo de Lomito Train" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Lomito Train" />
+    <meta
+      name="twitter:description"
+      content="Registro de entrenamiento de fuerza que funciona sin cuenta y sin conexión."
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/og-image.png" />
 
     <!-- Los iconos y el manifest viven en public/: los lee el navegador por URL fija,
          no pasan por el grafo de modulos de Vite. -->
@@ -14,7 +39,7 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <!-- iOS no lee el manifest para el nombre del icono ni, antes de 16.4, para el modo
          de pantalla: se lo dicen las etiquetas apple-*. Sin apple-mobile-web-app-title
-         usaria el <title> de la pestana. Detalle en docs/pwa.md. -->
+         usaria el titulo de la pestana. Detalle en docs/pwa.md. -->
     <meta name="application-name" content="Lomito Train" />
     <meta name="apple-mobile-web-app-title" content="Lomito Train" />
     <meta name="mobile-web-app-capable" content="yes" />

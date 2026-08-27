@@ -114,13 +114,14 @@ mascara del lanzador dejaba a la vista ese negro.
 `npm run icons` (`scripts/build-icons.mjs`, Node puro, sin dependencias) mide el
 radio y el color del fondo sobre el propio maestro y genera:
 
-| Archivo                        | Tamano | Forma                                             | Por que                                                                    |
-| ------------------------------ | ------ | ------------------------------------------------- | -------------------------------------------------------------------------- |
-| `public/icon-192.png`, `-512`  | any    | El arte con las esquinas **transparentes**        | Lo ven el dialogo de instalacion, el arranque y el escritorio, sin mascara |
-| `public/icon-maskable-512.png` | 512    | Crema a sangre, arte reducido a la zona segura    | Android recorta a la forma que decida el lanzador: fondo hasta el borde    |
-| `public/apple-touch-icon.png`  | 180    | Crema a sangre, opaco, arte al tamano del maestro | iOS aplica su mascara y pinta de negro la transparencia                    |
-| `public/favicon-16.png`, `-32` | any    | Como el icono any                                 | Pestana del navegador                                                      |
-| `src/assets/logo-mark.png`     | 96     | Solo la cabeza                                    | Cabecera de la aplicacion: el logotipo completo no se lee a 32 px          |
+| Archivo                        | Tamano   | Forma                                             | Por que                                                                    |
+| ------------------------------ | -------- | ------------------------------------------------- | -------------------------------------------------------------------------- |
+| `public/icon-192.png`, `-512`  | any      | El arte con las esquinas **transparentes**        | Lo ven el dialogo de instalacion, el arranque y el escritorio, sin mascara |
+| `public/icon-maskable-512.png` | 512      | Crema a sangre, arte reducido a la zona segura    | Android recorta a la forma que decida el lanzador: fondo hasta el borde    |
+| `public/apple-touch-icon.png`  | 180      | Crema a sangre, opaco, arte al tamano del maestro | iOS aplica su mascara y pinta de negro la transparencia                    |
+| `public/favicon-16.png`, `-32` | any      | Como el icono any                                 | Pestana del navegador                                                      |
+| `public/og-image.png`          | 1200x630 | Arte centrado sobre crema, opaco, menos de 300 kB | Vista previa del enlace en WhatsApp, Telegram, Slack y X                   |
+| `src/assets/logo-mark.png`     | 96       | Solo la cabeza                                    | Cabecera de la aplicacion: el logotipo completo no se lee a 32 px          |
 
 La zona segura de un icono maskable es un circulo del 80 por ciento del lado. El
 maestro entero se escala a ese 80 por ciento, con sus margenes, porque asi la
@@ -133,6 +134,46 @@ detecta inundando desde los cuatro vertices todo lo que no sea crema.
 
 Los derivados se versionan. Un clon limpio no necesita ejecutar nada; el script se
 lanza a mano cuando cambia el maestro.
+
+## Vista previa del enlace
+
+Al compartir la URL, WhatsApp, Telegram, Slack o X piden la pagina y leen las
+etiquetas Open Graph de `index.html`: titulo, descripcion e imagen. Dos cosas que
+no son obvias y ya han fallado:
+
+- **`og:image` tiene que ser una URL absoluta.** El resto del build usa rutas
+  relativas para no saber donde se publica, asi que la base publica vive en `.env`
+  como `VITE_SITE_URL` y Vite la sustituye en `index.html` al construir. Si el sitio
+  cambia de dominio, se cambia ahi y en ningun otro sitio.
+- **Ningun comentario de `index.html` puede contener una etiqueta HTML escrita.** Los
+  rastreadores de vistas previas no parsean HTML: buscan la primera aparicion de
+  `<title>` con una expresion regular. Un comentario que decia "usaria el <title> de
+  la pestana" hizo que WhatsApp mostrara como titulo el final de ese comentario.
+
+WhatsApp ademas descarta imagenes de mas de 300 kB, por eso `npm run icons` reduce el
+arte hasta que el PNG cabe. Y cachea la vista previa por URL durante horas: para ver
+un cambio hay que compartir la URL con un parametro distinto, por ejemplo `?v=2`.
+
+## Despliegue
+
+El sitio vive en `https://lomito-train.netlify.app`. Se sube el `dist` tal cual: con
+enrutado por hash no hacen falta reescrituras. Dos archivos de `public/` existen solo
+por el hosting:
+
+- `_headers`: Netlify no conoce la extension `.webmanifest` y servia el manifest
+  como `application/octet-stream`. Chrome lo tolera, pero el tipo correcto es
+  `application/manifest+json`.
+- `.env` (en la raiz, versionado): la URL publica para Open Graph, ver arriba.
+
+Netlify sirve `sw.js` con `max-age=0, must-revalidate`, que es lo que un service
+worker necesita para que el navegador vea cada version nueva.
+
+Si alguien no consigue instalar desde la URL publicada, lo primero es saber el
+dispositivo: en iPhone no hay boton, es Compartir y Anadir a pantalla de inicio; en
+Android con Chrome la opcion esta en el menu de los tres puntos, "Instalar
+aplicacion", y el boton de Ajustes aparece en cuanto Chrome dispara
+`beforeinstallprompt`. Si la aplicacion ya estaba instalada, el menu muestra "Abrir
+Lomito Train" en su lugar.
 
 ## Deuda conocida
 

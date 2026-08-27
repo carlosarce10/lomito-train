@@ -1,0 +1,4 @@
+# Cabeceras para Netlify, que es donde se publica. Otros hostings ignoran el archivo.
+# Netlify no conoce la extension .webmanifest y la servia como application/octet-stream.
+/manifest.webmanifest
+  Content-Type: application/manifest+json

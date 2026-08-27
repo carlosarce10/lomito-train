@@ -439,6 +439,50 @@ write(
   false,
 );
 
+// Vista previa del enlace (Open Graph): 1200 por 630, que es lo que esperan WhatsApp,
+// Telegram, Slack y X. El arte va centrado sobre el fondo crema. WhatsApp no muestra
+// imagenes de mas de 300 kB, asi que el arte se reduce hasta que el PNG cabe.
+console.log('Imagen de vista previa del enlace');
+const OG_WIDTH = 1200;
+const OG_HEIGHT = 630;
+const OG_LIMIT = 300 * 1024;
+const OG_ART_SIZES = [520, 480, 440, 400, 360];
+
+function composeOg(artSize) {
+  const art = resize(interior, artSize);
+  const data = new Uint8ClampedArray(OG_WIDTH * OG_HEIGHT * 4);
+  for (let i = 0; i < OG_WIDTH * OG_HEIGHT; i++) {
+    data[i * 4] = background[0];
+    data[i * 4 + 1] = background[1];
+    data[i * 4 + 2] = background[2];
+    data[i * 4 + 3] = 255;
+  }
+  const x0 = Math.round((OG_WIDTH - artSize) / 2);
+  const y0 = Math.round((OG_HEIGHT - artSize) / 2);
+  for (let y = 0; y < artSize; y++) {
+    data.set(
+      art.data.subarray(y * artSize * 4, (y + 1) * artSize * 4),
+      ((y0 + y) * OG_WIDTH + x0) * 4,
+    );
+  }
+  return encodePng({ width: OG_WIDTH, height: OG_HEIGHT, data }, { alpha: false });
+}
+
+let ogPng = null;
+for (const artSize of OG_ART_SIZES) {
+  const candidate = composeOg(artSize);
+  if (candidate.length <= OG_LIMIT) {
+    ogPng = candidate;
+    console.log(`  arte a ${artSize}px`);
+    break;
+  }
+}
+if (!ogPng) throw new Error('og-image.png no baja de 300 kB con ningun tamano de arte');
+writeFileSync('public/og-image.png', ogPng);
+console.log(
+  `  public/og-image.png (${OG_WIDTH}x${OG_HEIGHT}, ${(ogPng.length / 1024).toFixed(0)} kB)`,
+);
+
 // Marca de la cabecera: solo la cabeza. El logotipo completo lleva el texto dentro y
 // a 32px no se lee. Las coordenadas son del maestro de 1254 px.
 console.log('Marca de la cabecera');
