@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { buildBackup, importBackup, importExercises } from '@domain/storage/backup';
 import { CURRENT_VERSION } from '@domain/storage/migrations';
+import { importPlan, isPlanFile, readPlan } from '@domain/storage/planImport';
 import { exercisesRepository, routinesRepository } from '@domain/storage/repositories';
 import { isoDay, saveBlob } from '@services/file/downloadFile';
 import useToast from '@shared/components/ToastProvider/useToast';
@@ -192,21 +193,31 @@ export default function useDataExport() {
           const leido = importCsv(await file.text(), buildImportDictionary());
           resultado = leido.ok ? importExercises(leido.exercises) : leido;
         } else {
-          resultado = importBackup(JSON.parse(await file.text()));
+          // Un plan de Lomito Workouts se fusiona; una copia propia sustituye.
+          const crudo = JSON.parse(await file.text());
+          resultado = isPlanFile(crudo) ? importPlan(crudo) : importBackup(crudo);
         }
 
         if (!resultado.ok) {
-          toast.error(t('export.importFailed'));
+          toast.error(
+            resultado.reason === 'planTooNew' ? t('export.planTooNew') : t('export.importFailed'),
+          );
           return resultado;
         }
         if (resultado.descartados > 0) {
           toast.error(t('export.importDiscarded', { count: resultado.descartados }));
         }
         toast.success(
-          t('export.imported', {
-            exercises: resultado.exercises,
-            routines: resultado.routines,
-          }),
+          'exercisesCreated' in resultado
+            ? t('export.importedPlan', {
+                created: resultado.exercisesCreated,
+                reused: resultado.exercisesReused,
+                routines: resultado.routinesCreated + resultado.routinesUpdated,
+              })
+            : t('export.imported', {
+                exercises: resultado.exercises,
+                routines: resultado.routines,
+              }),
         );
         window.setTimeout(() => window.location.reload(), 900);
         return resultado;
@@ -224,8 +235,38 @@ export default function useDataExport() {
     [toast, t],
   );
 
+  /**
+   * Resume lo que hara importar un archivo, para que la confirmacion diga la verdad:
+   * un plan de Lomito Workouts se anade, cualquier otro archivo sustituye los datos.
+   * Solo lee el archivo; no escribe nada.
+   *
+   * @param {File} file Archivo elegido por el usuario.
+   * @returns {Promise<{ kind: 'plan', title: string, exercises: number, routines: number }
+   *                  | { kind: 'replace' }>}
+   */
+  const resumirArchivo = useCallback(async (file) => {
+    try {
+      if ((await detectarFormato(file)) !== 'json') return { kind: 'replace' };
+      const crudo = JSON.parse(await file.text());
+      if (!isPlanFile(crudo)) return { kind: 'replace' };
+      const plan = readPlan(crudo);
+      if (!plan.ok) return { kind: 'replace' };
+      return {
+        kind: 'plan',
+        title: plan.title,
+        exercises: plan.exercises.length,
+        routines: plan.routines.length,
+      };
+    } catch (error) {
+      // Un JSON ilegible se queda en la confirmacion general; la importacion avisara.
+      console.error('No se pudo leer el archivo para resumirlo', error);
+      return { kind: 'replace' };
+    }
+  }, []);
+
   return {
     trabajando,
+    resumirArchivo,
     exportarExcel,
     exportarCsv,
     exportarCopia,

@@ -63,6 +63,7 @@ traduccion y ambitos de commit. La columna "codigo" manda.
 | Instalacion en el dispositivo              | `install`     | Instalar       | Install       |
 | Version nueva esperando a activarse        | `update`      | Actualizar     | Update        |
 | Funcionamiento sin red                     | `offline`     | Sin conexion   | Offline       |
+| Plan importado desde Lomito Workouts       | `plan`        | Plan           | Plan          |
 
 Palabras prohibidas y su sustituto:
 

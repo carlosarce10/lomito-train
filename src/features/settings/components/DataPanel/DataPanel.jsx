@@ -18,7 +18,7 @@ import './DataPanel.scss';
  */
 export default function DataPanel() {
   const { t, tn } = useTranslation('settings');
-  const { trabajando, exportarExcel, exportarCsv, exportarCopia, importarArchivo } =
+  const { trabajando, resumirArchivo, exportarExcel, exportarCsv, exportarCopia, importarArchivo } =
     useDataExport();
   const inputRef = useRef(null);
   const [ficheroPendiente, setFicheroPendiente] = useState(null);
@@ -29,19 +29,21 @@ export default function DataPanel() {
     { id: 'backup', icon: mdiDownload, onClick: exportarCopia },
   ];
 
-  const alElegirFichero = (event) => {
+  const alElegirFichero = async (event) => {
     const file = event.target.files?.[0];
     // El input se limpia siempre: si no, elegir el mismo fichero dos veces seguidas
     // no dispara el evento y parece que la importacion no funciona.
     event.target.value = '';
-    if (file) setFicheroPendiente(file);
+    if (file) setFicheroPendiente({ file, resumen: await resumirArchivo(file) });
   };
 
   const confirmarImportacion = async () => {
-    const file = ficheroPendiente;
+    const pendiente = ficheroPendiente;
     setFicheroPendiente(null);
-    if (file) await importarArchivo(file);
+    if (pendiente) await importarArchivo(pendiente.file);
   };
+
+  const esPlan = ficheroPendiente?.resumen.kind === 'plan';
 
   return (
     <div className="c-data-panel">
@@ -97,19 +99,25 @@ export default function DataPanel() {
       <Modal
         isOpen={ficheroPendiente !== null}
         onClose={() => setFicheroPendiente(null)}
-        title={t('export.importConfirmTitle')}
+        title={esPlan ? t('export.importPlanTitle') : t('export.importConfirmTitle')}
         closeLabel={tn('common', 'action.close')}
       >
         <div className="c-data-panel__confirm">
           <p>
-            {t('export.importConfirmText', {
-              exercises: exercisesRepository.getAll().length,
-              routines: routinesRepository.getAll().length,
-            })}
+            {esPlan
+              ? t('export.importPlanText', {
+                  title: ficheroPendiente.resumen.title,
+                  exercises: ficheroPendiente.resumen.exercises,
+                  routines: ficheroPendiente.resumen.routines,
+                })
+              : t('export.importConfirmText', {
+                  exercises: exercisesRepository.getAll().length,
+                  routines: routinesRepository.getAll().length,
+                })}
           </p>
           <div className="c-data-panel__confirm-actions">
-            {/* El foco inicial va a Cancelar, la opcion segura: importar reemplaza
-                todos los datos y no hay servidor del que recuperarlos. */}
+            {/* El foco inicial va a Cancelar, la opcion segura: importar una copia
+                reemplaza todos los datos y no hay servidor del que recuperarlos. */}
             <button
               type="button"
               data-autofocus
@@ -120,10 +128,10 @@ export default function DataPanel() {
             </button>
             <button
               type="button"
-              className="c-data-panel__confirm-accept"
+              className={`c-data-panel__confirm-accept${esPlan ? ' c-data-panel__confirm-accept--safe' : ''}`}
               onClick={confirmarImportacion}
             >
-              {t('export.import')}
+              {esPlan ? t('export.importPlanAccept') : t('export.import')}
             </button>
           </div>
         </div>

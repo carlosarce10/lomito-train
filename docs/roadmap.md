@@ -377,6 +377,13 @@ Hallazgos confirmados por la auditoria que siguen vivos en el codigo:
   `short_name` pasa a "Lomito Train". Ajustes explica como instalar en iOS, donde no
   existe dialogo de instalacion. Ver [pwa.md](pwa.md).
 
+- **Importar un plan de Lomito Workouts.** El plan llega como archivo por el mismo
+  boton de importar y se fusiona con los datos del usuario sin borrar nada:
+  ejercicios reutilizados por nombre, series vacias para los nuevos, y rutinas
+  actualizadas por nombre para que reimportar no duplique. Verificado en navegador
+  con datos previos y dos importaciones seguidas: las series existentes intactas, 0
+  referencias huerfanas y los mismos ids tras la segunda. Ver [export.md](export.md).
+
 ## Como se lee este archivo
 
 Las ocho fases del plan estan cerradas, asi que las diecisiete reglas duras de

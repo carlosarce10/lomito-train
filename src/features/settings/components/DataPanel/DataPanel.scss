@@ -103,6 +103,12 @@
     &__confirm-accept {
       background: var(--danger);
       color: var(--on-danger);
+
+      // Anadir un plan no borra nada: no es una accion de peligro.
+      &--safe {
+        background: var(--accent);
+        color: var(--on-accent);
+      }
     }
   }
 }

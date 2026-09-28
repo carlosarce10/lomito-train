@@ -141,6 +141,43 @@ reconstruccion:
 Importar sustituye datos y por eso pide confirmacion antes, con el conteo de lo que
 se va a reemplazar.
 
+## Plan de Lomito Workouts
+
+Lomito Workouts entrega planes de entrenamiento y exporta cada plan en un JSON propio,
+con `"app": "lomito-workouts"`. Entra por el mismo boton de importar, pero **no
+sustituye nada: se fusiona**. El usuario tiene aqui sus series de semanas y el plan
+llega de otra aplicacion, asi que borrar para importar seria destruir datos que nadie
+pidio tocar. Vive en `src/domain/storage/planImport.js`.
+
+Reglas:
+
+1. Un ejercicio del plan con el mismo nombre que uno existente, comparado con
+   `toComparableText` (sin acentos, mayusculas ni espacios repetidos), es ese
+   ejercicio: se reutiliza con sus series y su marca, sin tocarlo.
+2. Un ejercicio nuevo se crea con `createExercise` y tantas series vacias (`createSet`)
+   como `setCount`, para que el usuario solo tenga que anotar. Una serie a cero no
+   cuenta como marca: `getRecord` ignora el peso 0.
+3. Una rutina del plan con el mismo nombre que una existente se actualiza con los
+   ejercicios del plan y conserva su id y su color. Importar dos veces el mismo plan,
+   o una revision del plan, no duplica nada.
+4. Nada se borra. Los ejercicios nuevos van delante, como los que crea el usuario; las
+   rutinas nuevas, detras. Los ejercicios se escriben antes que las rutinas, para que
+   una rutina nunca apunte a un ejercicio sin guardar.
+5. Todo lo nuevo se valida contra su esquema antes de escribir; lo que no cumple se
+   descarta y se cuenta en el aviso.
+
+El envoltorio lleva `kind: "plan"` y `planVersion`. Una version mayor que
+`PLAN_VERSION` se rechaza con un aviso que pide actualizar. Los campos de ejercicio y
+rutina usan los catalogos de aqui (`muscleGroupIds`, `equipmentId`, `colorId`): la
+traduccion la hace Lomito Workouts al exportar. El formato completo esta en
+`docs/tracking-export.md` de Lomito Workouts.
+
+La confirmacion distingue los dos casos antes de importar: `resumirArchivo` lee el
+archivo sin escribir nada y, si es un plan, el dialogo dice que se anade y que se
+conserva, y el boton de aceptar no es de peligro. Una version anterior de esta
+aplicacion no conoce el formato y lo rechaza como "no es una copia valida", sin tocar
+los datos: `importBackup` exige `"app": "lomito-train"`.
+
 ## Respaldo completo
 
 `backup.js` exporta e importa un JSON validado contra su esquema, con la version

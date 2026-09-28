@@ -20,7 +20,7 @@
     "backup": "Backup",
     "backupHint": "A JSON file to move your data to another device",
     "import": "Import data",
-    "importHint": "JSON, Excel or CSV. Replaces what you have now with the contents of the file",
+    "importHint": "JSON, Excel or CSV. Replaces what is here now. A Lomito Workouts plan is added without deleting anything",
     "importConfirmTitle": "Import backup",
     "importConfirmText": "This will replace your {{exercises}} exercises and {{routines}} routines with the contents of the file. This cannot be undone.",
     "pdf": "Routine as PDF",
@@ -56,7 +56,12 @@
       "reps": "Reps",
       "key": "Key",
       "value": "Value"
-    }
+    },
+    "importPlanTitle": "Import Lomito Workouts plan",
+    "importPlanText": "“{{title}}” will be added: {{routines}} routines and {{exercises}} exercises. Your current exercises, routines and sets are kept. Exercises with the same name are reused and routines with the same name are updated.",
+    "importPlanAccept": "Add plan",
+    "importedPlan": "Plan imported: {{created}} new exercises, {{reused}} reused and {{routines}} routines",
+    "planTooNew": "This plan comes from a newer version of Lomito Workouts. Update Lomito Train and try again"
   },
   "unit": {
     "label": "Weight unit",
