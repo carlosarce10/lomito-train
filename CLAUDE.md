@@ -97,6 +97,7 @@ primera linea de codigo.
 | La configuracion del service worker             | `vite.config.js`, en el plugin `VitePWA`                            |
 | El registro del service worker o la instalacion | `src/services/pwa/`. Detalle en [docs/pwa.md](docs/pwa.md)          |
 | La URL publica del sitio                        | `.env`, en `VITE_SITE_URL`. La consume `index.html` para Open Graph |
+| El despliegue a produccion                      | `netlify.toml`. Detalle en [docs/pwa.md](docs/pwa.md)               |
 
 Anatomia obligatoria de una feature: `index.js` como unica API publica, mas
 `pages/`, `components/` y `hooks/`. Un hook de datos y un hook de UI nunca se

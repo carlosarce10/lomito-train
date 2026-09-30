@@ -1,0 +1,14 @@
+# Despliegue continuo en Netlify: cada push a main construye y publica en produccion.
+# Los pull requests generan una vista previa con su propia URL, sin tocar produccion.
+# Detalle en docs/pwa.md, seccion Despliegue.
+
+[build]
+  # La misma puerta que antes de cada commit. Si falla, no se publica nada y
+  # produccion sigue sirviendo la version anterior.
+  command = "npm run check"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+  # npm ci ejecuta "prepare", que instala los hooks de git. En el build no hacen falta.
+  HUSKY = "0"

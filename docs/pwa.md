@@ -156,9 +156,15 @@ un cambio hay que compartir la URL con un parametro distinto, por ejemplo `?v=2`
 
 ## Despliegue
 
-El sitio vive en `https://lomito-train.netlify.app`. Se sube el `dist` tal cual: con
-enrutado por hash no hacen falta reescrituras. Dos archivos de `public/` existen solo
-por el hosting:
+El sitio vive en `https://lomito-train.netlify.app` y se despliega solo: el sitio de
+Netlify esta enlazado al repositorio y cada push a `main` construye con
+`npm run check` y publica `dist/` en produccion. Si la puerta falla, no se publica
+nada y sigue la version anterior. Cada pull request genera una vista previa con su
+propia URL. La configuracion vive en `netlify.toml`, no en el panel de Netlify, para
+que quede versionada.
+
+Con enrutado por hash no hacen falta reescrituras. Dos archivos existen solo por el
+hosting:
 
 - `_headers`: Netlify no conoce la extension `.webmanifest` y servia el manifest
   como `application/octet-stream`. Chrome lo tolera, pero el tipo correcto es
